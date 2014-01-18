@@ -78,111 +78,115 @@ import com.salesmanager.test.core.SalesManagerCoreTestExecutionListener;
 
 @ContextConfiguration(locations = { "classpath:spring/test-spring-context.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
-@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, SalesManagerCoreTestExecutionListener.class })
+@TestExecutionListeners({ DependencyInjectionTestExecutionListener.class,
+		SalesManagerCoreTestExecutionListener.class })
 public class IsolatedTestCase {
 
-    private static final Logger log = Logger.getLogger(IsolatedTestCase.class);
+	private static final Logger log = Logger.getLogger(IsolatedTestCase.class);
 
-    private static final Date date = new Date(System.currentTimeMillis());
+	private static final Date date = new Date(System.currentTimeMillis());
 
-    @Autowired
-    private EntityManagerUtils entityManagerUtils;
+	@Autowired
+	private EntityManagerUtils entityManagerUtils;
 
-    @Autowired
-    protected ProductService productService;
+	@Autowired
+	protected ProductService productService;
 
-    @Autowired
-    protected ProductPriceService productPriceService;
+	@Autowired
+	protected ProductPriceService productPriceService;
 
-    @Autowired
-    protected ProductAttributeService productAttributeService;
+	@Autowired
+	protected ProductAttributeService productAttributeService;
 
-    @Autowired
-    protected ProductOptionService productOptionService;
+	@Autowired
+	protected ProductOptionService productOptionService;
 
-    @Autowired
-    protected ProductOptionValueService productOptionValueService;
+	@Autowired
+	protected ProductOptionValueService productOptionValueService;
 
-    @Autowired
-    protected ProductAvailabilityService productAvailabilityService;
+	@Autowired
+	protected ProductAvailabilityService productAvailabilityService;
 
-    @Autowired
-    protected ProductImageService productImageService;
+	@Autowired
+	protected ProductImageService productImageService;
 
-    @Autowired
-    protected ContentService contentService;
+	@Autowired
+	protected ContentService contentService;
 
-    @Autowired
-    protected CategoryService categoryService;
+	@Autowired
+	protected CategoryService categoryService;
 
-    @Autowired
-    protected MerchantStoreService merchantService;
+	@Autowired
+	protected MerchantStoreService merchantService;
 
-    @Autowired
-    protected ProductTypeService productTypeService;
+	@Autowired
+	protected ProductTypeService productTypeService;
 
-    @Autowired
-    protected LanguageService languageService;
+	@Autowired
+	protected LanguageService languageService;
 
-    @Autowired
-    protected CountryService countryService;
+	@Autowired
+	protected CountryService countryService;
 
-    @Autowired
-    protected ZoneService zoneService;
+	@Autowired
+	protected ZoneService zoneService;
 
-    @Autowired
-    protected CustomerService customerService;
+	@Autowired
+	protected CustomerService customerService;
 
-    @Autowired
-    protected ManufacturerService manufacturerService;
+	@Autowired
+	protected ManufacturerService manufacturerService;
 
-    @Autowired
-    protected CurrencyService currencyService;
+	@Autowired
+	protected CurrencyService currencyService;
 
-    @Autowired
-    protected OrderService orderService;
+	@Autowired
+	protected OrderService orderService;
 
-    @Autowired
-    protected GroupService groupService;
+	@Autowired
+	protected GroupService groupService;
 
-    @Autowired
-    protected PermissionService permissionService;
+	@Autowired
+	protected PermissionService permissionService;
 
-    @Autowired
-    protected UserService userService;
+	@Autowired
+	protected UserService userService;
 
-    @Autowired
-    protected InitializationDatabase initializationDatabase;
+	@Autowired
+	protected InitializationDatabase initializationDatabase;
 
-    @Autowired
-    protected ModuleConfigurationService moduleConfigurationService;
+	@Autowired
+	protected ModuleConfigurationService moduleConfigurationService;
 
-    // @Autowired
-    protected TestSupportFactory testSupportFactory;
+	// @Autowired
+	protected TestSupportFactory testSupportFactory;
 
-    @Test
-    public void creatAdminUser() throws ServiceException {
-	// MerchantStore store =
-	// merchantStoreService.getMerchantStore(MerchantStore.DEFAULT_STORE);
-	MerchantStore store = merchantService.getByCode(MerchantStore.DEFAULT_STORE);
-	org.springframework.security.authentication.encoding.ShaPasswordEncoder passwordEncoder = new org.springframework.security.authentication.encoding.ShaPasswordEncoder();
-	String password = passwordEncoder.encodePassword("password", null);
+	@Test
+	public void creatAdminUser() throws ServiceException {
+		// MerchantStore store =
+		// merchantStoreService.getMerchantStore(MerchantStore.DEFAULT_STORE);
+		MerchantStore store = merchantService
+				.getByCode(MerchantStore.DEFAULT_STORE);
+		org.springframework.security.authentication.encoding.ShaPasswordEncoder passwordEncoder = new org.springframework.security.authentication.encoding.ShaPasswordEncoder();
+		String password = passwordEncoder.encodePassword("password", null);
 
-	List<Group> groups = groupService.listGroup(GroupType.ADMIN);
+		List<Group> groups = groupService.listGroup(GroupType.ADMIN);
 
-	// creation of the super admin admin:password)
-	com.salesmanager.core.business.user.model.User user = new com.salesmanager.core.business.user.model.User("admin", password, "admin@shopizer.com");
-	user.setFirstName("Administrator");
-	user.setLastName("User");
+		// creation of the super admin admin:password)
+		com.salesmanager.core.business.user.model.User user = new com.salesmanager.core.business.user.model.User(
+				"admin", password, "admin@shopizer.com");
+		user.setFirstName("Administrator");
+		user.setLastName("User");
 
-	for (Group group : groups) {
-	    if (group.getGroupName().equals("SUPERADMIN") || group.getGroupName().equals("ADMIN")) {
-		user.getGroups().add(group);
-	    }
+		for (Group group : groups) {
+			if (group.getGroupName().equals("SUPERADMIN")
+					|| group.getGroupName().equals("ADMIN")) {
+				user.getGroups().add(group);
+			}
+		}
+
+		user.setMerchantStore(store);
+		userService.create(user);
 	}
-
-	user.setMerchantStore(store);
-	userService.create(user);
-    }
 
 }
