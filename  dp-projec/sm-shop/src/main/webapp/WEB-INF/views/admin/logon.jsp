@@ -325,8 +325,8 @@
 							</h2>
 						</div>
 						<div style="float: right;">
-							<img alt="go to www.shopizer.com"
-								src="<c:url value="/resources/img/shopizer_small.png" />">
+							<%-- <img alt="go to www.shopizer.com"
+								src="<c:url value="/resources/img/shopizer_small.png" />"> --%>
 						</div>
 					</div>
 

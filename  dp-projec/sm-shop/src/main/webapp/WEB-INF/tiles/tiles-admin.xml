@@ -308,5 +308,8 @@
   		<put-attribute name="body" value="/pages/admin/configuration/cacheManagement.jsp" /> 
   	</definition>    	
   	
+  	<definition name="admin-company" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/company.jsp" /> 
+  	</definition>
   	
 </tiles-definitions>

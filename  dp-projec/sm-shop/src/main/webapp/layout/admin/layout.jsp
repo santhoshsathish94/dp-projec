@@ -82,7 +82,7 @@ response.setDateHeader ("Expires", -1);
 									
 									<ul class="dropdown-menu">
 										<li><a href="<c:url value="/admin/users/displayUser.html" />"><s:message code="label.my.profile" text="My profile" /></a></li>
-										<li><a href="javascript:;">TODO //Language</a></li>
+										<!-- <li><a href="javascript:;">TODO //Language</a></li> -->
 										<li class="divider"></li>
 										<li>
 											<c:url value="/admin/j_spring_security_logout" var="logoutUrl"/>
@@ -342,8 +342,32 @@ response.setDateHeader ("Expires", -1);
 			});
 			$("#taxrates-link").click(function() {
   				window.location='<c:url value="/admin/tax/taxrates/list.html" />';
-			});		
-
+			});
+			$("#company-info-link").click(function() {
+				$('#info').show();
+				$('#accounting').hide();
+				$('#currencies').hide();
+				$('#general').hide();
+			});
+			$("#company-accounting-link").click(function() {
+				$('#info').hide();
+				$('#accounting').show();
+				$('#currencies').hide();
+				$('#general').hide();
+			});
+			$("#company-currencies-link").click(function() {
+				$('#info').hide();
+				$('#accounting').hide();
+				$('#currencies').show();
+				$('#general').hide();
+			});
+			$("#company-genral-link").click(function() {
+				$('#info').hide();
+				$('#accounting').hide();
+				$('#currencies').hide();
+				$('#general').show();
+			});
+			
 		}); 
 		
 		
