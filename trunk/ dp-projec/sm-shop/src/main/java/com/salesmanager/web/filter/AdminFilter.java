@@ -57,14 +57,8 @@ public class AdminFilter extends HandlerInterceptorAdapter {
 		
 		User user = (User)request.getSession().getAttribute(Constants.ADMIN_USER);
 		
-		
-
-		
-		
-		
 		String storeCode = MerchantStore.DEFAULT_STORE;
 		MerchantStore store = (MerchantStore)request.getSession().getAttribute(Constants.ADMIN_STORE);
-		
 		
 		String userName = request.getRemoteUser();
 		
@@ -101,7 +95,6 @@ public class AdminFilter extends HandlerInterceptorAdapter {
 		}
 		request.setAttribute(Constants.ADMIN_STORE, store);
 		
-		
 		Language language = (Language) request.getSession().getAttribute("LANGUAGE");
 		
 		if(language==null) {
@@ -118,17 +111,11 @@ public class AdminFilter extends HandlerInterceptorAdapter {
 				language = store.getDefaultLanguage();
 			}
 			
-			
-			
 			request.getSession().setAttribute("LANGUAGE", language);
-			
-
 		}
-		
 
 		request.setAttribute(Constants.LANGUAGE, language);
 		
-
 		if(menus==null) {
 			InputStream in = null;
 			ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
