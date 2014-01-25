@@ -596,14 +596,14 @@ public class InitStoreData implements InitData {
 		    productPriceService.create(dprice6);
 
 		    
-		    //Create a customer (user name[nick] : shopizer password : password)
+		    //Create a customer (user name[nick] : i-Shop password : password)
 
 		    Customer customer = new Customer();
-			customer.setFirstname("Leonardo");
+			customer.setFirstname("dilip");
 			customer.setMerchantStore(store);
-			customer.setLastname("DiCaprio");
+			customer.setLastname("Upadhyay");
 			customer.setCity("Boucherville");
-			customer.setEmailAddress("test@shopizer.com");
+			customer.setEmailAddress("dilip.repo@gmail.com");
 			customer.setGender(CustomerGender.M);						
 			customer.setTelephone("444-555-6666");
 			customer.setAnonymous(false);
@@ -615,7 +615,7 @@ public class InitStoreData implements InitData {
 			customer.setCountry(canada);
 			customer.setZone(zone);
 			customer.setDefaultLanguage(en);
-			customer.setNick("shopizer");
+			customer.setNick("ishop");
 			
 			String password = passwordEncoder.encodePassword("password", null);
 			customer.setPassword(password);

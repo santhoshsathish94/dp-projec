@@ -57,9 +57,9 @@ public class InitializationLoader {
 		try {
 			
 			if (initializationDatabase.isEmpty()) {
-				LOGGER.info(String.format("%s : Shopizer database is empty, populate it....", "sm-shop"));
+				LOGGER.info(String.format("%s : iShop database is empty, populate it....", "i-Shop"));
 		
-				 initializationDatabase.populate("sm-shop");
+				 initializationDatabase.populate("i-shop");
 				
 				
 				
