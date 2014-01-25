@@ -227,7 +227,7 @@
 							</h2>
 						</div>
 						<div style="float: right;">
-							<img alt="go to www.shopizer.com"
+							<img alt="go to www.ishop.in"
 								src="<c:url value="/resources/img/shopizer_small.png" />">
 						</div>
 					</div>
