@@ -13,8 +13,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jdk.version>1.6</jdk.version>
-		
-		
+
+
 		<jackson-version>1.8.1</jackson-version>
 		<axis-version>1.4</axis-version>
 		<jaxws.api.version>2.1</jaxws.api.version>
@@ -23,7 +23,7 @@
 		<jsr250.version>1.0</jsr250.version>
 		<org.elasticsearch-version>0.90.2</org.elasticsearch-version>
 		<jasperreports-version>3.7.4</jasperreports-version>
-		
+
 		<freemarker.version>2.3.19</freemarker.version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<hibernate.ehcache.version>3.5.1-Final</hibernate.ehcache.version>
@@ -42,14 +42,11 @@
 	</properties>
 
 	<dependencies>
-	
-		<!--<dependency>
-    		<groupId>com.shopizer</groupId>
-    		<artifactId>com.shopizer.authorizenet</artifactId>
-    		<version>0.0.1-SNAPSHOT</version>
-		</dependency>-->
-		
-	    <!-- sm-search -->		
+
+		<!--<dependency> <groupId>com.shopizer</groupId> <artifactId>com.shopizer.authorizenet</artifactId> 
+			<version>0.0.1-SNAPSHOT</version> </dependency> -->
+
+		<!-- sm-search -->
 		<dependency>
 			<groupId>com.shopizer</groupId>
 			<artifactId>sm-search</artifactId>
@@ -147,13 +144,8 @@
 		</dependency>
 
 		<!-- Spring -->
-		<!--
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-asm</artifactId>
-			<version>${sm-core.org.springframework-security.version}</version>
-		</dependency>
-		-->
+		<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-asm</artifactId> 
+			<version>${sm-core.org.springframework-security.version}</version> </dependency> -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
@@ -231,7 +223,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${sm-core.mysql-connector-java}</version>
 		</dependency>
-		
+
 		<!-- H2 Connector -->
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -268,29 +260,24 @@
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
-	   </dependency>
-	   
+		</dependency>
+
 		<!-- Apache common -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-		
-		<!--
-		<dependency>
-  			<groupId>org.jboss.cache</groupId>
-  			<artifactId>jbosscache-core</artifactId>
-  			<version>3.2.5.GA</version>
-		</dependency>
-		-->
-		
+
+		<!-- <dependency> <groupId>org.jboss.cache</groupId> <artifactId>jbosscache-core</artifactId> 
+			<version>3.2.5.GA</version> </dependency> -->
+
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -304,7 +291,7 @@
 			<version>3.1</version>
 		</dependency>
 
-		
+
 
 		<!-- JodaTime -->
 		<dependency>
@@ -319,26 +306,26 @@
 		</dependency>
 
 
-        <!-- Infinispan -->
-  		<dependency>
+		<!-- Infinispan -->
+		<dependency>
 			<groupId>org.infinispan</groupId>
-    		<artifactId>infinispan-core</artifactId>
-    		<version>5.1.6.FINAL</version>
-  		</dependency>
+			<artifactId>infinispan-core</artifactId>
+			<version>5.1.6.FINAL</version>
+		</dependency>
 
-  		<!-- TO REMOVE -->
-  		<dependency>
-    		<groupId>org.infinispan</groupId>
-    		<artifactId>infinispan-cachestore-bdbje</artifactId>
-    		<version>5.1.4.FINAL</version>
-  		</dependency>
-
-		<dependency>      
-			<groupId>org.infinispan</groupId>      
-			<artifactId>infinispan-cachestore-jdbc</artifactId>      
+		<!-- TO REMOVE -->
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-cachestore-bdbje</artifactId>
 			<version>5.1.4.FINAL</version>
-		</dependency> 
-		
+		</dependency>
+
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-cachestore-jdbc</artifactId>
+			<version>5.1.4.FINAL</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-tree</artifactId>
@@ -350,26 +337,26 @@
 			<artifactId>freemarker</artifactId>
 			<version>${freemarker.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4.5</version>
 		</dependency>
-		
+
 
 		<dependency>
 			<groupId>org.jopendocument</groupId>
 			<artifactId>jOpenDocument</artifactId>
 			<version>1.3b1</version>
 		</dependency>
-		
-	    <dependency>
+
+		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
 			<version>4.2.1</version>
 		</dependency>
-		
+
 
 		<!-- Test dependencies -->
 		<dependency>
@@ -388,52 +375,46 @@
 		<!-- <dependency> <groupId>com.oracle</groupId> <artifactId>ojdbc5</artifactId> 
 			<version>11.1.0.7.0</version> <scope>provided</scope> </dependency> -->
 	</dependencies>
-	
-	<repositories>	
+
+	<repositories>
 		<!-- For testing against latest Spring snapshots -->
 		<repository>
 			<id>org.springframework.maven.snapshot</id>
 			<name>Spring Maven Snapshot Repository</name>
 			<url>http://maven.springframework.org/snapshot</url>
-			<releases><enabled>false</enabled></releases>
-			<snapshots><enabled>true</enabled></snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 		<!-- For developing against latest Spring milestones -->
 		<repository>
 			<id>org.springframework.maven.milestone</id>
 			<name>Spring Maven Milestone Repository</name>
 			<url>http://maven.springframework.org/milestone</url>
-			<snapshots><enabled>false</enabled></snapshots>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>org.jboss.repository.releases</id>
-			<name>JBoss Maven Release Repository</name>			
+			<name>JBoss Maven Release Repository</name>
 			<url>https://repository.jboss.org/nexus/content/repositories/releases</url>
-			<snapshots><enabled>false</enabled></snapshots>			
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 
 	<build>
-		<!-- 
-			Annotation processor to be generated in target/generated-sources
-			The build will generate the required annotated classes in generated-sources
-			Then will jump to the regular build in pluginManagement
-			
-			mvn clean
-			mvn install
-			
-			** if the install phase complains on missing Qxyz classes then
-			
-			mvn clean
-			mvn generate-sources
-			mvn install
-			
-			*** Want to have the schema generated
-			
-			** hbm2ddl not working 
-			mvn hibernate3:hbm2ddl
-			 
-		-->
+		<!-- Annotation processor to be generated in target/generated-sources The 
+			build will generate the required annotated classes in generated-sources Then 
+			will jump to the regular build in pluginManagement mvn clean mvn install 
+			** if the install phase complains on missing Qxyz classes then mvn clean 
+			mvn generate-sources mvn install *** Want to have the schema generated ** 
+			hbm2ddl not working mvn hibernate3:hbm2ddl -->
 		<plugins>
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
@@ -480,8 +461,8 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.12</version>
 					<configuration>
-          				<skipTests>true</skipTests>
-        			</configuration>
+						<skipTests>true</skipTests>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -573,6 +554,13 @@
 							<artifactId>querydsl-apt</artifactId>
 							<version>${sm-core.querydsl.version}</version>
 						</dependency>
+
+						<dependency>
+							<groupId>org.springframework.security</groupId>
+							<artifactId>spring-security-core</artifactId>
+							<version>3.1.4.RELEASE</version>
+							<scope>compile</scope>
+						</dependency>
 					</dependencies>
 				</plugin>
 				<!-- hbm2ddl Hibernate entities to schema -->
@@ -597,7 +585,7 @@
 						</components>
 						<componentProperties>
 							<persistenceunit>sm-unit</persistenceunit>
-							<!--<propertyfile>src/test/resources/hbm2ddl.properties</propertyfile>-->
+							<!--<propertyfile>src/test/resources/hbm2ddl.properties</propertyfile> -->
 							<outputfilename>schema.ddl</outputfilename>
 							<drop>false</drop>
 							<create>true</create>
