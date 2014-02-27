@@ -342,7 +342,25 @@ response.setDateHeader ("Expires", -1);
 			});
 			$("#taxrates-link").click(function() {
   				window.location='<c:url value="/admin/tax/taxrates/list.html" />';
-			});		
+			});
+			
+			$("#company-info-link").click(function() {
+				window.location='<c:url value="/admin/company.html" />';
+			});
+			$("#company-accounting-period-list-link").click(function() {
+				window.location='<c:url value="/admin/company/acountingPeriods.html" />';
+			});
+			$("#company-accounting-period-create-link").click(function() {
+				window.location='<c:url value="/admin/company/createAccountingPeriod.html" />';
+			});
+			$("#company-currencies-link").click(function() {
+				$('#currencies').show();
+				$('#general').hide();
+			});
+			$("#company-genral-link").click(function() {
+				$('#currencies').hide();
+				$('#general').show();
+			});
 
 		}); 
 		
