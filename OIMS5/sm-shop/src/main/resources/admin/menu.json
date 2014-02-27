@@ -9,6 +9,30 @@
 }},
 {
 "menu":{
+"code":"company", 
+"icon":"icon-home",
+"url":"/admin/company.html", 
+"role":"SUPERADMIN",
+"order":1,
+"menus":[
+	{"menu":{"code":"company-info","url":"/admin/company.html","role":"SUPERADMIN","order":1}},
+	{"menu":{
+		"code":"company-accounting","url":"","role":"SUPERADMIN","order":2,"menus":
+		[
+			{"menu":{
+				"code":"company-accounting-period-list","url":"/admin/company/acountingPeriods.html","role":"SUPERADMIN","order":0
+			}},
+			{"menu":{
+				"code":"company-accounting-period-create","url":"/admin/company/createAccountingPeriod.html","role":"SUPERADMIN","order":1
+			}}
+		]
+	}},
+	{"menu":{"code":"company-currencies","url":"#currencies","role":"SUPERADMIN","order":3}},
+	{"menu":{"code":"company-genral","url":"#general","role":"SUPERADMIN","order":4}}
+]
+}},
+{
+"menu":{
 "code":"store", 
 "icon":"icon-file",
 "url":"/admin/store/store.html", 

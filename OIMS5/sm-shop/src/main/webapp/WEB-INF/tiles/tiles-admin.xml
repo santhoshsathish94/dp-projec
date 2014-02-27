@@ -308,5 +308,16 @@
   		<put-attribute name="body" value="/pages/admin/configuration/cacheManagement.jsp" /> 
   	</definition>    	
   	
+  	<definition name="admin-company" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/company/company.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-company-accounting-period-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/company/accountingPeriods.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-company-accounting-period" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/company/accountingPeriod.jsp" /> 
+  	</definition>
   	
 </tiles-definitions>
