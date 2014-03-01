@@ -46,33 +46,33 @@ public class CompanyServiceImpl extends SalesManagerEntityServiceImpl<Integer, C
 	}
 
 	@Override
-	public AccountingPeriod getByAccountingPeriodId(Long id)
-			throws ServiceException {
-		// TODO Auto-generated method stub
-		return null;
+	public AccountingPeriod getByAccountingPeriodId(Long id) throws ServiceException {
+		
+		int accountingPeriodId = Integer.parseInt(id.toString());
+		
+		return companyDao.getByAccountingPeriodId(accountingPeriodId);
 	}
 
 	@Override
-	public List<AccountingPeriod> listAccountingPeriod()
-			throws ServiceException {
+	public List<AccountingPeriod> listAccountingPeriod() throws ServiceException {
 		return companyDao.listAccountingPeriod();
 	}
 
 	@Override
-	public List<AccountingPeriod> listAccountingPeriodByCompany(Company company)
-			throws ServiceException {
+	public List<AccountingPeriod> listAccountingPeriodByCompany(Company company) throws ServiceException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void saveOrUpdate(Company company, AccountingPeriod accountingPeriod)
-			throws ServiceException {
+	public void saveOrUpdate(Company company, AccountingPeriod accountingPeriod) throws ServiceException {
 		
 		if(accountingPeriod.getId() == null) {
 			company.getAccountingPeriod().add(accountingPeriod);
 			accountingPeriod.setCompany(company);
 		} else {
+			
+			
 			
 		}
 		

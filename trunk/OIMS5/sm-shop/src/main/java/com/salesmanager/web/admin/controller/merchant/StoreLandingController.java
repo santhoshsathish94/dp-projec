@@ -120,14 +120,11 @@ public class StoreLandingController {
 			content.setMerchantStore(store);
 		}
 		
-
 		//List<Language> languages = store.getLanguages();
 			
 		Map<String,Language> langs = languageService.getLanguagesMap();
 		
-		
-		
-/*		for(Language l : languages) {
+		/*for(Language l : languages) {
 			
 			StoreLandingDescription landingDescription = null;
 			for(ContentDescription desc : content.getDescriptions()) {
@@ -140,23 +137,13 @@ public class StoreLandingController {
 						landingDescription.setLanguage(desc.getLanguage());
 					}
 			}
-		
-			
 			if(landingDescription==null) {
 				landingDescription = new StoreLandingDescription();
 				landingDescription.setLanguage(l);
 			}
-			
-
-			
 			descriptions.add(landingDescription);
 		}
-		
 		landing.setDescriptions(descriptions);*/
-		
-		
-		
-			
 
 		List<StoreLandingDescription> descriptions = storeLanding.getDescriptions();
 		List<ContentDescription> contentDescriptions = new ArrayList<ContentDescription>();
@@ -178,16 +165,12 @@ public class StoreLandingController {
 								desc.setName(description.getTitle());
 								desc.setDescription(description.getHomePageContent());
 								desc.setMetatagKeywords(description.getKeywords());
-								
-								
 							}
 
 						}
 					}
 					
 					if(contentDescription==null) {
-						
-						
 						contentDescription = new ContentDescription();
 						contentDescription.setContent(content);
 						contentDescription.setLanguage(l);
@@ -195,17 +178,10 @@ public class StoreLandingController {
 						contentDescription.setName(description.getTitle());
 						contentDescription.setDescription(description.getHomePageContent());
 						contentDescription.setMetatagKeywords(description.getKeywords());
-
 					}
-					
 					contentDescriptions.add(contentDescription);
-
-
-
 				}
-				
 				content.setDescriptions(contentDescriptions);
-				
 			}
 
 

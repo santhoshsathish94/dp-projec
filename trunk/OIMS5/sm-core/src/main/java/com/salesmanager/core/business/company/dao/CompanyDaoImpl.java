@@ -60,7 +60,7 @@ public class CompanyDaoImpl  extends SalesManagerEntityDaoImpl<Integer, Company>
 	public AccountingPeriod getByAccountingPeriodId(int id) {
 		QAccountingPeriod qAccountingPeriod = QAccountingPeriod.accountingPeriod;
 		JPQLQuery query = new JPAQuery (getEntityManager());
-		query.from(qAccountingPeriod).fetchAll();
+		query.from(qAccountingPeriod).where(qAccountingPeriod.id.eq(id));
 		
 		return query.uniqueResult(qAccountingPeriod);
 	}
