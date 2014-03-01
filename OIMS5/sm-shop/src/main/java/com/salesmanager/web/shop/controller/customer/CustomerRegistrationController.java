@@ -137,27 +137,27 @@ public class CustomerRegistrationController extends AbstractController {
         MerchantStore merchantStore = (MerchantStore) request.getAttribute( Constants.MERCHANT_STORE );
         Language language = (Language)request.getAttribute(Constants.LANGUAGE);
         
-        ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-        reCaptcha.setPublicKey( coreConfiguration.getProperty( RECAPATCHA_PUBLIC_KEY ) );
-        reCaptcha.setPrivateKey( coreConfiguration.getProperty( RECAPATCHA_PRIVATE_KEY ) );
-        
-
-        model.addAttribute( "recapatcha_public_key", coreConfiguration.getProperty( RECAPATCHA_PUBLIC_KEY ) );
-        
-        if ( StringUtils.isNotBlank( customer.getRecaptcha_challenge_field() )
-            && StringUtils.isNotBlank( customer.getRecaptcha_response_field() ) )
-        {
-            ReCaptchaResponse reCaptchaResponse =
-                reCaptcha.checkAnswer( request.getRemoteAddr(), customer.getRecaptcha_challenge_field(),
-                                       customer.getRecaptcha_response_field() );
-            if ( !reCaptchaResponse.isValid() )
-            {
-                LOGGER.info( "Captcha response does not matched" );
-    			FieldError error = new FieldError("recaptcha_challenge_field","recaptcha_challenge_field",messages.getMessage("validaion.recaptcha.not.matched", locale));
-    			bindingResult.addError(error);
-            }
-
-        }
+//        ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
+//        reCaptcha.setPublicKey( coreConfiguration.getProperty( RECAPATCHA_PUBLIC_KEY ) );
+//        reCaptcha.setPrivateKey( coreConfiguration.getProperty( RECAPATCHA_PRIVATE_KEY ) );
+//        
+//
+//        model.addAttribute( "recapatcha_public_key", coreConfiguration.getProperty( RECAPATCHA_PUBLIC_KEY ) );
+//        
+//        if ( StringUtils.isNotBlank( customer.getRecaptcha_challenge_field() )
+//            && StringUtils.isNotBlank( customer.getRecaptcha_response_field() ) )
+//        {
+//            ReCaptchaResponse reCaptchaResponse =
+//                reCaptcha.checkAnswer( request.getRemoteAddr(), customer.getRecaptcha_challenge_field(),
+//                                       customer.getRecaptcha_response_field() );
+//            if ( !reCaptchaResponse.isValid() )
+//            {
+//                LOGGER.info( "Captcha response does not matched" );
+//    			FieldError error = new FieldError("recaptcha_challenge_field","recaptcha_challenge_field",messages.getMessage("validaion.recaptcha.not.matched", locale));
+//    			bindingResult.addError(error);
+//            }
+//
+//        }
         
         if ( StringUtils.isNotBlank( customer.getUserName() ) )
         {
