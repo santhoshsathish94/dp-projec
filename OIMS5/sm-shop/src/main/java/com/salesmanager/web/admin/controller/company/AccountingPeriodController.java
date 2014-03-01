@@ -1,5 +1,6 @@
 package com.salesmanager.web.admin.controller.company;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -142,28 +143,38 @@ public class AccountingPeriodController {
 	 * @throws Exception
 	 */
 	@Secured("SUPERADMIN")
-	@RequestMapping(value="/admin/company/displayAccountingPeriod.html", method=RequestMethod.GET)
+	@RequestMapping(value="/admin/company/editAccountingPeriod.html", method=RequestMethod.GET)
 	public String displayAccountingPeriodEdit(@ModelAttribute("id") Long id, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
-		return displayUser(id, model, request, response, locale);
+		return displayUser(id, model, request, response);
 	}
 
-	private String displayUser(Long dbAccountingPeriodId, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	private String displayUser(Long dbAccountingPeriodId, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//display menu
 		setMenu(model,request);
 		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+		
+		String returnType = "admin-company-accounting-period";
 		
 		if(dbAccountingPeriodId != null && dbAccountingPeriodId != 0) {
 			AccountingPeriod dbAccountingPeriod = companyService.getByAccountingPeriodId(dbAccountingPeriodId);
 			
 			if(dbAccountingPeriod == null) {
-				return "admin-company-accounting-period-list";
+				returnType = "admin-company-accounting-period-list";
 			}
-		} else {
 			
+			dbAccountingPeriod.setFromSDate(dateFormat.format(dbAccountingPeriod.getFromDate()));
+			
+			dbAccountingPeriod.setToSDate(dateFormat.format(dbAccountingPeriod.getToDate()));
+			
+			model.addAttribute("accountingPeriod", dbAccountingPeriod);
+			
+		} else {
+			returnType = "admin-company-accounting-period";
 		}
-		
-		return null;
+
+		return returnType;
 	}
 	
 	private void setMenu(Model model, HttpServletRequest request) throws Exception {
@@ -186,11 +197,7 @@ public class AccountingPeriodController {
 	@RequestMapping(value="/admin/company/createAccountingPeriod.html", method=RequestMethod.GET)
 	public String displayAccountingPeriodCreate(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		//display menu
-		setMenu(model,request);
-		
-		return "admin-company-accounting-period";
-
+		return displayUser(Long.getLong("0"), model, request, response);
 	}
 	
 	@Secured("SUPERADMIN")
@@ -220,7 +227,7 @@ public class AccountingPeriodController {
 		if(!StringUtils.isBlank(accountingPeriod.getFromSDate())) {
 			try {
 				date = DateUtil.getDate(accountingPeriod.getFromSDate());
-				accountingPeriod.setFromDate(date);
+				accPeriod.setFromDate(date);
 			} catch (Exception e) {
 				ObjectError error = new ObjectError("fromDate",messages.getMessage("message.invalid.date", locale));
 				result.addError(error);
@@ -231,16 +238,19 @@ public class AccountingPeriodController {
 		if(!StringUtils.isBlank(accountingPeriod.getToSDate())) {
 			try {
 				date = DateUtil.getDate(accountingPeriod.getToSDate());
-				accountingPeriod.setToDate(date);
+				accPeriod.setToDate(date);
 			} catch (Exception e) {
 				ObjectError error = new ObjectError("toDate",messages.getMessage("message.invalid.date", locale));
 				result.addError(error);
 			}
 		}
 		
+		accPeriod.setStatus(accountingPeriod.isStatus());
 
+		accPeriod.setSetAsDefault(accountingPeriod.isSetAsDefault());
+		
 		if(ispresent) {
-			accountingPeriod.setUpdated(new Date());
+			accPeriod.setUpdated(new Date());
 		}
 		
 		companyService.saveOrUpdate(sessionCompany, accPeriod);

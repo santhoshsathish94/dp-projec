@@ -15,7 +15,7 @@
 				<!-- Listing grid include -->
 				<c:set value="/admin/acountingPeriods/paging.html" var="pagingUrl" scope="request"/>
 				<c:set value="/admin/acountingPeriods/removeAccountingPeriod.html" var="removeUrl" scope="request"/>
-				<c:set value="/admin/acountingPeriods/editAccountingPeriod.html" var="editUrl" scope="request"/>
+				<c:set value="/admin/company/editAccountingPeriod.html" var="editUrl" scope="request"/>
 				<c:set value="/admin/company/acountingPeriods.html" var="afterRemoveUrl" scope="request"/>
 				<c:set var="entityId" value="accountingPeriodId" scope="request"/>
 				<c:set var="componentTitleKey" value="label.accounting.periods.title" scope="request"/>

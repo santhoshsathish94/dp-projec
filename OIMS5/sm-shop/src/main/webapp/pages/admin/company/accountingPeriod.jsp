@@ -65,7 +65,7 @@
 						</div>
 						
 						<div style="float: left; width: 200px;" class="controls">
-							<input type="checkbox" name="setAsDefault" id="setAsDefault" value="${accountingPeriod.setAsDefault}" <c:if test="${accountingPeriod.isDefault == true}"> checked="checked" </c:if> onclick="changeCheckBoxValue('isDefault');">
+							<input type="checkbox" name="setAsDefault" id="setAsDefault" value="${accountingPeriod.setAsDefault}" <c:if test="${accountingPeriod.setAsDefault == true}"> checked="checked" </c:if> onclick="changeCheckBoxValue('setAsDefault');">
 						</div>
 					</div>
 				</div>

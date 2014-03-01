@@ -143,7 +143,7 @@ public class Company extends SalesManagerEntity<Integer, Company> {
 	private Currency companyCurrency;
 	
 	@Valid
-	@OneToMany(mappedBy="company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy="company", cascade = CascadeType.ALL)
 	private List<AccountingPeriod> accountingPeriod = new ArrayList<AccountingPeriod>();
 	
 	/*@ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)
