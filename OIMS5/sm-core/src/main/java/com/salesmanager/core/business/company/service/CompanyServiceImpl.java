@@ -72,7 +72,11 @@ public class CompanyServiceImpl extends SalesManagerEntityServiceImpl<Integer, C
 			accountingPeriod.setCompany(company);
 		} else {
 			
-			
+			for(AccountingPeriod ap: company.getAccountingPeriod()) {
+				if(ap.getId() == accountingPeriod.getId()) {
+					ap = accountingPeriod;
+				}
+			}
 			
 		}
 		

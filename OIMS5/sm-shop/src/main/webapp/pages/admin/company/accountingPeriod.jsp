@@ -10,7 +10,17 @@
 <div class="tabbable">
 	<jsp:include page="/common/adminTabs.jsp" />
 	
-	<h3><s:message code="label.company.accountingPeriod.title" text="Create Accounting Period" /></h3>	
+	<h3>
+		<c:choose>
+			<c:when test="${accountingPeriod.id == 0}">
+				<s:message code="label.company.accountingPeriod.title" text="Create Accounting Period" />
+			</c:when>
+			<c:otherwise>
+				<s:message code="label.company.accountingPeriod.title_Update" text="Update Accounting Period" />
+			</c:otherwise>
+		</c:choose>
+	
+	</h3>	
 	<br/>
 	
 	<c:url var="saveAccPeriod" value="/admin/company/saveAccountingPeriod.html"/>
