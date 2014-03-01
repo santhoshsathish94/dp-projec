@@ -251,6 +251,8 @@ public class AccountingPeriodController {
 		
 		if(ispresent) {
 			accPeriod.setUpdated(new Date());
+			
+			sessionCompany = accPeriod.getCompany();
 		}
 		
 		companyService.saveOrUpdate(sessionCompany, accPeriod);
@@ -258,6 +260,9 @@ public class AccountingPeriodController {
 		model.addAttribute("success","success");
 		model.addAttribute("accountingPeriod", accPeriod);
 		
+		if(ispresent) {
+			return "admin-company-accounting-period-list";
+		}
 		return "admin-company-accounting-period";
 	}
 }
