@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.salesmanager.core.business.company.model.AccountingPeriod;
 import com.salesmanager.core.business.company.model.Company;
+import com.salesmanager.core.business.company.model.CompanyCurrencies;
 import com.salesmanager.core.business.generic.dao.SalesManagerEntityDao;
 import com.salesmanager.core.business.generic.exception.ServiceException;
 
@@ -21,4 +22,11 @@ public interface CompanyDao  extends SalesManagerEntityDao<Integer, Company> {
 	List<AccountingPeriod> listAccountingPeriodByCompany(Company company);
 
 	void saveOrUpdateAccountingPeriod(AccountingPeriod accountingPeriod);
+	
+	
+	CompanyCurrencies getByCompanyCurrenciesId(int id);
+	
+	List<CompanyCurrencies> listCompanyCurrencies();
+	
+	void saveOrUpdate(CompanyCurrencies companyCurrencies);
 }

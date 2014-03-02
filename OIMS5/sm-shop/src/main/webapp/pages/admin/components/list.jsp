@@ -34,7 +34,7 @@
 											} else {
 
 												var msg = isc.XMLTools.selectObjects(jsonData, "/response/statusMessage");
-												alert("! " + msg);
+												//alert("! " + msg);
 											}
 										}
 									}

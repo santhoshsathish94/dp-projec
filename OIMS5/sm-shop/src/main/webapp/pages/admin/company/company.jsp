@@ -109,19 +109,6 @@ function callBackCheckCode(msg,code) {
 	if(code==0) {
 		$('.btn').removeClass('disabled');
 	}
-	/* if(code==9999) {
-
-		$('#checkCodeStatus').html('<font color="green"><s:message code="message.code.available" text="This code is available"/></font>');
-		$('#checkCodeStatus').show();
-		$('.btn').removeClass('disabled');
-	}
-	if(code==9998) {
-
-		$('#checkCodeStatus').html('<font color="red"><s:message code="message.code.exist" text="This code already exist"/></font>');
-		$('#checkCodeStatus').show();
-		$('.btn').addClass('disabled');
-	} */
-	
 }
 
 
@@ -339,15 +326,6 @@ function callBackCheckCode(msg,code) {
 				</div>
 			</div>
 		</div>
-		<!-- <div id="accounting" style="display: none;">
-			Needs to add code here
-		</div>
-		<div id="currencies" style="display: none;">
-			Needs to add code here
-		</div>
-		<div id="general" style="display: none;">
-			Needs to add code here
-		</div> -->
 		
 		<form:hidden path="id" />
 		<form:hidden path="code"/>

@@ -7,7 +7,6 @@
 
 
 
-{title:"<s:message code="label.entity.id" text="Id"/>", name:"accountingPeriodId", canFilter:false},
 {title:"<s:message code="label.entity.accountingPeriod" text="Accounting Period"/>", name:"accPeriod", canFilter:false},	
 {title:"<s:message code="label.generic.status" text="Status"/>", name:"status", canFilter:false},
 {title:"<s:message code="label.entity.default" text="Default"/>", name:"default", canFilter:false},

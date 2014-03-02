@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.salesmanager.core.business.company.dao.CompanyDao;
 import com.salesmanager.core.business.company.model.AccountingPeriod;
 import com.salesmanager.core.business.company.model.Company;
+import com.salesmanager.core.business.company.model.CompanyCurrencies;
 import com.salesmanager.core.business.generic.exception.ServiceException;
 import com.salesmanager.core.business.generic.service.SalesManagerEntityServiceImpl;
 
@@ -65,22 +66,30 @@ public class CompanyServiceImpl extends SalesManagerEntityServiceImpl<Integer, C
 	}
 
 	@Override
-	public void saveOrUpdate(Company company, AccountingPeriod accountingPeriod) throws ServiceException {
-		
-		if(accountingPeriod.getId() == null) {
-			company.getAccountingPeriod().add(accountingPeriod);
-			accountingPeriod.setCompany(company);
-		} else {
-			
-			for(AccountingPeriod ap: company.getAccountingPeriod()) {
-				if(ap.getId() == accountingPeriod.getId()) {
-					ap = accountingPeriod;
-				}
-			}
-			
-		}
-		
-		super.update(company);
+	public void saveOrUpdate(AccountingPeriod accountingPeriod) throws ServiceException {
+		companyDao.saveOrUpdateAccountingPeriod(accountingPeriod);
+	}
+
+	@Override
+	public CompanyCurrencies getByCurrencyId(Long id) throws ServiceException {
+		int currencyId = Integer.parseInt(id.toString());
+		return companyDao.getByCompanyCurrenciesId(currencyId);
+	}
+
+	@Override
+	public List<CompanyCurrencies> listCompanyCurrencies() throws ServiceException {
+		return companyDao.listCompanyCurrencies();
+	}
+
+	@Override
+	public List<CompanyCurrencies> listCompanyCurrenciesByCompany(Company company) throws ServiceException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveOrUpdate(CompanyCurrencies companyCurrencies) throws ServiceException {
+		companyDao.saveOrUpdate(companyCurrencies);
 	}
 
 }
