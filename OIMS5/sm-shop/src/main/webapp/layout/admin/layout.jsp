@@ -360,7 +360,7 @@ response.setDateHeader ("Expires", -1);
 				window.location='<c:url value="/admin/company/createCurrencies.html" />';
 			});
 			$("#company-general-link").click(function() {
-				window.location='<c:url value="/admin/generalInfo.html" />';
+				window.location='<c:url value="/admin/company/generalInfo.html" />';
 			});
 
 		}); 

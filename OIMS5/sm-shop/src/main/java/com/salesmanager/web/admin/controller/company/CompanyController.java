@@ -79,7 +79,7 @@ public class CompanyController {
 	@RequestMapping(value="/admin/company.html", method=RequestMethod.GET)
 	public String displayCompany(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		
-		setMenu(model,request);
+		setMenu(model,request, "company-info");
 		Company sessionCompany = (Company)request.getAttribute(Constants.ADMIN_COMPANY);
 		
 		Company company = null;
@@ -97,19 +97,17 @@ public class CompanyController {
 			company.setCompanyCurrency(currencyService.getByCode("INR"));
 			company.setCompanyZone(zoneService.getByCode("MAH"));
 			company.setCode("SUPERADMIN");
-			/*company.setLanguages(languageService.getLanguages());
-			company.setDefaultCompanyLanguage(userService.getByUserName(request.getRemoteUser()).getDefaultLanguage());*/
 		}
 		
 		return displayCompanyDetails(company, model, request, response, locale);
 	}
 	
-	private void setMenu(Model model, HttpServletRequest request) throws Exception {
+	private void setMenu(Model model, HttpServletRequest request, String activeMenue) throws Exception {
 		
 		//display menu
 		Map<String,String> activeMenus = new HashMap<String,String>();
 		activeMenus.put("company", "company");
-		activeMenus.put("company-info", "company-info");
+		activeMenus.put(activeMenue, activeMenue);
 
 		
 		@SuppressWarnings("unchecked")
@@ -123,7 +121,7 @@ public class CompanyController {
 	
 	private String displayCompanyDetails(Company company, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		
-		setMenu(model,request);
+		setMenu(model,request, "company-info");
 		Language language = (Language)request.getAttribute("LANGUAGE");
 		List<Language> languages = languageService.getLanguages();
 		List<Currency> currencies = currencyService.list();
@@ -151,7 +149,7 @@ public class CompanyController {
 	@RequestMapping(value="/admin/company/save.html", method=RequestMethod.POST)
 	public String saveCompanyDetails(@Valid @ModelAttribute("company") Company company, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		
-		setMenu(model,request);
+		setMenu(model,request, "company-info");
 		Company sessionCompany = (Company)request.getSession().getAttribute(Constants.ADMIN_COMPANY);
 
 		if(company.getId()!=null) {
@@ -230,4 +228,57 @@ public class CompanyController {
 		
 		return "admin-company";
 	}
+	
+	@Secured("SUPERADMIN")
+	@RequestMapping(value="/admin/company/generalInfo.html", method=RequestMethod.GET)
+	public String displayGeneral(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		setMenu(model,request, "company-general");
+		Company sessionCompany = (Company)request.getAttribute(Constants.ADMIN_COMPANY);
+		
+		if(sessionCompany == null) {
+			sessionCompany = companyService.getByCode(Company.DEFAULT_ADMIN);
+			request.getSession().setAttribute(Constants.ADMIN_COMPANY, sessionCompany);
+		}
+		
+		model.addAttribute("company", sessionCompany);
+		
+		return "admin-company-general";
+	}
+	
+	@Secured("SUPERADMIN")
+	@RequestMapping(value="/admin/company/saveGeneralInfo.html", method=RequestMethod.POST)
+	public String saveGeneralInfo(@Valid @ModelAttribute("company") Company company, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		setMenu(model,request, "company-general");
+		
+		Company sessionCompany = (Company)request.getAttribute(Constants.ADMIN_COMPANY);
+		if(sessionCompany == null) {
+			sessionCompany = companyService.getByCode(Company.DEFAULT_ADMIN);
+		}
+		
+		if(company.getId()!=null) {
+			if(company.getId().intValue() != sessionCompany.getId().intValue()) {
+				return "redirect:/admin/company/generalInfo.html";
+			}
+			
+			sessionCompany = companyService.getById(company.getId());
+		}
+		
+		sessionCompany.setNegativeStock(company.isNegativeStock());
+		sessionCompany.setReportHeader(company.isReportHeader());
+		sessionCompany.setCreateBranch(company.isCreateBranch());
+		sessionCompany.setEmailOnMasterUpdate(company.isEmailOnMasterUpdate());
+		
+		
+		companyService.saveOrUpdate(sessionCompany);
+		
+		request.getSession().setAttribute(Constants.ADMIN_COMPANY, sessionCompany);
+		
+		model.addAttribute("success","success");
+		model.addAttribute("company", sessionCompany);
+		
+		return "admin-company-general";
+	}
+	
 }
