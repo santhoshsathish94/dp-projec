@@ -353,13 +353,14 @@ response.setDateHeader ("Expires", -1);
 			$("#company-accounting-period-create-link").click(function() {
 				window.location='<c:url value="/admin/company/createAccountingPeriod.html" />';
 			});
-			$("#company-currencies-link").click(function() {
-				$('#currencies').show();
-				$('#general').hide();
+			$("#company-currencies-list-link").click(function() {
+				window.location='<c:url value="/admin/company/currencies.html" />';
 			});
-			$("#company-genral-link").click(function() {
-				$('#currencies').hide();
-				$('#general').show();
+			$("#company-currencies-create-link").click(function() {
+				window.location='<c:url value="/admin/company/createCurrencies.html" />';
+			});
+			$("#company-general-link").click(function() {
+				window.location='<c:url value="/admin/generalInfo.html" />';
 			});
 
 		}); 

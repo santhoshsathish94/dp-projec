@@ -320,4 +320,12 @@
   		<put-attribute name="body" value="/pages/admin/company/accountingPeriod.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-company-currency-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/company/currencies.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-company-currency" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/company/currency.jsp" /> 
+  	</definition>
+  	
 </tiles-definitions>

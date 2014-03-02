@@ -29,17 +29,17 @@
 	}},
 		
 	{"menu":{
-  "code":"company-currencies","url":"","role":"SUPERADMIN","order":2,"menus":
-  [
-   {"menu":{
-    "code":"company-company-currencies-list","url":"/admin/company/currencies.html","role":"SUPERADMIN","order":0
-   }},
-   {"menu":{
-    "code":"company-company-currencies-create","url":"/admin/company/createCurrencies.html","role":"SUPERADMIN","order":1
-   }}
-  ]
- }},
-	{"menu":{"code":"company-genral","url":"#general","role":"SUPERADMIN","order":4}}
+	  "code":"company-currencies","url":"","role":"SUPERADMIN","order":2,"menus":
+	  [
+	   {"menu":{
+	    "code":"company-currencies-list","url":"/admin/company/currencies.html","role":"SUPERADMIN","order":0
+	   }},
+	   {"menu":{
+	    "code":"company-currencies-create","url":"/admin/company/createCurrencies.html","role":"SUPERADMIN","order":1
+	   }}
+	  ]
+	 }},
+	{"menu":{"code":"company-general","url":"/admin/generalInfo.html","role":"SUPERADMIN","order":4}}
 ]
 }},
 {

@@ -146,6 +146,10 @@ public class Company extends SalesManagerEntity<Integer, Company> {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="company", cascade = CascadeType.ALL)
 	private List<AccountingPeriod> accountingPeriod = new ArrayList<AccountingPeriod>();
 	
+	@Valid
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="company", cascade = CascadeType.ALL)
+	private List<CompanyCurrencies> curriencies = new ArrayList<CompanyCurrencies>();
+	
 	/*@ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)
 	@JoinColumn(name = "COMPANY_LANGUAGE_ID", nullable=true)
 	private Language defaultCompanyLanguage;
@@ -584,6 +588,20 @@ public class Company extends SalesManagerEntity<Integer, Company> {
 	 */
 	public void setAccountingPeriod(List<AccountingPeriod> accountingPeriod) {
 		this.accountingPeriod = accountingPeriod;
+	}
+
+	/**
+	 * @return the curriencies
+	 */
+	public List<CompanyCurrencies> getCurriencies() {
+		return curriencies;
+	}
+
+	/**
+	 * @param curriencies the curriencies to set
+	 */
+	public void setCurriencies(List<CompanyCurrencies> curriencies) {
+		this.curriencies = curriencies;
 	}
 	
 }

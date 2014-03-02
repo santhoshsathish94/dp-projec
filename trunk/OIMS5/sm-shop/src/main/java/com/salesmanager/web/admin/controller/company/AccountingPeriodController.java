@@ -29,10 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.salesmanager.core.business.company.model.AccountingPeriod;
 import com.salesmanager.core.business.company.model.Company;
 import com.salesmanager.core.business.company.service.CompanyService;
-import com.salesmanager.core.business.reference.country.model.Country;
-import com.salesmanager.core.business.reference.currency.model.Currency;
-import com.salesmanager.core.business.reference.language.model.Language;
-import com.salesmanager.core.business.reference.zone.model.Zone;
 import com.salesmanager.core.business.user.model.User;
 import com.salesmanager.core.business.user.service.UserService;
 import com.salesmanager.core.utils.ajax.AjaxResponse;
@@ -214,7 +210,7 @@ public class AccountingPeriodController {
 			if(accPeriod == null) {
 				return "redirect:/admin/company/acountingPeriods.html";
 			}
-			ispresent = true;
+			accPeriod.setUpdated(new Date());
 		} else {
 			sessionCompany = (Company)request.getAttribute(Constants.ADMIN_COMPANY);
 			if(sessionCompany == null) {
@@ -246,23 +242,15 @@ public class AccountingPeriodController {
 		}
 		
 		accPeriod.setStatus(accountingPeriod.isStatus());
-
 		accPeriod.setSetAsDefault(accountingPeriod.isSetAsDefault());
+		accPeriod.setFromSDate(accountingPeriod.getFromSDate());
+		accPeriod.setToSDate(accountingPeriod.getToSDate());
 		
-		if(ispresent) {
-			accPeriod.setUpdated(new Date());
-			
-			sessionCompany = accPeriod.getCompany();
-		}
-		
-		companyService.saveOrUpdate(sessionCompany, accPeriod);
+		companyService.saveOrUpdate(accPeriod);
 		
 		model.addAttribute("success","success");
 		model.addAttribute("accountingPeriod", accPeriod);
 		
-		if(ispresent) {
-			return "admin-company-accounting-period-list";
-		}
 		return "admin-company-accounting-period";
 	}
 }
