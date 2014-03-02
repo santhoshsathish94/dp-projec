@@ -4161,3 +4161,6 @@
 .sm .invisible {
   visibility: hidden;
 }
+.sm .icon-company {
+  background-position: -72px -24px;
+}

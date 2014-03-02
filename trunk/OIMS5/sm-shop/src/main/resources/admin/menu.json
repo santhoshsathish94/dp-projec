@@ -10,7 +10,7 @@
 {
 "menu":{
 "code":"company", 
-"icon":"icon-home",
+"icon":"icon-company",
 "url":"/admin/company.html", 
 "role":"SUPERADMIN",
 "order":1,

@@ -5,20 +5,16 @@
 
 <%@ page session="false" %>
 
-
-    <link href="<c:url value="/resources/css/bootstrap/css/datepicker.css" />" rel="stylesheet"></link>
-	<script src="<c:url value="/resources/js/bootstrap/bootstrap-datepicker.js" />"></script>
-
+<link href="<c:url value="/resources/css/bootstrap/css/datepicker.css" />" rel="stylesheet"></link>
+<script src="<c:url value="/resources/js/bootstrap/bootstrap-datepicker.js" />"></script>
 
 <script>
-
 
 $(document).ready(function() {
 	
 	if($("#code").val()=="") {
 		$('.btn').addClass('disabled');
 	}
-
 	
 	<c:choose>
 	<c:when test="${company.companyStateProvince!=null && company.companyStateProvince!=''}">
@@ -84,8 +80,6 @@ function getZones(countryCode){
 				$('.zone-list').hide();             
 				$('#companyStateProvince').show();
 			}
-
-	  
 	  },
 	  error: function(xhr, textStatus, errorThrown) {
 	  	alert('error ' + errorThrown);
@@ -93,8 +87,6 @@ function getZones(countryCode){
 	  
 	});
 }
-
-
 
 function validateCode() {
 	$('#checkCodeStatus').html('<img src="<c:url value="/resources/img/ajax-loader.gif" />');
