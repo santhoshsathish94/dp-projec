@@ -150,6 +150,18 @@ public class Company extends SalesManagerEntity<Integer, Company> {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy="company", cascade = CascadeType.ALL)
 	private List<CompanyCurrencies> curriencies = new ArrayList<CompanyCurrencies>();
 	
+	@Column(name="negtive_stock")
+	private boolean negativeStock;
+	
+	@Column(name="report_header")
+	private boolean reportHeader;
+	
+	@Column(name="create_branch")
+	private boolean createBranch;
+	
+	@Column(name="email_on_master_update")
+	private boolean emailOnMasterUpdate;
+	
 	/*@ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)
 	@JoinColumn(name = "COMPANY_LANGUAGE_ID", nullable=true)
 	private Language defaultCompanyLanguage;
@@ -602,6 +614,62 @@ public class Company extends SalesManagerEntity<Integer, Company> {
 	 */
 	public void setCurriencies(List<CompanyCurrencies> curriencies) {
 		this.curriencies = curriencies;
+	}
+
+	/**
+	 * @return the negativeStock
+	 */
+	public boolean isNegativeStock() {
+		return negativeStock;
+	}
+
+	/**
+	 * @param negativeStock the negativeStock to set
+	 */
+	public void setNegativeStock(boolean negativeStock) {
+		this.negativeStock = negativeStock;
+	}
+
+	/**
+	 * @return the reportHeader
+	 */
+	public boolean isReportHeader() {
+		return reportHeader;
+	}
+
+	/**
+	 * @param reportHeader the reportHeader to set
+	 */
+	public void setReportHeader(boolean reportHeader) {
+		this.reportHeader = reportHeader;
+	}
+
+	/**
+	 * @return the createBranch
+	 */
+	public boolean isCreateBranch() {
+		return createBranch;
+	}
+
+	/**
+	 * @param createBranch the createBranch to set
+	 */
+	public void setCreateBranch(boolean createBranch) {
+		this.createBranch = createBranch;
+	}
+
+	/**
+	 * @return the emailOnMasterUpdate
+	 */
+	public boolean isEmailOnMasterUpdate() {
+		return emailOnMasterUpdate;
+	}
+
+	/**
+	 * @param emailOnMasterUpdate the emailOnMasterUpdate to set
+	 */
+	public void setEmailOnMasterUpdate(boolean emailOnMasterUpdate) {
+		this.emailOnMasterUpdate = emailOnMasterUpdate;
 	}
 	
 }

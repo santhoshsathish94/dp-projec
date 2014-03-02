@@ -39,7 +39,7 @@
 	   }}
 	  ]
 	 }},
-	{"menu":{"code":"company-general","url":"/admin/generalInfo.html","role":"SUPERADMIN","order":4}}
+	{"menu":{"code":"company-general","url":"/admin/company/generalInfo.html","role":"SUPERADMIN","order":4}}
 ]
 }},
 {

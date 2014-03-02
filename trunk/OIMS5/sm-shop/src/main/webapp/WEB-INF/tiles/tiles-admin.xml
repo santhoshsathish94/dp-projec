@@ -328,4 +328,8 @@
   		<put-attribute name="body" value="/pages/admin/company/currency.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-company-general" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/company/generalInfo.jsp" /> 
+  	</definition>
+  	
 </tiles-definitions>
