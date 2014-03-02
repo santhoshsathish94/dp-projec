@@ -17,7 +17,43 @@
 					<jsp:include page="/common/adminTabs.jsp" />
 					<div id="messages" class="alert alert-info" style="display:none">
 					</div>
-
+					
+					<div class="box" style="margin-bottom: 10px;">
+						<span class="box-title">
+						<p><s:message code="label.company.dashboard.title" text="Comppany information" /></p>
+						</span>
+						
+						<p>
+						<address>
+							<strong><c:out value="${company.companyDisplayName}"/></strong><br/>
+							<c:if test="${not empty company.companyAddress}">
+								<c:out value="${company.companyAddress}"/><br/>
+							</c:if>
+							<c:if test="${not empty company.companyCity}">
+								<c:out value="${company.companyCity}"/>,
+							</c:if>
+							<c:choose>
+							<c:when test="${not empty company.companyZone}">
+								<c:out value="${company.companyZone.code}"/>,
+							</c:when>
+							<c:otherwise>
+								<c:if test="${not empty company.companyStateProvince}">
+									<c:out value="${company.companyStateProvince}"/>,
+								</c:if>
+							</c:otherwise>
+							</c:choose>
+							<c:if test="${not empty company.companyPostalCode}">
+								<c:out value="${company.companyPostalCode}"/>
+							</c:if>
+							<br/><c:out value="${country.name}"/>
+							<c:if test="${not empty company.companyMobileNumber}">
+								<br/><c:out value="${company.companyMobileNumber}"/>
+							</c:if>
+						</address>
+						</p>
+					</div>
+					
+					
 					<div class="box">
 						<span class="box-title">
 						<p><s:message code="label.store.information" text="Store information" /></p>
@@ -62,7 +98,7 @@
 						
 					</div>
 					
-					<br/>
+					<%-- <br/>
 					<h3><s:message code="label.order.recent" text="Recent orders"/></h3>
 					<br/><br/>
 					
@@ -77,6 +113,6 @@
 				 <c:set var="canRemoveEntry" value="false" scope="request"/>
 
             	 <jsp:include page="/pages/admin/components/list.jsp"></jsp:include> 
-				 <!-- End listing grid include -->
+				 <!-- End listing grid include --> --%>
 
 </div>
