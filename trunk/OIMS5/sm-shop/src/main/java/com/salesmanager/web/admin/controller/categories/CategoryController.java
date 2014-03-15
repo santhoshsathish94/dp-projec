@@ -219,7 +219,8 @@ public class CategoryController {
 		
 
 		model.addAttribute("success","success");
-		return "catalogue-categories-category";
+		//return "catalogue-categories-category";
+		return displayCategory(null,model,request,null);
 	}
 	
 	
