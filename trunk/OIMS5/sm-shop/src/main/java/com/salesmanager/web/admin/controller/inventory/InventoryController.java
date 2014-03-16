@@ -74,13 +74,28 @@ public class InventoryController {
 	@Autowired
 	EmailService emailService;
 
-	@Secured("SUPERADMIN")
+	@Secured("AUTH")
 	@RequestMapping(value = "/admin/inventoryManagement/createstock.html", method = RequestMethod.GET)
 	public String displayCompany(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
-
+		//display menu
+		setMenu(model,request, "openingStock");
 		return "admin-inventory";
 	}
 
-	
+	private void setMenu(Model model, HttpServletRequest request, String setActiveMenus) throws Exception {
+		
+		//display menu
+		Map<String,String> activeMenus = new HashMap<String,String>();
+		activeMenus.put("inventoryManagement", "inventoryManagement");
+		activeMenus.put(setActiveMenus, setActiveMenus);
+
+		
+		@SuppressWarnings("unchecked")
+		Map<String, Menu> menus = (Map<String, Menu>)request.getAttribute("MENUMAP");
+		
+		Menu currentMenu = (Menu)menus.get("inventoryManagement");
+		model.addAttribute("currentMenu",currentMenu);
+		model.addAttribute("activeMenus",activeMenus);
+	}
 	
 }
