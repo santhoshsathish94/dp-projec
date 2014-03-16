@@ -282,7 +282,7 @@
 }},
 {
 "menu":{
-"code":"supplier", 
+"code":"Supplier", 
 "icon":"icon-supplier",
 "url":"/admin/supplier/suppliers.html", 
 "role":"AUTH",
@@ -354,11 +354,11 @@
 }},
 {
 "menu":{
-"code":"inventoryManagement", 
+"code":"Inventory Management", 
 "icon":"icon-inventoryManagement",
 "url":"/admin/inventoryManagement/createstock.html", 
 "role":"AUTH",
-"order":12,
+"order":4,
 "menus":[
 	{"menu":{
 		"code":"openingStock","url":"","role":"AUTH","order":1,"menus":

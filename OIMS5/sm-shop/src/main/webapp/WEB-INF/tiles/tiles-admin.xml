@@ -332,4 +332,8 @@
   		<put-attribute name="body" value="/pages/admin/company/generalInfo.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-inventory" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/createstock.jsp" /> 
+  	</definition>
+  	
 </tiles-definitions>
