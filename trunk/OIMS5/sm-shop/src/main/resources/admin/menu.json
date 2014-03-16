@@ -282,11 +282,32 @@
 }},
 {
 "menu":{
+"code":"supplier", 
+"icon":"icon-supplier",
+"url":"/admin/supplier/suppliers.html", 
+"role":"AUTH",
+"order":8,
+"menus":[
+	{"menu":{
+		"code":"supplier","url":"","role":"AUTH","order":1,"menus":
+		[
+			{"menu":{
+				"code":"supplier-list","url":"/admin/supplier/suppliers.html","role":"AUTH","order":0
+			}},
+			{"menu":{
+				"code":"supplier-create","url":"/admin/supplier/createsupplier.html","role":"AUTH","order":1
+			}}
+		]
+	}}
+]
+}},
+{
+"menu":{
 "code":"order",
 "icon":"icon-shopping-cart", 
 "url":"/admin/orders/list.html", 
 "role":"ORDER",
-"order":8,
+"order":9,
 "menus":[
 	{"menu":{
 		"code":"order-list","url":"/admin/orders/list.html","role":"ORDER","order":0
@@ -299,7 +320,7 @@
 "icon":"icon-book", 
 "url":"/admin/tax/taxconfiguration/edit.html", 
 "role":"TAX",
-"order":9,
+"order":10,
 "menus":[
 	{"menu":{
 		"code":"taxconfiguration","url":"/admin/tax/taxconfiguration/edit.html","role":"TAX","order":0
@@ -311,14 +332,6 @@
 		"code":"taxrates","url":"/admin/tax/taxrates/list.html","role":"TAX","order":2
 	}}
 ]
-}},
-{
-"menu":{
-"code":"cache",
-"icon":"icon-th", 
-"url":"/admin/cache/cacheManagement.html", 
-"role":"AUTH",
-"order":10
 }},
 {
 "menu":{
@@ -338,7 +351,61 @@
 		"code":"system-configurations","url":"/admin/configuration/system.html","role":"AUTH","order":2
 	}}
 ]
+}},
+{
+"menu":{
+"code":"inventoryManagement", 
+"icon":"icon-inventoryManagement",
+"url":"/admin/inventoryManagement/createstock.html", 
+"role":"AUTH",
+"order":12,
+"menus":[
+	{"menu":{
+		"code":"openingStock","url":"","role":"AUTH","order":1,"menus":
+		[
+			{"menu":{
+				"code":"stock-list","url":"/admin/inventoryManagement/stocks.html","role":"AUTH","order":0
+			}},
+			{"menu":{
+				"code":"stock-create","url":"/admin/inventoryManagement/createstock.html","role":"AUTH","order":1
+			}}
+		]
+	}},
+	{"menu":{
+		"code":"purchase","url":"","role":"AUTH","order":2,"menus":
+		[
+			{"menu":{
+				"code":"purchase-entry-list","url":"/admin/inventoryManagement/purchaseEntrylist.html","role":"AUTH","order":0
+			}},
+			{"menu":{
+				"code":"purchase-entry-create","url":"/admin/inventoryManagement/createPurchaseEntry.html","role":"AUTH","order":1
+			}},
+			{"menu":{
+				"code":"purchase-return-debit-note-list","url":"/admin/inventoryManagement/purchasereturndnlist.html","role":"AUTH","order":3
+			}},
+			{"menu":{
+				"code":"purchase-return-debit-note-create","url":"/admin/inventoryManagement/createpurchasereturndn.html","role":"AUTH","order":4
+			}},
+			{"menu":{
+				"code":"debit-note-other-list","url":"/admin/inventoryManagement/debitnoteotherlist.html","role":"AUTH","order":3
+			}},
+			{"menu":{
+				"code":"debit-note-other-create","url":"/admin/inventoryManagement/createdebitnoteother.html","role":"AUTH","order":4
+			}}
+		]
+	}},
+	{"menu":{
+		"code":"branchtransfer","url":"","role":"AUTH","order":3,"menus":
+		[
+			{"menu":{
+				"code":"branch-transfer-list","url":"/admin/inventoryManagement/branchtransferlist.html","role":"AUTH","order":0
+			}},
+			{"menu":{
+				"code":"branch-transfer-create","url":"/admin/inventoryManagement/createbranchtransfer.html","role":"AUTH","order":1
+			}}
+		]
+	}}
+]
 }}
+
 ]}
-
-
