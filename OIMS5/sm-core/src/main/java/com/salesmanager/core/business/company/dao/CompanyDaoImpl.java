@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import com.mysema.query.jpa.JPQLQuery;
@@ -87,7 +86,7 @@ public class CompanyDaoImpl  extends SalesManagerEntityDaoImpl<Integer, Company>
 
 	@Override
 	public void saveOrUpdateAccountingPeriod(AccountingPeriod accountingPeriod) {
-		if(accountingPeriod.getId() == 0) {
+		if(accountingPeriod.getId() == null) {
 			super.save(accountingPeriod);
 		} else {
 			super.update(accountingPeriod);
