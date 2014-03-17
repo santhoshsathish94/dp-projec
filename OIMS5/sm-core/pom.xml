@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.shopizer</groupId>
-	<artifactId>sm-core</artifactId>
+	<artifactId>icore</artifactId>
 	<version>2.0</version>
 	<packaging>jar</packaging>
 
-	<name>sm-core</name>
+	<name>icore</name>
 	<url>http://www.shopizer.com</url>
 
 	<properties>
