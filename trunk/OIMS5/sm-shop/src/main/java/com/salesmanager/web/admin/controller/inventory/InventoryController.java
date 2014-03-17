@@ -76,17 +76,36 @@ public class InventoryController {
 
 	@Secured("AUTH")
 	@RequestMapping(value = "/admin/inventoryManagement/createstock.html", method = RequestMethod.GET)
-	public String displayCompany(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public String createStock(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		//display menu
 		setMenu(model,request, "openingStock");
 		return "admin-inventory";
 	}
+	
+	@Secured("AUTH")
+	@RequestMapping(value = "/admin/inventoryManagement/stocks.html", method = RequestMethod.GET)
+	public String displayStocks(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		//display menu
+		setMenu(model,request, "openingStock");
+		return "admin-inventory";
+	}
+	
+	
 
 	private void setMenu(Model model, HttpServletRequest request, String setActiveMenus) throws Exception {
 		
 		//display menu
 		Map<String,String> activeMenus = new HashMap<String,String>();
 		activeMenus.put("inventoryManagement", "inventoryManagement");
+		activeMenus.put("stock-list", "company");
+		activeMenus.put("purchase-entry-list", "purchase-entry-list");
+		activeMenus.put("purchase-entry-create", "purchase-entry-create");
+		activeMenus.put("purchase-return-debit-note-list", "purchase-return-debit-note-list");
+		activeMenus.put("purchase-return-debit-note-create", "purchase-return-debit-note-create");
+		activeMenus.put("debit-note-other-list", "debit-note-other-list");
+		activeMenus.put("debit-note-other-create", "debit-note-other-create");
+		activeMenus.put("branch-transfer-list", "branch-transfer-list");
+		activeMenus.put("branch-transfer-create", "branch-transfer-create");
 		activeMenus.put(setActiveMenus, setActiveMenus);
 
 		
