@@ -110,15 +110,12 @@
                 </properties>
           </loader>
 		  <transaction transactionManagerLookupClass="org.infinispan.transaction.lookup.DummyTransactionManagerLookup" transactionMode="TRANSACTIONAL" lockingMode="OPTIMISTIC" />
-
-		
-		
-		
-		
-			  --><loader class="org.infinispan.loaders.file.FileCacheStore" fetchPersistentState="false"
+			  -->
+			  
+			  <loader class="org.infinispan.loaders.file.FileCacheStore" fetchPersistentState="false"
 	               ignoreModifications="false" purgeOnStartup="false">
 	               <properties>
-	                 <property name="location" value="/Users/csamson777/Documents/workspace2/infinispan/store"/>
+	                 <property name="location" value="C:/Projects/IMS-Projects/java/OIMS5_WITH_DP/store"/>
 	               </properties>
 	          </loader>
 		
@@ -141,7 +138,7 @@
 	          <loader class="org.infinispan.loaders.file.FileCacheStore" fetchPersistentState="false"
 	               ignoreModifications="false" purgeOnStartup="false">
 	            <properties>
-	                 <property name="location" value="/Users/csamson777/Documents/workspace2/files"/>
+	                 <property name="location" value="C:/Projects/IMS-Projects/java/OIMS5_WITH_DP/files"/>
 	               </properties>
 	          </loader>
 	     </loaders>
