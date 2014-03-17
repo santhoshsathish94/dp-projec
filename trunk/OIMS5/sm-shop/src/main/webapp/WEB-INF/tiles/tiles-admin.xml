@@ -336,4 +336,12 @@
   		<put-attribute name="body" value="/pages/admin/inventory/createstock.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-supplier-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/supplier/suppliers.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-supplier" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/supplier/supplier.jsp" /> 
+  	</definition>
+  	
 </tiles-definitions>

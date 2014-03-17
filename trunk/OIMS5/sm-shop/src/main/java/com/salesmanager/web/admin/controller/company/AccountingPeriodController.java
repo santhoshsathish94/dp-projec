@@ -72,9 +72,7 @@ public class AccountingPeriodController {
 	@SuppressWarnings("unchecked")
 	@Secured("SUPERADMIN")
 	@RequestMapping(value = "/admin/acountingPeriods/paging.html", method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody
-	String pageAccountingPeriod(HttpServletRequest request,
-			HttpServletResponse response) {
+	public @ResponseBody String pageAccountingPeriod(HttpServletRequest request, HttpServletResponse response) {
 
 		AjaxResponse resp = new AjaxResponse();
 
@@ -142,10 +140,10 @@ public class AccountingPeriodController {
 	@RequestMapping(value="/admin/company/editAccountingPeriod.html", method=RequestMethod.GET)
 	public String displayAccountingPeriodEdit(@ModelAttribute("id") Long id, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
-		return displayUser(id, model, request, response);
+		return displayAccountingPeriod(id, model, request, response);
 	}
 
-	private String displayUser(Long dbAccountingPeriodId, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	private String displayAccountingPeriod(Long dbAccountingPeriodId, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//display menu
 		setMenu(model,request);
 		
@@ -193,15 +191,14 @@ public class AccountingPeriodController {
 	@RequestMapping(value="/admin/company/createAccountingPeriod.html", method=RequestMethod.GET)
 	public String displayAccountingPeriodCreate(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		return displayUser(Long.getLong("0"), model, request, response);
+		return displayAccountingPeriod(Long.valueOf("0"), model, request, response);
 	}
 	
 	@Secured("SUPERADMIN")
 	@RequestMapping(value="/admin/company/saveAccountingPeriod.html", method=RequestMethod.POST)
-	public String saveCompanyDetails(@Valid @ModelAttribute("accountingPeriod") AccountingPeriod accountingPeriod, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public String saveAccountingPeriod(@Valid @ModelAttribute("accountingPeriod") AccountingPeriod accountingPeriod, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		
 		setMenu(model,request);
-		boolean ispresent = false;
 		AccountingPeriod accPeriod = new AccountingPeriod();
 		Company sessionCompany = null;
 		
@@ -219,7 +216,7 @@ public class AccountingPeriodController {
 			}
 		}
 		
-		Date date = new Date();
+		Date date = null;
 		if(!StringUtils.isBlank(accountingPeriod.getFromSDate())) {
 			try {
 				date = DateUtil.getDate(accountingPeriod.getFromSDate());
@@ -230,7 +227,6 @@ public class AccountingPeriodController {
 			}
 		}
 		
-		date = new Date();
 		if(!StringUtils.isBlank(accountingPeriod.getToSDate())) {
 			try {
 				date = DateUtil.getDate(accountingPeriod.getToSDate());
