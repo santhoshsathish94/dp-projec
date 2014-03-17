@@ -185,7 +185,7 @@ response.setDateHeader ("Expires", -1);
      <script>
 	
 		$(document).ready(function(){ 
-			
+			alert("1");
 
 			$("#catalogue-products-create-link").click(function() {
 				window.location='<c:url value="/admin/products/createProduct.html" />';
@@ -363,6 +363,42 @@ response.setDateHeader ("Expires", -1);
 				window.location='<c:url value="/admin/company/generalInfo.html" />';
 			});
 
+			///  Inventory Management
+
+			$("#openingStock").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/createstock.html" />';
+			});
+			$("#stock-list").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/stocks.html" />';
+			});
+			$("#stock-create").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/createstock.html" />';
+			});
+			$("purchase-entry-list").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/purchaseEntrylist.html" />';
+			});
+			$("purchase-entry-create").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/createPurchaseEntry.html" />';
+			});
+			$("purchase-return-debit-note-list").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/purchasereturndnlist.html" />';
+			});
+			$("purchase-return-debit-note-create").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/createpurchasereturndn.html" />';
+			});
+			$("debit-note-other-list").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/debitnoteotherlist.html" />';
+			});
+			$("debit-note-other-create").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/createdebitnoteother.html" />';
+			});
+			$("branch-transfer-list").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/branchtransferlist.html" />';
+			});
+			$("branch-transfer-create").click(function() {
+				window.location='<c:url value="/admin/inventoryManagement/createbranchtransfer.html" />';
+			});
+alert("2");
 		}); 
 		
 		

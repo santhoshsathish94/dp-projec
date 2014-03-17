@@ -31,7 +31,7 @@
 				<prop key="POPULATE_TEST_DATA">true</prop>
 				
 				<prop key="ORDER_SCHEME">http</prop>
-				<prop key="CONTEXT_PATH">sm-shop</prop>
+				<prop key="CONTEXT_PATH">ishop</prop>
 				<prop key="URL_EXTENSION">.html</prop>
 				<!-- #https://www.google.com/recaptcha/admin/create -->
 				<prop key="shopizer.recapatcha_public_key">6Lc1Pe0SAAAAADQDlWbv3MYYj7lGEeCEanwC42bv</prop>
