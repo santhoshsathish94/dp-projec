@@ -22,9 +22,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.salesmanager.core.business.company.model.AccountingPeriod;
 import com.salesmanager.core.business.company.model.Company;
 import com.salesmanager.core.business.company.service.CompanyService;
 import com.salesmanager.core.business.reference.country.model.Country;
@@ -35,15 +33,11 @@ import com.salesmanager.core.business.reference.language.model.Language;
 import com.salesmanager.core.business.reference.language.service.LanguageService;
 import com.salesmanager.core.business.reference.zone.model.Zone;
 import com.salesmanager.core.business.reference.zone.service.ZoneService;
-import com.salesmanager.core.business.system.service.EmailService;
-import com.salesmanager.core.business.user.model.User;
 import com.salesmanager.core.business.user.service.UserService;
-import com.salesmanager.core.utils.ajax.AjaxResponse;
 import com.salesmanager.web.admin.entity.web.Menu;
 import com.salesmanager.web.constants.Constants;
 import com.salesmanager.web.utils.DateUtil;
 import com.salesmanager.web.utils.LabelUtils;
-import com.salesmanager.web.utils.UserUtils;
 
 
 @Controller
@@ -71,9 +65,6 @@ public class CompanyController {
 	
 	@Autowired
 	LabelUtils messages;
-	
-	@Autowired
-	EmailService emailService;
 	
 	@Secured("SUPERADMIN")
 	@RequestMapping(value="/admin/company.html", method=RequestMethod.GET)

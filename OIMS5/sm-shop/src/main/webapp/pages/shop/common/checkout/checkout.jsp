@@ -561,6 +561,10 @@ $(document).ready(function() {
 
 				initPayment(paymentSelection);
 				
+			} else if(paymentSelection.contains('moneyorder')) {
+				
+				initPayment(paymentSelection);
+				
 			} else {
 				//submit form
 				$('#pageContainer').hideLoading();

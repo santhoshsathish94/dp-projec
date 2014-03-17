@@ -358,7 +358,7 @@
 "icon":"icon-inventoryManagement",
 "url":"/admin/inventoryManagement/createstock.html", 
 "role":"AUTH",
-"order":11,
+"order":12,
 "menus":[
 	{"menu":{
 		"code":"openingStock","url":"","role":"AUTH","order":1,"menus":
