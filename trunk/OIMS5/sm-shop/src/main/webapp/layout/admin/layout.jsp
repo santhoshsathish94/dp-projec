@@ -185,7 +185,6 @@ response.setDateHeader ("Expires", -1);
      <script>
 	
 		$(document).ready(function(){ 
-			alert("1");
 
 			$("#catalogue-products-create-link").click(function() {
 				window.location='<c:url value="/admin/products/createProduct.html" />';
@@ -381,31 +380,31 @@ response.setDateHeader ("Expires", -1);
 			$("#stock-create-link").click(function() {
 				window.location='<c:url value="/admin/inventoryManagement/createstock.html" />';
 			});
-			$("purchase-entry-list-link").click(function() {
+			$("#purchase-entry-list-link").click(function() {
 				window.location='<c:url value="/admin/inventoryManagement/purchaseEntrylist.html" />';
 			});
-			$("purchase-entry-create-link").click(function() {
+			$("#purchase-entry-create-link").click(function() {
 				window.location='<c:url value="/admin/inventoryManagement/createPurchaseEntry.html" />';
 			});
-			$("purchase-return-debit-note-list-link").click(function() {
+			$("#purchase-return-debit-note-list-link").click(function() {
 				window.location='<c:url value="/admin/inventoryManagement/purchasereturndnlist.html" />';
 			});
-			$("purchase-return-debit-note-create-link").click(function() {
+			$("#purchase-return-debit-note-create-link").click(function() {
 				window.location='<c:url value="/admin/inventoryManagement/createpurchasereturndn.html" />';
 			});
-			$("debit-note-other-list-link").click(function() {
+			$("#debit-note-other-list-link").click(function() {
 				window.location='<c:url value="/admin/inventoryManagement/debitnoteotherlist.html" />';
 			});
-			$("debit-note-other-create-link").click(function() {
+			$("#debit-note-other-create-link").click(function() {
 				window.location='<c:url value="/admin/inventoryManagement/createdebitnoteother.html" />';
 			});
-			$("branch-transfer-list-link").click(function() {
+			$("#branch-transfer-list-link").click(function() {
 				window.location='<c:url value="/admin/inventoryManagement/branchtransferlist.html" />';
 			});
-			$("branch-transfer-create-link").click(function() {
+			$("#branch-transfer-create-link").click(function() {
 				window.location='<c:url value="/admin/inventoryManagement/createbranchtransfer.html" />';
 			});
-alert("2");
+			
 		}); 
 		
 		
