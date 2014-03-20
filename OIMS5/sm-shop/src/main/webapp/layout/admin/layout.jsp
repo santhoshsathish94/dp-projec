@@ -36,7 +36,7 @@ response.setDateHeader ("Expires", -1);
     			<meta name="description" content="">
     			<meta name="author" content="">
     			
-    			<script src="<c:url value="/resources/js/bootstrap/jquery.js" />"></script>
+    			<script src="<c:url value="/resources/js/bootstrap/jquery/jquery-1.10.2.js" />"></script>
     			<script src="<c:url value="/resources/js/jquery.friendurl.min.js" />"></script>
  
   
@@ -367,6 +367,13 @@ response.setDateHeader ("Expires", -1);
 			});
 			$("#supplier-create-link").click(function() {
 				window.location='<c:url value="/admin/supplier/createsupplier.html" />';
+			});
+			
+			$("#sales-channel-default-margin-list-link").click(function() {
+				window.location='<c:url value="/admin/supplier/saleschanneldefaultmargins.html" />';
+			});
+			$("#sales-channel-default-margin-create-link").click(function() {
+				window.location='<c:url value="/admin/supplier/createsaleschanneldefaultmargin.html" />';
 			});
 			
 			///  Inventory Management

@@ -108,6 +108,7 @@
 		    	<value>classpath:database.properties</value>
 				<value>classpath:email.properties</value>
 				<value>classpath:configs.properties</value>
+				<value>classpath:file_repository.properties</value>
 			</list>
 		</property>
 	</bean>

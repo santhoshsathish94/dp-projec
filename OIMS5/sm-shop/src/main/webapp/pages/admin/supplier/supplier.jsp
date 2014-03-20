@@ -148,7 +148,7 @@ function selectCountry(value) {
 					
 					<div class="control-group" style="float: left; margin-bottom: 0px;">
 						<div style="float: left; width: 120px;">
-	                        <label style="margin-top: 5px;"><s:message code="label.currency" text="Currency"/></label>
+	                        <label style="margin-top: 5px;"><s:message code="label.supplier.currency" text="Currency"/></label>
 						</div>
                         <div style="float: left;" class="controls">
                         	<form:select items="${currencies}" itemValue="id" itemLabel="code" path="currency.id" style="width: 205px;"/> 
@@ -170,7 +170,7 @@ function selectCountry(value) {
 					
 					<div class="control-group" style="float: left; margin-bottom: 0px;">
 						<div style="float: left; width: 120px;">
-	                        <label style="margin-top: 5px;"><s:message code="label.tin.number" text="TIN No:"/></label>
+	                        <label style="margin-top: 5px;"><s:message code="label.supplier.tin.number" text="TIN No:"/></label>
 						</div>
                         <div style="float: left;" class="controls">
          					<form:input cssClass="input-large" path="tinNumber" cssStyle="width: 195px;"/>
@@ -180,7 +180,7 @@ function selectCountry(value) {
 					
 					<div class="control-group" style="float: left; margin-bottom: 0px;">
 						<div style="float: left; width: 120px;">
-	                        <label style="margin-top: 5px;"><s:message code="label.sevice.tax.number" text="Service Tax No:"/></label>
+	                        <label style="margin-top: 5px;"><s:message code="label.supplier.sevice.tax.number" text="Service Tax No:"/></label>
 						</div>
                         <div style="float: left;" class="controls">
          					<form:input cssClass="input-large" path="serviceTaxNumber" cssStyle="width: 195px;"/>

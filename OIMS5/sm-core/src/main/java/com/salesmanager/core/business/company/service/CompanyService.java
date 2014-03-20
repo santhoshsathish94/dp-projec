@@ -35,4 +35,7 @@ public interface CompanyService extends SalesManagerEntityService<Integer, Compa
 	
 	void saveOrUpdate(CompanyCurrencies companyCurrencies) throws ServiceException;
 	
+	Company getCompanyByCompanyDisplayName(String displayName);
+	
+	List<String> getCompanyNameListByDisplayName(String displayName);
 }

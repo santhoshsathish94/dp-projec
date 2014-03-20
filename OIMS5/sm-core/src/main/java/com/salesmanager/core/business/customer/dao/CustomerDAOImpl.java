@@ -329,5 +329,47 @@ public class CustomerDAOImpl extends SalesManagerEntityDaoImpl<Long, Customer> i
 		
 		return query.list(qCustomer);
 	}
+	
+	@Override
+	public Customer getByCustomerCompany(String customerCompany){
+		QCustomer qCustomer = QCustomer.customer;
+		QCountry qCountry = QCountry.country;
+		QZone qZone = QZone.zone;
+		QCustomerAttribute qCustomerAttribute = QCustomerAttribute.customerAttribute;
+		QCustomerOption qCustomerOption = QCustomerOption.customerOption;
+		QCustomerOptionValue qCustomerOptionValue = QCustomerOptionValue.customerOptionValue;
+		
+		JPQLQuery query = new JPAQuery (getEntityManager());
+		
+		query.from(qCustomer)
+			.join(qCustomer.merchantStore).fetch()
+			//.leftJoin(qCustomer.billing.country,qCountry).fetch()
+			//.leftJoin(qCustomer.billing.zone,qZone).fetch()
+			.leftJoin(qCustomer.defaultLanguage).fetch()
+			.leftJoin(qCustomer.attributes,qCustomerAttribute).fetch()
+			.leftJoin(qCustomerAttribute.customerOption, qCustomerOption).fetch()
+			.leftJoin(qCustomerAttribute.customerOptionValue, qCustomerOptionValue).fetch()
+			.leftJoin(qCustomerOption.descriptions).fetch()
+			.leftJoin(qCustomerOptionValue.descriptions).fetch()
+			.where(qCustomer.company.eq(customerCompany));
+		
+		return query.uniqueResult(qCustomer);
+	}
 
+	@Override
+	public List<String> getCustomerListByCustomerCompany(String accountName) {
+		
+		StringBuilder qs = new StringBuilder();
+		qs.append("select c.company from Customer as c ");
+		qs.append("where c.company like :companyName ");
+		
+		String hql = qs.toString();
+		Query q = super.getEntityManager().createQuery(hql);
+		
+		q.setParameter("companyName", accountName+"%");
+		
+		List<String> companyNameList = q.getResultList(); 
+		
+		return companyNameList;
+	}
 }

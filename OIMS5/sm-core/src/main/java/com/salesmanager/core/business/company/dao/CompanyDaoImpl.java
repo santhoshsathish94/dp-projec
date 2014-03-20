@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
@@ -21,9 +22,6 @@ import com.salesmanager.core.business.generic.exception.ServiceException;
 @Repository("companyDao")
 public class CompanyDaoImpl  extends SalesManagerEntityDaoImpl<Integer, Company> implements CompanyDao {
 
-	@PersistenceContext
-	private EntityManager entityManager;
-	
 	public CompanyDaoImpl() {
 		super();
 	}
@@ -120,17 +118,33 @@ public class CompanyDaoImpl  extends SalesManagerEntityDaoImpl<Integer, Company>
 		}
 	}
 
-	/**
-	 * @return the entityManager
-	 */
-	public EntityManager getEntityManager() {
-		return entityManager;
+	@Override
+	public Company getCompanyByCompanyDisplayName(String displayName) {
+		QCompany qCompany = QCompany.company;
+		
+		JPQLQuery query = new JPAQuery (getEntityManager());
+		
+		query.from(qCompany).where(qCompany.companyDisplayName.eq(displayName));
+		
+		return query.uniqueResult(qCompany);
 	}
 
-	/**
-	 * @param entityManager the entityManager to set
-	 */
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
+	@Override
+	public List<String> getCompanyNameListByDisplayName(String displayName) {
+		
+		StringBuilder qs = new StringBuilder();
+		qs.append("select c.companyDisplayName from Company as c ");
+		qs.append("where c.companyDisplayName like :displayName ");
+		
+		String hql = qs.toString();
+		Query q = super.getEntityManager().createQuery(hql);
+		
+		q.setParameter("displayName", displayName+"%");
+		
+		List<String> displayNameList = q.getResultList(); 
+		
+		return displayNameList;
 	}
+
+	
 }

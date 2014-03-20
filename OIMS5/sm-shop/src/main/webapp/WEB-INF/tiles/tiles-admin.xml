@@ -344,4 +344,12 @@
   		<put-attribute name="body" value="/pages/admin/supplier/supplier.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-pt-default-margin-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/supplier/defaultMargins.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-pt-default-margin" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/supplier/setupdefaultmargin.jsp" /> 
+  	</definition>
+  	
 </tiles-definitions>

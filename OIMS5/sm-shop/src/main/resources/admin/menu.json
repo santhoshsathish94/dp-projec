@@ -289,13 +289,24 @@
 "order":8,
 "menus":[
 	{"menu":{
-		"code":"supplier","url":"","role":"AUTH","order":1,"menus":
+		"code":"supplier-info","url":"","role":"AUTH","order":1,"menus":
 		[
 			{"menu":{
 				"code":"supplier-list","url":"/admin/supplier/suppliers.html","role":"AUTH","order":0
 			}},
 			{"menu":{
 				"code":"supplier-create","url":"/admin/supplier/createsupplier.html","role":"AUTH","order":1
+			}}
+		]
+	}},
+	{"menu":{
+		"code":"sales-channel-default-margin","url":"","role":"AUTH","order":2,"menus":
+		[
+			{"menu":{
+				"code":"sales-channel-default-margin-list","url":"/admin/supplier/saleschanneldefaultmargins.html","role":"AUTH","order":0
+			}},
+			{"menu":{
+				"code":"sales-channel-default-margin-create","url":"/admin/supplier/createsaleschanneldefaultmargin.html","role":"AUTH","order":1
 			}}
 		]
 	}}
