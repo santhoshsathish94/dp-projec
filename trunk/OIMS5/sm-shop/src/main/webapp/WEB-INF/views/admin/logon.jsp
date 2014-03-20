@@ -2,34 +2,27 @@
 
 <html>
 
-	<%
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Cache-Control", "no-cache");
-		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", -1);
-	%>
+<%
+	response.setCharacterEncoding("UTF-8");
+	response.setHeader("Cache-Control", "no-cache");
+	response.setHeader("Pragma", "no-cache");
+	response.setDateHeader("Expires", -1);
+%>
 
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-	<%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
-	<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
-	<%@page contentType="text/html"%>
-	<%@page pageEncoding="UTF-8"%>
+<%@page contentType="text/html"%>
+<%@page pageEncoding="UTF-8"%>
 
-
-
-
-
-	<head>
-		<meta http-equiv="Pragma" content="no-cache">
-			<meta http-equiv="expires" content="0">
-				<title><s:message code="label.storeadministration"
-						text="Store administration" />
-				</title>
-
-
-
+<head>
+	<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="expires" content="0">
+			<title><s:message code="label.storeadministration"
+					text="Store administration" />
+			</title>
 
 <style type=text/css>
 #logon {
@@ -63,26 +56,13 @@
 	margin-left: -50px;
 	margin-top: 30px;
 }
-
-
-
-
 </style>
 
+<link href="<c:url value="/resources/css/bootstrap/css/sm-bootstrap.css" />" rel="stylesheet" />
+<link href="<c:url value="/resources/css/bootstrap/css/sm-bootstrap-responsive.css" />" rel="stylesheet" />
+<link href="<c:url value="/resources/css/shopizer-admin.css" />" rel="stylesheet" />
 
-
-
-				<link
-					href="<c:url value="/resources/css/bootstrap/css/sm-bootstrap.css" />"
-					rel="stylesheet" />
-				<link
-					href="<c:url value="/resources/css/sm-bootstrap-responsive.css" />"
-					rel="stylesheet" />
-				<link href="<c:url value="/resources/css/shopizer.css" />"
-					rel="stylesheet" />
-
-
-				<style type=text/css>
+<style type=text/css>
 .sm label {
 	color: #EBEBEB;
 	font-size: 16px;
@@ -92,200 +72,191 @@
 	color: #EBEBEB;
 	font-size: 16px;
 }
-
-
-
-
-
 </style>
 
-		<script src="<c:url value="/resources/js/bootstrap/jquery.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/js/jquery-cookie.js"/>"></script>
-		<script src="<c:url value="/resources/js/bootstrap/bootstrap-modal.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery.js" />"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/jquery-cookie.js"/>"></script>
+<script src="<c:url value="/resources/js/bootstrap/bootstrap-modal.js" />"></script>
 
+<script SRC="<c:url value="/resources/smart-client/system/modules/ISC_Core.js" />"></script>
+<script SRC="<c:url value="/resources/smart-client/system/modules/ISC_Foundation.js" />"></script>
+<script SRC="<c:url value="/resources/smart-client/system/modules/ISC_Containers.js" />"></script>
+<script SRC="<c:url value="/resources/smart-client/system/modules/ISC_Grids.js" />"></script>
+<script SRC="<c:url value="/resources/smart-client/system/modules/ISC_DataBinding.js" />"></script>
 
+<script language="javascript">
+			
+			function getUserInformation() {
+				 // get the form values 
+				$('#securityQtn1Select').empty();
+				$('#securityQtn2Select').empty();
+				$('#securityQtn3Select').empty();
+				$('#answer1').val('');
+				$('#answer2').val('');
+				$('#answer3').val('');
+				var userName = $('#username').val();
+	        if(!userName){
+			    alert("<s:message code="message.username.required" text="User name is required" />");
+		    }else{
+				$.ajax({
+						type: 'POST',
+						dataType: "json",
+						url: "<c:url value="/admin/users/resetPassword.html" />",
+						data: "username="+ userName ,
+						success: function(response) { 
+							 var msg = isc.XMLTools.selectObjects(response, "/response/statusMessage");
+							 var status = isc.XMLTools.selectObjects(response, "/response/status");
+							 if(status==0 || status ==9999) {
+								 $("#getPassword").modal('hide'),
+								 $('#getSecurityQtn').modal({
+   								 	backdrop: true
+   						   		 })
+   						
+   								 var data = isc.XMLTools.selectObjects(response, "/response/data");
+   						  	     if(data && data.length>0) {
+   						  	     
+   						  	     	$('#question1').text(data[0].question1);
+	    						  	$('#question2').text(data[0].question2);
+	    						  	$('#question3').text(data[0].question3);
 
-    <script SRC="<c:url value="/resources/smart-client/system/modules/ISC_Core.js" />"></script>
-    <script SRC="<c:url value="/resources/smart-client/system/modules/ISC_Foundation.js" />"></script>
-    <script SRC="<c:url value="/resources/smart-client/system/modules/ISC_Containers.js" />"></script>
-    <script SRC="<c:url value="/resources/smart-client/system/modules/ISC_Grids.js" />"></script>
-    <script SRC="<c:url value="/resources/smart-client/system/modules/ISC_DataBinding.js" />"></script>
-
-
-
-				<script language="javascript">
-				
-				function getUserInformation() {
-					 // get the form values 
-					$('#securityQtn1Select').empty();
-					$('#securityQtn2Select').empty();
-					$('#securityQtn3Select').empty();
-					$('#answer1').val('');
-					$('#answer2').val('');
-					$('#answer3').val('');
-					var userName = $('#username').val();
-		        if(!userName){
-				    alert("<s:message code="message.username.required" text="User name is required" />");
-			    }else{
-					$.ajax({
-							type: 'POST',
-							dataType: "json",
-							url: "<c:url value="/admin/users/resetPassword.html" />",
-							data: "username="+ userName ,
-							success: function(response) { 
-								 var msg = isc.XMLTools.selectObjects(response, "/response/statusMessage");
-								 var status = isc.XMLTools.selectObjects(response, "/response/status");
-								 if(status==0 || status ==9999) {
-									 $("#getPassword").modal('hide'),
-									 $('#getSecurityQtn').modal({
-    								 	backdrop: true
-    						   		 })
-    						
-    								 var data = isc.XMLTools.selectObjects(response, "/response/data");
-    						  	     if(data && data.length>0) {
-    						  	     
-    						  	     	$('#question1').text(data[0].question1);
-		    						  	$('#question2').text(data[0].question2);
-		    						  	$('#question3').text(data[0].question3);
-
-    								 } 
-								} else {
-									if(msg!=null && msg !='') {
-										alert(msg);
-									}
+   								 } 
+							} else {
+								if(msg!=null && msg !='') {
+									alert(msg);
 								}
-								
-							},
-							error: function(jqXHR,textStatus,errorThrown) { 
-								alert('Error ' + jqXHR + "-" + textStatus + "-" + errorThrown);
 							}
-
-							}); 
-				}
- 		        				}
-				
-				
-				function doSecurityQtnSubmit() {
-					
-					var answer1 = $('#answer1').val();
-					var answer2 = $('#answer2').val();
-					var answer3 = $('#answer3').val();
-				   		 
-					 if(!answer1){
-					    alert("<s:message code="security.answer.question1.message" text="Please answer to security question 1"/>");
-					    
-					 }else if(!answer2){
-						 alert("<s:message code="security.answer.question2.message" text="Please answer to security question 2"/>");
-						
-					 }else if(!answer3){
-						 alert("<s:message code="security.answer.question3.message" text="Please answer to security question 3"/>");
-					   
-					 }else{					 
-
-						 $.ajax({
-									type: 'POST',
-									dataType: "json",
-									url: "<c:url value="/admin/users/resetPasswordSecurityQtn.html" />",
-									data: "answer1="+ answer1+"&answer2="+ answer2+"&answer3="+ answer3,
-									success: function(response) { 
-										 //console.log("responcesajid "+response);
-										 //console.log(response);
-										 var msg = isc.XMLTools.selectObjects(response, "/response/statusMessage");
-										 var status = isc.XMLTools.selectObjects(response, "/response/status");
-										 if(status==0 || status ==9999) {
-											 $("#getSecurityQtn").modal('hide')
-											  $('#finalWindow').modal({
-		    									 backdrop: true
-		    						   		 }) 
-					 						 $("#finaltext").val (msg);
-											 var div = document.getElementById('finaltext1');
-											 div.innerHTML =  msg;		    						
-		    								 var data = isc.XMLTools.selectObjects(response, "/response/data");
-										  } else {
-											if(msg!=null && msg !='') {
-												 $("#getSecurityQtn").modal('hide')
-												  $('#finalWindow').modal({
-			    								 	backdrop: true
-			    						   		 	}) 
-						 						 $("#finaltext").val (msg);
-												var div = document.getElementById('finaltext1');
-												div.innerHTML =  msg;						 
-											}
-										}
-										
-									}  
-								});
-					 
-				 }
-			}
-
-	$(document)
-			.ready(
-					function() {
-						
-						$('#changePassword').click(function() {
-							//$('#getPassword').show();
-							$('#username').val('');
-							$('#getPassword').modal({
-    							backdrop: true
-    						})
-						})
-						
-
-						var username = $.cookie('usernamecookie');
-						if (username != null && username != '') {
-							$('#j_username').val(username);
-							$('#remember').attr('checked', true);
+							
+						},
+						error: function(jqXHR,textStatus,errorThrown) { 
+							alert('Error ' + jqXHR + "-" + textStatus + "-" + errorThrown);
 						}
 
+						}); 
+			}
+		        				}
+			
+			
+			function doSecurityQtnSubmit() {
+				
+				var answer1 = $('#answer1').val();
+				var answer2 = $('#answer2').val();
+				var answer3 = $('#answer3').val();
+			   		 
+				 if(!answer1){
+				    alert("<s:message code="security.answer.question1.message" text="Please answer to security question 1"/>");
+				    
+				 }else if(!answer2){
+					 alert("<s:message code="security.answer.question2.message" text="Please answer to security question 2"/>");
+					
+				 }else if(!answer3){
+					 alert("<s:message code="security.answer.question3.message" text="Please answer to security question 3"/>");
+				   
+				 }else{					 
 
-						$("#formSubmitButton")
-								.click(
-										function() {
-											
-											
+					 $.ajax({
+								type: 'POST',
+								dataType: "json",
+								url: "<c:url value="/admin/users/resetPasswordSecurityQtn.html" />",
+								data: "answer1="+ answer1+"&answer2="+ answer2+"&answer3="+ answer3,
+								success: function(response) { 
+									 //console.log("responcesajid "+response);
+									 //console.log(response);
+									 var msg = isc.XMLTools.selectObjects(response, "/response/statusMessage");
+									 var status = isc.XMLTools.selectObjects(response, "/response/status");
+									 if(status==0 || status ==9999) {
+										 $("#getSecurityQtn").modal('hide')
+										  $('#finalWindow').modal({
+	    									 backdrop: true
+	    						   		 }) 
+				 						 $("#finaltext").val (msg);
+										 var div = document.getElementById('finaltext1');
+										 div.innerHTML =  msg;		    						
+	    								 var data = isc.XMLTools.selectObjects(response, "/response/data");
+									  } else {
+										if(msg!=null && msg !='') {
+											 $("#getSecurityQtn").modal('hide')
+											  $('#finalWindow').modal({
+		    								 	backdrop: true
+		    						   		 	}) 
+					 						 $("#finaltext").val (msg);
+											var div = document.getElementById('finaltext1');
+											div.innerHTML =  msg;						 
+										}
+									}
+									
+								}  
+							});
+				 
+			 }
+		}
 
-											var hasError = false;
-											$('#j_username_help').html("");
-											$('#j_password_help').html("");
-											
-											
-											if ($('#remember').attr('checked')) {
-												$.cookie('usernamecookie', $(
-														'#j_username').val(), {
-													expires : 1024,
-													path : '/'
-												});
-											} else {
-												$.cookie('usernamecookie',
-														null, {
-															expires : 1024,
-															path : '/'
-														});
-											}
-											if ($.trim($('#j_username').val()) == '') {
-												hasError = true;
-												$('#j_username_help')
-														.html(
-																"<font color='red' size='4'><strong>*</strong></font>");
-											}
+$(document)
+		.ready(
+				function() {
+					
+					$('#changePassword').click(function() {
+						//$('#getPassword').show();
+						$('#username').val('');
+						$('#getPassword').modal({
+   							backdrop: true
+   						})
+					})
+					
 
-											if ($.trim($('#j_password').val()) == '') {
-												hasError = true;
-												$('#j_password_help')
-														.html(
-																"<font color='red' size='4'><strong>*</strong></font>");
-											}
+					var username = $.cookie('usernamecookie');
+					if (username != null && username != '') {
+						$('#j_username').val(username);
+						$('#remember').attr('checked', true);
+					}
 
-											if (!hasError) {
-												$("#logonForm").submit();
-											}
 
-										});
+					$("#formSubmitButton")
+							.click(
+									function() {
+										
+										
 
-					});
-</script>
-	</head>
+										var hasError = false;
+										$('#j_username_help').html("");
+										$('#j_password_help').html("");
+										
+										
+										if ($('#remember').attr('checked')) {
+											$.cookie('usernamecookie', $(
+													'#j_username').val(), {
+												expires : 1024,
+												path : '/'
+											});
+										} else {
+											$.cookie('usernamecookie',
+													null, {
+														expires : 1024,
+														path : '/'
+													});
+										}
+										if ($.trim($('#j_username').val()) == '') {
+											hasError = true;
+											$('#j_username_help')
+													.html(
+															"<font color='red' size='4'><strong>*</strong></font>");
+										}
+
+										if ($.trim($('#j_password').val()) == '') {
+											hasError = true;
+											$('#j_password_help')
+													.html(
+															"<font color='red' size='4'><strong>*</strong></font>");
+										}
+
+										if (!hasError) {
+											$("#logonForm").submit();
+										}
+
+									});
+
+				});
+	</script>
+</head>
 
 	<body>
 
@@ -296,14 +267,6 @@
 
 			<div id=logon>
 
-
-
-
-
-
-
-
-
 				<div class="row">
 					<c:if test="${not empty param.login_error}">
 						<div class="alert alert-error">
@@ -313,10 +276,7 @@
 					</c:if>
 				</div>
 
-
-
 				<div id="login-box">
-
 
 					<div class="row">
 						<div style="float: left; width: 180px;">

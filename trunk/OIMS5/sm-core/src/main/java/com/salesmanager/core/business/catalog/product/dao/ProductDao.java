@@ -49,4 +49,7 @@ public interface ProductDao extends SalesManagerEntityDao<Long, Product> {
 
 	Product getBySeUrl(MerchantStore store, String seUrl, Locale locale);
 	
+	Product getProductBySKU(String sku);
+	
+	List<String> getProductListBySKU(String sku);
 }

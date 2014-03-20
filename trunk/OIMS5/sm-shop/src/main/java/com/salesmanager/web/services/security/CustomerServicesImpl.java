@@ -79,11 +79,6 @@ public class CustomerServicesImpl implements UserDetailsService{
 	    		GrantedAuthority auth = new GrantedAuthorityImpl(permission.getPermissionName());
 	    		authorities.add(auth);
 	    	}
-			
-
-			
-
-		
 		
 		} catch (ServiceException e) {
 			LOGGER.error("Exception while querrying customer",e);

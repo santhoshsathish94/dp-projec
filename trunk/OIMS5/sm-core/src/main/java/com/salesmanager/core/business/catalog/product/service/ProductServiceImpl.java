@@ -415,8 +415,14 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<Long, Prod
 
 	}
 	
-	
+	@Override
+	public Product getProductBySKU(String sku) {
+		return productDao.getProductBySKU(sku);
+	}
 
-
+	@Override
+	public List<String> getProductListBySKU(String sku) {
+		return productDao.getProductListBySKU(sku);
+	}
 	
 }

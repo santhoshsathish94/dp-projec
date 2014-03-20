@@ -92,4 +92,13 @@ public class CompanyServiceImpl extends SalesManagerEntityServiceImpl<Integer, C
 		companyDao.saveOrUpdate(companyCurrencies);
 	}
 
+	@Override
+	public Company getCompanyByCompanyDisplayName(String displayName) {
+		return companyDao.getCompanyByCompanyDisplayName(displayName);
+	}
+	
+	@Override
+	public List<String> getCompanyNameListByDisplayName(String displayName) {
+		return companyDao.getCompanyNameListByDisplayName(displayName);
+	}
 }

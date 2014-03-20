@@ -29,4 +29,8 @@ public interface CompanyDao  extends SalesManagerEntityDao<Integer, Company> {
 	List<CompanyCurrencies> listCompanyCurrencies();
 	
 	void saveOrUpdate(CompanyCurrencies companyCurrencies);
+	
+	Company getCompanyByCompanyDisplayName(String displayName);
+	
+	List<String> getCompanyNameListByDisplayName(String displayName);
 }
