@@ -141,7 +141,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companyaddress" text="Address"/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:textarea cssClass="input-large highlight" path="companyAddress" cssStyle="width: 195px;"/>
+         					<form:textarea cssClass="input-large" path="companyAddress" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyAddress" cssClass="error" /></span>
                         </div>
 					</div>
@@ -151,7 +151,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companycity" text="City"/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companyCity" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companyCity" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyCity" cssClass="error" /></span>
                         </div>
 					</div>
@@ -161,7 +161,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companypostalcode" text="Postal Code"/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companyPostalCode" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companyPostalCode" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyPostalCode" cssClass="error" /></span>
                         </div>
 					</div>
@@ -171,7 +171,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companyworknumber" text="Work No."/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companyWorkNumber" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companyWorkNumber" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyWorkNumber" cssClass="error" /></span>
                         </div>
 					</div>
@@ -181,7 +181,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companymobilenumber" text="Mobile No."/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companyMobileNumber" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companyMobileNumber" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyMobileNumber" cssClass="error" /></span>
                         </div>
 					</div>
@@ -191,7 +191,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companyfaxnumber" text="Fax No."/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companyFaxNumber" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companyFaxNumber" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyFaxNumber" cssClass="error" /></span>
                         </div>
 					</div>
@@ -211,7 +211,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companyalternateemailaddress" text="Alternate Email"/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companyAlternateEmailAddress" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companyAlternateEmailAddress" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyAlternateEmailAddress" cssClass="error" /></span>
                         </div>
 					</div>
@@ -247,7 +247,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companyroc" text="ROC"/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companyROC" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companyROC" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyROC" cssClass="error" /></span>
                         </div>
 					</div>
@@ -257,7 +257,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companypan" text="PAN"/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companyPAN" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companyPAN" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyPAN" cssClass="error" /></span>
                         </div>
 					</div>
@@ -267,7 +267,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companytan" text="TAN"/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companyTAN" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companyTAN" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyTAN" cssClass="error" /></span>
                         </div>
 					</div>
@@ -277,7 +277,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companytin" text="TIN"/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companyTIN" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companyTIN" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companyTIN" cssClass="error" /></span>
                         </div>
 					</div>
@@ -287,7 +287,7 @@ function callBackCheckCode(msg,code) {
 	                        <label style="margin-top: 5px;"><s:message code="label.companystnumber" text="ST No."/></label>
 						</div>
                         <div style="float: left;" class="controls">
-         					<form:input cssClass="input-large highlight" path="companySTNumber" cssStyle="width: 195px;"/>
+         					<form:input cssClass="input-large" path="companySTNumber" cssStyle="width: 195px;"/>
 	                        <span class="help-inline"><form:errors path="companySTNumber" cssClass="error" /></span>
                         </div>
 					</div>
@@ -311,7 +311,7 @@ function callBackCheckCode(msg,code) {
 							<form:options items="${countries}" itemValue="isoCode" itemLabel="name"/>
    							</form:select>
 	                     </div>
-	                  </div>
+	                </div>
 					
 					<!-- Hidden Files Data : End -->
 					
