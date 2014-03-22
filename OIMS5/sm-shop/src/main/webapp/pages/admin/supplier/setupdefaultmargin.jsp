@@ -104,7 +104,7 @@ $(function() {
 	<jsp:include page="/common/adminTabs.jsp" />
 	
 		<h3>
-			<c:choose>
+		<c:choose>
 			<c:when test="${partyItemDefaultMargin.id == null}">
 				<s:message code="label.sales.channel.default.margin.title" text="Set-up New Default Margin" /></h3>
 			</c:when>

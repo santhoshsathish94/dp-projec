@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.salesmanager.core.business.generic.model.SalesManagerEntity;
+import com.salesmanager.core.business.reference.country.model.Country;
 import com.salesmanager.core.business.reference.currency.model.Currency;
 import com.salesmanager.core.business.reference.zone.model.Zone;
 
@@ -39,14 +40,12 @@ public class Supplier extends SalesManagerEntity<Integer, Supplier> {
 	@Column(name = "OPENING_BANALCE", length=0, precision=1)
 	private Double openingBalance;
 	
-	@Column(name = "COUNTRY", length=100)
-	private String country;
 	
 	@Column(name = "ADDRESS_LABEL", length=100, nullable=false)
 	private String addressLabel;
 	
-	@Column(name = "MOBILE_NUMBER")
-	private Integer mobileNumber;
+	@Column(name = "MOBILE_NUMBER", length=10)
+	private String mobileNumber;
 	
 	@Column(name = "WORK_NUMBER", length=100)
 	private String workNumber;
@@ -85,7 +84,11 @@ public class Supplier extends SalesManagerEntity<Integer, Supplier> {
 	@JoinColumn(name = "CURRENCY_ID", nullable=true)
 	private Currency currency;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Country.class)
+	@JoinColumn(name = "COUNTRY_ID", nullable=true, updatable=true)
+	private Country country;
+	
+	@OneToOne(fetch = FetchType.EAGER, targetEntity = Zone.class)
 	@JoinColumn(name="STATE_ID", nullable=true, updatable=true)
 	private Zone zone;
 	
@@ -132,14 +135,14 @@ public class Supplier extends SalesManagerEntity<Integer, Supplier> {
 	/**
 	 * @return the country
 	 */
-	public String getCountry() {
+	public Country getCountry() {
 		return country;
 	}
 
 	/**
 	 * @param country the country to set
 	 */
-	public void setCountry(String country) {
+	public void setCountry(Country country) {
 		this.country = country;
 	}
 
@@ -160,14 +163,14 @@ public class Supplier extends SalesManagerEntity<Integer, Supplier> {
 	/**
 	 * @return the mobileNumber
 	 */
-	public Integer getMobileNumber() {
+	public String getMobileNumber() {
 		return mobileNumber;
 	}
 
 	/**
 	 * @param mobileNumber the mobileNumber to set
 	 */
-	public void setMobileNumber(Integer mobileNumber) {
+	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
 

@@ -23,22 +23,21 @@ $(document).ready(function() {
 	
 	<c:choose>
 	<c:when test="${supplier.zone!=null && supplier.zone!=''}">
-		$('.zone-list').hide();          
-		$('#supplierZone').show(); 
-		$('#supplierZone').val('<c:out value="${supplier.zone}"/>');
-		getZones('IN');
+		$('.zone-list').show();          
+		$('#supplierZone').hide(); 
+		getZones('<c:out value="${supplier.country.isoCode}" />'); 
+		//$('#supplierZone').val('<c:out value="${supplier.zone}"/>');
 	</c:when>
 	<c:otherwise>
 		$('.zone-list').show();           
 		$('#supplierZone').hide();
-		getZones('IN'); 
+		getZones('<c:out value="${supplier.country.isoCode}" />'); 
 	</c:otherwise>
 	</c:choose>
 
-	/* $(".country-list").change(function() {
+	$(".country-list").change(function() {
 		getZones($(this).val());
-    }) */
-
+    })
 
 });
 
@@ -106,7 +105,7 @@ function selectCountry(value) {
 	
 		<h3>
 			<c:choose>
-			<c:when test="${supplier.id == 0}">
+			<c:when test="${supplier.id == null}">
 				<s:message code="label.supplier.title" text="New Supplier" /></h3>
 			</c:when>
 			<c:otherwise>
@@ -194,19 +193,40 @@ function selectCountry(value) {
 				<h4><s:message code="label.supplier.contact.title" text="Contact Address" /></h4>
 				<div style="width: 50%; float: left; margin-top: 10px;">
 					
-					<div class="control-group" style="float: left; width: 100%; margin-bottom: 10px;">
+					<%-- <div class="control-group" style="float: left; width: 100%; margin-bottom: 10px;">
 						<div style="float: left; width: 100%;" class="controls">
 						
        						<div style="float: left; width: 49%;">
-       							<input type="radio" id="selcountry" name="selcountry" style="float: left;" checked="checked" onclick="selectCountry('India');"/><span style="float: left; margin-left: 3px;">India</span>
+       							<input type="radio" id="countryIndia" name="selcountry" style="float: left;" checked="checked" onclick="selectCountry('India');"/><span style="float: left; margin-left: 3px;">India</span>
        						</div>
        						<div style="float: left; width: 49%;">
-       							<input type="radio" id="selcountry" name="selcountry" style="float: left;" onclick="selectCountry('Other');"/><span style="float: left; margin-left: 3px;">Other</span>
+       							<input type="radio" id="countryOther" name="selcountry" style="float: left;" onclick="selectCountry('Other');"/><span style="float: left; margin-left: 3px;">Other</span>
        						</div>
          					
          					<form:input cssClass="input-large highlight" path="country" cssStyle="width: 195px; display: none;" />
                         </div>
+					</div> --%>
+					
+					<div class="control-group" style="float: left; margin-bottom: 0px;">
+						<div style="float: left; width: 120px;">
+	                        <label style="margin-top: 5px;"><s:message code="label.supplier.country" text="Country"/></label>
+						</div>
+                        <div style="float: left;" class="controls">
+         					<form:select cssClass="country-list" path="country.isoCode"  cssStyle="width: 205px;">
+								<form:options items="${countries}" itemValue="isoCode" itemLabel="name"/>
+   							</form:select>
+                        </div>
 					</div>
+					
+					<%-- <div class="control-group" style="float: left; width: 100%; margin-bottom: 10px;">
+	                    <label><s:message code="label.supplier.country" text="Country"/></label>
+	                    <div class="controls">
+                 			<form:select cssClass="country-list highlight" path="country.isoCode">
+								<form:options items="${countries}" itemValue="isoCode" itemLabel="name"/>
+   							</form:select>
+	                     </div>
+	                </div> --%>
+					
 					
 					<div class="control-group" style="float: left; margin-bottom: 0px;">
 						<div style="float: left; width: 120px;">

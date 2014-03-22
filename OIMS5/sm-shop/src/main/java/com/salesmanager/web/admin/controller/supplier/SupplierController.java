@@ -30,9 +30,12 @@ import com.salesmanager.core.business.company.model.Company;
 import com.salesmanager.core.business.company.service.CompanyService;
 import com.salesmanager.core.business.customer.model.Customer;
 import com.salesmanager.core.business.customer.service.CustomerService;
+import com.salesmanager.core.business.reference.country.model.Country;
 import com.salesmanager.core.business.reference.country.service.CountryService;
 import com.salesmanager.core.business.reference.currency.model.Currency;
 import com.salesmanager.core.business.reference.currency.service.CurrencyService;
+import com.salesmanager.core.business.reference.language.model.Language;
+import com.salesmanager.core.business.reference.language.service.LanguageService;
 import com.salesmanager.core.business.reference.zone.model.Zone;
 import com.salesmanager.core.business.reference.zone.service.ZoneService;
 import com.salesmanager.core.business.supplier.model.PartyItemDefaultMargin;
@@ -41,7 +44,6 @@ import com.salesmanager.core.business.supplier.service.SupplierService;
 import com.salesmanager.core.business.user.model.User;
 import com.salesmanager.core.business.user.service.UserService;
 import com.salesmanager.core.utils.ajax.AjaxResponse;
-import com.salesmanager.web.admin.controller.ControllerConstants;
 import com.salesmanager.web.admin.entity.web.Menu;
 import com.salesmanager.web.constants.Constants;
 import com.salesmanager.web.utils.LabelUtils;
@@ -78,6 +80,9 @@ public class SupplierController {
 	
 	@Autowired
 	LabelUtils messages;
+
+	@Autowired
+	LanguageService languageService;
 	
 	@Secured("AUTH")
 	@RequestMapping(value="/admin/supplier/suppliers.html", method=RequestMethod.GET)
@@ -138,38 +143,44 @@ public class SupplierController {
 	@Secured("AUTH")
 	@RequestMapping(value="/admin/supplier/createsupplier.html", method=RequestMethod.GET)
 	public String createSupplier(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return displaySupplier(Long.valueOf("0"), model, request, response);
+		
+		Supplier newSupplier = new Supplier();
+		newSupplier.setCountry(countryService.getByCode("IN"));
+		newSupplier.setCurrency(currencyService.getByCode("INR"));
+		newSupplier.setZone(zoneService.getByCode("MAH"));
+		
+		return displaySupplier(newSupplier, model, request, response);
 	}
 	
 	@Secured("AUTH")
 	@RequestMapping(value="/admin/supplier/editsupplier.html", method=RequestMethod.GET)
 	public String editSupplier(@ModelAttribute("id") Long id, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
-		return displaySupplier(id, model, request, response);
+		
+		Supplier dbSupplier = supplierService.getSupplier(id);
+		
+		if(dbSupplier == null) {
+			return "admin-supplier-list";
+		}
+		
+		return displaySupplier(dbSupplier, model, request, response);
 	}
 	
-	private String displaySupplier(Long dbSupplierId, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	private String displaySupplier(Supplier supplier, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//display menu
 		setMenu(model,request, "supplier-info");
-		String returnType = "admin-supplier";
-		Supplier dbSupplier = null;
-		if(dbSupplierId != null && dbSupplierId != 0) {
-			dbSupplier = supplierService.getSupplier(dbSupplierId);
-			
-			if(dbSupplier == null) {
-				returnType = "admin-supplier-list";
-			}
-			
-		} else {
-			returnType = "admin-supplier";
-			dbSupplier = new Supplier();
-		}
+		
+		Language language = languageService.getByCode("en");
+		
+		//get countries
+		List<Country> countries = countryService.getCountries(language);
+		model.addAttribute("countries", countries);
 		
 		List<Currency> currencies = currencyService.list();
 		model.addAttribute("currencies",currencies);
 		
-		model.addAttribute("supplier", dbSupplier);
+		model.addAttribute("supplier", supplier);
 		
-		return returnType;
+		return "admin-supplier";
 	}
 	
 	@Secured("AUTH")
@@ -188,27 +199,33 @@ public class SupplierController {
 			}
 		}
 		
-		Zone zone = supplier.getZone();
-		if(zone != null) {
-			zone = zoneService.getByCode(zone.getCode());
-		}
-		
 		Currency currency = supplier.getCurrency();
 		if(currency != null) {
 			currency = currencyService.getById(currency.getId());
 		}
 		
+		Country country = supplier.getCountry();
+		country = countryService.getByCode(country.getIsoCode());
 		
+		Zone zone = supplier.getZone();
+		if(zone != null) {
+			zone = zoneService.getByCode(zone.getCode());
+		}
+		
+		
+		supplier.setCountry(country);
 		supplier.setZone(zone);
 		supplier.setCurrency(currency);
 		supplier.setUpdated(new Date());
 		
 		supplierService.saveOrUpdate(supplier);
 		
-		model.addAttribute("success","success");
-		model.addAttribute("supplier", supplier);
+		Supplier savedSupplier = supplierService.getById(supplier.getId());
 		
-		return "admin-supplier";
+		model.addAttribute("success","success");
+		model.addAttribute("supplier", savedSupplier);
+		
+		return displaySupplier(savedSupplier, model, request, response);
 	}
 	
 	private void setMenu(Model model, HttpServletRequest request, String selectedMenu) throws Exception {
