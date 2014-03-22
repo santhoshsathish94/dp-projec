@@ -197,7 +197,24 @@ public class SupplierController {
 			if(newSupplier == null) {
 				return "admin-supplier-list";
 			}
+			
+			newSupplier.setUpdated(new Date());
 		}
+		
+		newSupplier.setAddress(supplier.getAddress());
+		newSupplier.setAddressLabel(supplier.getAddressLabel());
+		newSupplier.setEmail(supplier.getEmail());
+		newSupplier.setAlternateEmail(supplier.getAlternateEmail());
+		newSupplier.setCity(supplier.getCity());
+		newSupplier.setHomeNumber(supplier.getHomeNumber());
+		newSupplier.setMobileNumber(supplier.getMobileNumber());
+		newSupplier.setOpeningBalance(supplier.getOpeningBalance());
+		newSupplier.setPanNumber(supplier.getPanNumber());
+		newSupplier.setPostalCode(supplier.getPostalCode());
+		newSupplier.setServiceTaxNumber(supplier.getServiceTaxNumber());
+		newSupplier.setSupplierName(supplier.getSupplierName());
+		newSupplier.setTinNumber(supplier.getTinNumber());
+		newSupplier.setWorkNumber(supplier.getWorkNumber());
 		
 		Currency currency = supplier.getCurrency();
 		if(currency != null) {
@@ -212,15 +229,13 @@ public class SupplierController {
 			zone = zoneService.getByCode(zone.getCode());
 		}
 		
+		newSupplier.setCountry(country);
+		newSupplier.setZone(zone);
+		newSupplier.setCurrency(currency);
 		
-		supplier.setCountry(country);
-		supplier.setZone(zone);
-		supplier.setCurrency(currency);
-		supplier.setUpdated(new Date());
+		supplierService.saveOrUpdate(newSupplier);
 		
-		supplierService.saveOrUpdate(supplier);
-		
-		Supplier savedSupplier = supplierService.getById(supplier.getId());
+		Supplier savedSupplier = supplierService.getById(newSupplier.getId());
 		
 		model.addAttribute("success","success");
 		model.addAttribute("supplier", savedSupplier);
