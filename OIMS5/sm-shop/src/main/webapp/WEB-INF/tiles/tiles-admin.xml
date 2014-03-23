@@ -352,4 +352,20 @@
   		<put-attribute name="body" value="/pages/admin/supplier/setupdefaultmargin.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-product-variant-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/products/variants.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-product-variant" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/products/variant.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-product-shade-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/products/shades.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-product-shade" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/products/shade.jsp" /> 
+  	</definition>
+  	
 </tiles-definitions>

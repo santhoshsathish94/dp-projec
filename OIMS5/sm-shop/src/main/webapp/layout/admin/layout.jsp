@@ -412,6 +412,20 @@ response.setDateHeader ("Expires", -1);
 				window.location='<c:url value="/admin/inventoryManagement/createbranchtransfer.html" />';
 			});
 			
+			$("#pack-size-list-link").click(function() {
+				window.location='<c:url value="/admin/catalogue/master/listpacksize.html" />';
+			});
+			$("#pack-size-create-link").click(function() {
+				window.location='<c:url value="/admin/catalogue/master/createpacksize.html" />';
+			});
+			$("#shades-list-link").click(function() {
+				window.location='<c:url value="/admin/catalogue/master/listshade.html" />';
+			});
+			$("#shades-create-link").click(function() {
+				window.location='<c:url value="/admin/catalogue/master/createshade.html" />';
+			});
+			
+			
 		}); 
 		
 		
