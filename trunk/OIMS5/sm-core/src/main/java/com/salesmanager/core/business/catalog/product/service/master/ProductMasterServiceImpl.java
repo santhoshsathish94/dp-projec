@@ -62,9 +62,15 @@ public class ProductMasterServiceImpl extends SalesManagerEntityServiceImpl<Long
 		productMasterDao.saveOrUpdate(shades);
 	}
 
-	
+	@Override
+	public List<String> getVariantNameList() {
+		return productMasterDao.getVariantNameList();
+	}
 
-	
+	@Override
+	public List<String> getShadeNameList() {
+		return productMasterDao.getShadeNameList();
+	}
 	
 
 }

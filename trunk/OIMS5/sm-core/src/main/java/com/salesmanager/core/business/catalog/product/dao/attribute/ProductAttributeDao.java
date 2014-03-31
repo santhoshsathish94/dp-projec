@@ -10,15 +10,13 @@ import com.salesmanager.core.business.reference.language.model.Language;
 
 public interface ProductAttributeDao extends SalesManagerEntityDao<Long, ProductAttribute> {
 
-	List<ProductAttribute> getByOptionId(MerchantStore store,
-			Long id);
+	List<ProductAttribute> getByOptionId(MerchantStore store, Long id);
 
-	List<ProductAttribute> getByOptionValueId(MerchantStore store,
-			Long id);
+	List<ProductAttribute> getByOptionValueId(MerchantStore store, Long id);
 
-	List<ProductAttribute> getByProduct(MerchantStore store,
-			Product product, Language language);
+	List<ProductAttribute> getByProduct(MerchantStore store, Product product, Language language);
 
 	List<ProductAttribute> getByAttributeIds(MerchantStore store, List<Long> ids);
 
+	List<ProductAttribute> getByProductID(MerchantStore store, Product product, Language language);
 }

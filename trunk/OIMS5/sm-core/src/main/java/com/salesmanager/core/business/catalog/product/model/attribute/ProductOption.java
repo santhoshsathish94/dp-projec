@@ -69,6 +69,9 @@ public class ProductOption extends SalesManagerEntity<Long, ProductOption> {
 	
 	public ProductOption() {
 	}
+	public ProductOption(Long id) {
+		this.id = id;
+	}
 	
 	public Integer getProductOptionSortOrder() {
 		return productOptionSortOrder;
@@ -145,5 +148,60 @@ public class ProductOption extends SalesManagerEntity<Long, ProductOption> {
 
 	public boolean isReadOnly() {
 		return readOnly;
+	}
+	
+	public class CustomProductOption {
+		
+		private Long id;
+		
+		private String optionName;
+		
+		public List<CustomProductOption> getCustomProductOptions(List<ProductOption> productOptions) {
+			
+			List<CustomProductOption> customProductOptions = new ArrayList<CustomProductOption>();
+			CustomProductOption customProductOption = null;
+			
+			for(ProductOption po: productOptions) {
+				customProductOption = new CustomProductOption();
+				
+				customProductOption.setId(po.getId());
+				customProductOption.setOptionName(po.getDescriptionsSettoList().get(0).getName());
+				
+				customProductOptions.add(customProductOption);
+			}
+			
+			return customProductOptions;
+		}
+		
+
+		/**
+		 * @return the optionId
+		 */
+		public Long getId() {
+			return id;
+		}
+
+		/**
+		 * @param optionId the optionId to set
+		 */
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		/**
+		 * @return the optionName
+		 */
+		public String getOptionName() {
+			return optionName;
+		}
+
+		/**
+		 * @param optionName the optionName to set
+		 */
+		public void setOptionName(String optionName) {
+			this.optionName = optionName;
+		}
+		
+		
 	}
 }

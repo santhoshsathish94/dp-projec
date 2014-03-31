@@ -2,6 +2,8 @@ package com.salesmanager.core.business.catalog.product.dao.master;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.mysema.query.jpa.JPQLQuery;
@@ -94,6 +96,32 @@ public class ProductMasterDaoImpl extends SalesManagerEntityDaoImpl<Long, Varian
 		
 	}
 
+	@Override
+	public List<String> getVariantNameList() {
+		
+		StringBuilder qs = new StringBuilder();
+		qs.append("select v.variantName from Variants as v ");
+		
+		String hql = qs.toString();
+		Query q = super.getEntityManager().createQuery(hql);
+		
+		List<String> variantName = q.getResultList();
+		
+		return variantName;
+	}
 	
+	@Override
+	public List<String> getShadeNameList() {
+		
+		StringBuilder qs = new StringBuilder();
+		qs.append("select s.shadesName from Shades as s ");
+		
+		String hql = qs.toString();
+		Query q = super.getEntityManager().createQuery(hql);
+		
+		List<String> shadesName = q.getResultList();
+		
+		return shadesName;
+	}
 
 }

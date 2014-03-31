@@ -31,11 +31,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.salesmanager.core.business.catalog.category.model.Category;
 import com.salesmanager.core.business.catalog.category.model.CategoryDescription;
 import com.salesmanager.core.business.catalog.category.service.CategoryService;
 import com.salesmanager.core.business.catalog.product.model.Product;
 import com.salesmanager.core.business.catalog.product.model.attribute.ProductAttribute;
+import com.salesmanager.core.business.catalog.product.model.attribute.ProductOption;
+import com.salesmanager.core.business.catalog.product.model.attribute.ProductOptionValue;
 import com.salesmanager.core.business.catalog.product.model.availability.ProductAvailability;
 import com.salesmanager.core.business.catalog.product.model.description.ProductDescription;
 import com.salesmanager.core.business.catalog.product.model.image.ProductImage;
@@ -46,9 +51,12 @@ import com.salesmanager.core.business.catalog.product.model.price.ProductPriceDe
 import com.salesmanager.core.business.catalog.product.model.relationship.ProductRelationship;
 import com.salesmanager.core.business.catalog.product.model.type.ProductType;
 import com.salesmanager.core.business.catalog.product.service.ProductService;
+import com.salesmanager.core.business.catalog.product.service.attribute.ProductAttributeService;
+import com.salesmanager.core.business.catalog.product.service.attribute.ProductOptionValueService;
 import com.salesmanager.core.business.catalog.product.service.image.ProductImageService;
 import com.salesmanager.core.business.catalog.product.service.manufacturer.ManufacturerService;
 import com.salesmanager.core.business.catalog.product.service.type.ProductTypeService;
+import com.salesmanager.core.business.generic.exception.ServiceException;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.reference.language.model.Language;
 import com.salesmanager.core.business.tax.model.taxclass.TaxClass;
@@ -59,8 +67,10 @@ import com.salesmanager.core.utils.ajax.AjaxPageableResponse;
 import com.salesmanager.core.utils.ajax.AjaxResponse;
 import com.salesmanager.web.admin.entity.web.Menu;
 import com.salesmanager.web.constants.Constants;
+import com.salesmanager.web.entity.catalog.product.attribute.CustomProductAttribute;
 import com.salesmanager.web.utils.DateUtil;
 import com.salesmanager.web.utils.LabelUtils;
+import com.salesmanager.web.utils.LogicUtils;
 
 @Controller
 public class ProductController {
@@ -96,6 +106,12 @@ public class ProductController {
 	
 	@Autowired
 	CategoryService categoryService;
+	
+	@Autowired
+	ProductOptionValueService productOptionValueService;
+	
+	@Autowired
+	private ProductAttributeService productAttributeService;
 
 	@Secured("PRODUCTS")
 	@RequestMapping(value="/admin/products/editProduct.html", method=RequestMethod.GET)
@@ -111,34 +127,23 @@ public class ProductController {
 
 	}
 	
-	
-	
 	private String displayProduct(Long productId, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
 
 		//display menu
 		setMenu(model,request);
 		
-		
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		Language language = (Language)request.getAttribute("LANGUAGE");
-		
 
 		List<Manufacturer> manufacturers = manufacturerService.listByStore(store, language);
-		
 		List<ProductType> productTypes = productTypeService.list();
-		
 		List<TaxClass> taxClasses = taxClassService.listByStore(store);
-		
 		List<Language> languages = store.getLanguages();
-		
-
 		
 		com.salesmanager.web.admin.entity.catalog.Product product = new com.salesmanager.web.admin.entity.catalog.Product();
 		List<ProductDescription> descriptions = new ArrayList<ProductDescription>();
 
 		if(productId!=null && productId!=0) {//edit mode
-			
 
 			Product dbProduct = productService.getById(productId);
 			
@@ -158,7 +163,6 @@ public class ProductController {
 					if(lang.getCode().equals(l.getCode())) {
 						productDesc = desc;
 					}
-
 				}
 				
 				if(productDesc==null) {
@@ -167,7 +171,6 @@ public class ProductController {
 				}
 
 				descriptions.add(productDesc);
-				
 			}
 			
 			for(ProductImage image : dbProduct.getImages()) {
@@ -175,9 +178,7 @@ public class ProductController {
 					product.setProductImage(image);
 					break;
 				}
-
 			}
-			
 			
 			ProductAvailability productAvailability = null;
 			ProductPrice productPrice = null;
@@ -211,19 +212,19 @@ public class ProductController {
 			product.setPrice(productPrice);
 			product.setDescriptions(descriptions);
 			
-			
 			product.setDateAvailable(DateUtil.formatDate(dbProduct.getDateAvailable()));
-
-
+			product.setProductHaveVariants(dbProduct.isProductHaveVariants());
+			
+			List<ProductAttribute> productAttributeList = productAttributeService.getByProductID(store, dbProduct, language);
+			
+			model.addAttribute("variants", new CustomProductAttribute().getProductAttributeAsJson(productAttributeList));
+			
 		} else {
-
-
 			for(Language l : languages) {
 				
 				ProductDescription desc = new ProductDescription();
 				desc.setLanguage(l);
 				descriptions.add(desc);
-				
 			}
 			
 			Product prod = new Product();
@@ -237,14 +238,12 @@ public class ProductController {
 			product.setProduct(prod);
 			product.setDescriptions(descriptions);
 			product.setDateAvailable(DateUtil.formatDate(new Date()));
-
-
 		}
 		
-		
-		
-		
-		
+		List<ProductOptionValue> productOptionValues = productOptionValueService.listByStore(store, language);
+		List<ProductOptionValue.CustomProductOptionValues> customOptionValues = new ProductOptionValue().new CustomProductOptionValues().getCustomProductOptionValues(productOptionValues);
+				
+		model.addAttribute("variantList", LogicUtils.getJSONString(customOptionValues));
 		model.addAttribute("product",product);
 		model.addAttribute("manufacturers", manufacturers);
 		model.addAttribute("productTypes", productTypes);
@@ -255,8 +254,7 @@ public class ProductController {
 
 	@Secured("PRODUCTS")
 	@RequestMapping(value="/admin/products/save.html", method=RequestMethod.POST)
-	public String saveProduct(@Valid @ModelAttribute("product") com.salesmanager.web.admin.entity.catalog.Product  product, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
-		
+	public String saveProduct(@Valid @ModelAttribute("product") com.salesmanager.web.admin.entity.catalog.Product  product, BindingResult result, Model model, HttpServletRequest request, Locale locale, HttpServletResponse response) throws Exception {
 
 		Language language = (Language)request.getAttribute("LANGUAGE");
 		
@@ -266,11 +264,8 @@ public class ProductController {
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		
 		List<Manufacturer> manufacturers = manufacturerService.listByStore(store, language);
-		
 		List<ProductType> productTypes = productTypeService.list();
-		
 		List<TaxClass> taxClasses = taxClassService.listByStore(store);
-		
 		List<Language> languages = store.getLanguages();
 		
 		model.addAttribute("manufacturers", manufacturers);
@@ -297,8 +292,6 @@ public class ProductController {
 			}
 		}
 		
-
-		
 		//validate image
 		if(product.getImage()!=null && !product.getImage().isEmpty()) {
 			
@@ -308,9 +301,7 @@ public class ProductController {
 				String maxWidth = configuration.getProperty("PRODUCT_IMAGE_MAX_WIDTH_SIZE");
 				String maxSize = configuration.getProperty("PRODUCT_IMAGE_MAX_SIZE");
 				
-				
 				BufferedImage image = ImageIO.read(product.getImage().getInputStream());
-				
 				
 				if(!StringUtils.isBlank(maxHeight)) {
 					
@@ -319,7 +310,6 @@ public class ProductController {
 						ObjectError error = new ObjectError("image",messages.getMessage("message.image.height", locale) + " {"+maxHeight+"}");
 						result.addError(error);
 					}
-					
 				}
 				
 				if(!StringUtils.isBlank(maxWidth)) {
@@ -329,7 +319,6 @@ public class ProductController {
 						ObjectError error = new ObjectError("image",messages.getMessage("message.image.width", locale) + " {"+maxWidth+"}");
 						result.addError(error);
 					}
-					
 				}
 				
 				if(!StringUtils.isBlank(maxSize)) {
@@ -339,18 +328,12 @@ public class ProductController {
 						ObjectError error = new ObjectError("image",messages.getMessage("message.image.size", locale) + " {"+maxSize+"}");
 						result.addError(error);
 					}
-					
 				}
-				
-
 				
 			} catch (Exception e) {
 				LOGGER.error("Cannot validate product image", e);
 			}
-
 		}
-		
-		
 		
 		if (result.hasErrors()) {
 			return "admin-products-edit";
@@ -369,7 +352,6 @@ public class ProductController {
 		Set<ProductAvailability> availabilities = new HashSet<ProductAvailability>();	
 
 		if(product.getProduct().getId()!=null && product.getProduct().getId().longValue()>0) {
-		
 		
 			//get actual product
 			newProduct = productService.getById(product.getProduct().getId());
@@ -391,13 +373,11 @@ public class ProductController {
 			newProduct.setProductShipeable(product.getProduct().isProductShipeable());
 			newProduct.setTaxClass(product.getProduct().getTaxClass());
 
-
 			Set<ProductAvailability> avails = newProduct.getAvailabilities();
 			if(avails !=null && avails.size()>0) {
 				
 				for(ProductAvailability availability : avails) {
 					if(availability.getRegion().equals(com.salesmanager.core.constants.Constants.ALL_REGIONS)) {
-
 						
 						newProductAvailability = availability;
 						Set<ProductPrice> productPrices = availability.getPrices();
@@ -416,7 +396,6 @@ public class ProductController {
 					}
 				}
 			}
-			
 			
 			for(ProductImage image : newProduct.getImages()) {
 				if(image.isDefaultImage()) {
@@ -451,7 +430,6 @@ public class ProductController {
 		if(newProductAvailability==null) {
 			newProductAvailability = new ProductAvailability();
 		}
-		
 
 		newProductAvailability.setProductQuantity(product.getAvailability().getProductQuantity());
 		newProductAvailability.setProductQuantityOrderMin(product.getAvailability().getProductQuantityOrderMin());
@@ -478,21 +456,16 @@ public class ProductController {
 		newProduct.setDescriptions(descriptions);
 		product.setDateAvailable(DateUtil.formatDate(date));
 
-		
+		newProduct.setProductHaveVariants(product.isProductHaveVariants());
 		
 		if(product.getImage()!=null && !product.getImage().isEmpty()) {
 			
-
-			
 			String imageName = product.getImage().getOriginalFilename();
-			
-
 			
 			ProductImage productImage = new ProductImage();
 			productImage.setDefaultImage(true);
 			productImage.setImage(product.getImage().getInputStream());
 			productImage.setProductImage(imageName);
-			
 			
 			List<ProductImageDescription> imagesDescriptions = new ArrayList<ProductImageDescription>();
 
@@ -503,7 +476,6 @@ public class ProductController {
 				imageDescription.setLanguage(l);
 				imageDescription.setProductImage(productImage);
 				imagesDescriptions.add(imageDescription);
-				
 			}
 			
 			productImage.setDescriptions(imagesDescriptions);
@@ -515,18 +487,23 @@ public class ProductController {
 			
 			//product displayed
 			product.setProductImage(productImage);
-			
-			
 		} else {
-			
 			productService.saveOrUpdate(newProduct);
-			
 		}
 		
+		try {
+			saveProductAttribute(product.getProductVariants(), newProduct);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
+		/*List<ProductOptionValue> productOptionValues = productOptionValueService.listByStore(store, language);
+		List<ProductOptionValue.CustomProductOptionValues> customOptionValues = new ProductOptionValue().new CustomProductOptionValues().getCustomProductOptionValues(productOptionValues);
+				
+		model.addAttribute("variantList", LogicUtils.getJSONString(customOptionValues));*/
 		model.addAttribute("success","success");
-		
-		return "admin-products-edit";
+		return displayProduct(newProduct.getId(), model, request, response);
+		//return "admin-products-edit";
 	}
 	
 	
@@ -1016,4 +993,50 @@ public class ProductController {
 	}
 	
 
+	private void saveProductAttribute(String variants, Product product) {
+		
+		List<ProductAttribute> productAttributes = new ArrayList<ProductAttribute>();
+		
+		ProductAttribute prodAttr = null;
+		
+		JsonArray jsonArr = new JsonParser().parse(variants).getAsJsonArray();
+		if(jsonArr.size() > 0) {
+			
+			for(int i = 0; i < jsonArr.size(); i++) {
+				JsonObject combineArrayrObject = jsonArr.get(i).getAsJsonObject();
+				
+				if(combineArrayrObject != null) {
+					
+					if(combineArrayrObject.has("variant")) {
+						
+						JsonArray variantsArray = combineArrayrObject.get("variant").getAsJsonArray();//getAsString().split(",");
+						if(variantsArray.size() > 0) {
+							for(int j = 0; j < variantsArray.size(); j++) {
+								prodAttr = new ProductAttribute();
+								
+								prodAttr.setProduct(product);
+								
+								if(combineArrayrObject.has("shade")) {
+									prodAttr.setProductOption(new ProductOption(combineArrayrObject.get("shade").getAsLong()));
+								}
+								
+								prodAttr.setProductOptionValue(new ProductOptionValue(variantsArray.get(j).getAsLong()));
+ 								
+								productAttributes.add(prodAttr);
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		
+		for(ProductAttribute attribute: productAttributes) {
+			try {
+				productAttributeService.saveOrUpdate(attribute);
+			} catch (ServiceException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

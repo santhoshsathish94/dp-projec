@@ -14,6 +14,8 @@ public interface ProductMasterDao extends SalesManagerEntityDao<Long, Variants> 
 	
 	List<Variants> getVariantsList();
 	
+	List<String> getVariantNameList();
+	
 	void saveOrUpdate(Variants variants);
 	
 	Shades getShadesById(Long id);
@@ -21,6 +23,8 @@ public interface ProductMasterDao extends SalesManagerEntityDao<Long, Variants> 
 	Shades getShadesByShortCode(String shortCode);
 	
 	List<Shades> getShadesList();
+	
+	List<String> getShadeNameList();
 	
 	void saveOrUpdate(Shades shades);
 }

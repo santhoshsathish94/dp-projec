@@ -7,6 +7,15 @@
 <%@ page session="false" %>			
 <script type="text/javascript">
 	var priceFormatMessage = '<s:message code="message.price.cents" text="Wrong format" />';
+	var variantList = ${variantList}
+	<c:choose>
+		<c:when test="${variants != null && variants != ''}" >
+			var variants = ${variants}
+		</c:when>
+		<c:otherwise>
+		var variants = '';
+		</c:otherwise>
+	</c:choose>
 </script>
 
 <link href="<c:url value="/resources/css/bootstrap/css/datepicker.css" />" rel="stylesheet"></link>
@@ -16,7 +25,124 @@
 <script src="<c:url value="/resources/js/jquery.alphanumeric.pack.js" />"></script>
 <script src="<c:url value="/resources/js/adminFunctions.js" />"></script>
 
+<link rel="stylesheet" href="<c:url value="/resources/css/bootstrap/themes/base/jquery.ui.theme.css" />">
+<link rel="stylesheet" href="<c:url value="/resources/css/bootstrap/themes/base/jquery.ui.accordion.css" />">
+<link rel="stylesheet" href="<c:url value="/resources/css/bootstrap/themes/base/jquery.ui.menu.css" />">
+
+<script type='text/javascript' src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.bgiframe.min.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.ui.core.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.ui.widget.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.ui.position.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.ui.menu.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.ui.autocomplete.js" />"></script>
+
+<script src="<c:url value="/resources/js/admin-product.js" />"></script>
+
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.tokeninput.js" />"></script>
+
+<link rel="stylesheet" href="<c:url value="/resources/css/bootstrap/themes/base/token-input.css" />">
+<link rel="stylesheet" href="<c:url value="/resources/css/bootstrap/themes/base/token-input-facebook.css" />">
+
+<style>
+.ui-autocomplete {
+	max-height: 100px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	max-width: 135px;
+}
+/* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+*/
+* html .ui-autocomplete {
+	height: 100px;
+	width: 205px;
+}
+.ui-autocomplete-loading {
+	background: white url('/ishop/resources/css/bootstrap/themes/base/images/ui-anim_basic_16x16.gif') right center no-repeat;
+}
+
+.token-input-list-facebook {
+    clear: left;
+    cursor: text;
+    font-family: Verdana;
+    font-size: 12px;
+    height: auto !important;
+    list-style-type: none;
+    margin: 0;
+    min-height: 1px;
+    overflow: hidden;
+    padding: 0;
+    float: left;
+}
+
+ul.token-input-list-facebook {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    clear: left;
+    cursor: text;
+    font-family: Verdana;
+    font-size: 12px;
+    height: auto !important;
+    list-style-type: none;
+    margin: 0;
+    min-height: 1px;
+    overflow: hidden;
+    padding: 0;
+    width: 275px;
+    z-index: 999;
+    border-radius: 3px;
+}
+
+ul.token-input-list-facebook li input {
+    background-color: #FFFFFF;
+    border: 0 none;
+    margin: 2px 0;
+    padding: 3px 8px;
+    width: 100px;
+}
+
+div.token-input-dropdown-facebook {
+	width: 275px;
+}
+
+<!--
+#variant_master {
+	float: left; 
+	width: 100%;
+}
+
+#variant_master .variant_div {
+	float: left;
+	margin-left: 220px;
+}
+
+#variant_master .shades_variant {
+	float: left;
+	width: 130px;
+}
+
+#variant_master .pack_size_variant {
+	float: left;
+	/* width: 265px; */
+	outline: medium none;
+    width: 30px
+}
+
+.remove_variants {
+	margin-left: 10px; 
+	cursor: pointer;
+	float: left;
+}
+-->
+</style>
+
 <script type="text/javascript">
+
+/* var variants = "";//${variantNames}
+var shades = ${shades} */
+var counter = 1;
+
 	$(function() {
 		$('#sku').alphanumeric();
 		$('#productPriceAmount').numeric({allow:"."});
@@ -33,48 +159,16 @@
 		</c:forEach>
 		
 		
-		$('#product_variant').change(function(this) {
-			if($('#isProductHaveVariants').is(':checked')) {
-				this.show();
+		$('#productHaveVariant').click(function() {
+			if($('#productHaveVariant').is(":checked")) {
+				$('#productHaveVariants').val(true);
 			} else {
-				this.hide();
+				$('#productHaveVariants').val(false);
 			}
-		}); 
-	});
-	
-	function removeImage(imageId) {
-		$("#store.error").show();
-		$.ajax({
-		  type: 'POST',
-		  url: '<c:url value="/admin/products/product/removeImage.html"/>',
-		  data: 'imageId=' + imageId,
-		  dataType: 'json',
-		  success: function(response){
-				var status = isc.XMLTools.selectObjects(response, "/response/status");
-				if(status==0 || status ==9999) {
-					//remove delete
-					$("#imageControlRemove").html('');
-					//add field
-					$("#imageControl").html('<input class=\"input-file\" id=\"image\" name=\"image\" type=\"file\">');
-					$(".alert-success").show();
-				} else {
-					//display message
-					$(".alert-error").show();
-				}
-		  },
-		  error: function(xhr, textStatus, errorThrown) {
-		  	alert('error ' + errorThrown);
-		  }
+			
+			displayVaraint();
 		});
-	}
-	
-	function productHasVariant() {
-		if($('#isProductHaveVariants').is(':checked')) {
-			$('product_variant').show();
-		} else {
-			$('product_variant').hide();
-		}
-	}
+	});
 	
 </script>
 
@@ -122,7 +216,7 @@
 						</div>
 					</div>
 					
-					<form:hidden path="product.id" />
+					<form:hidden path="product.id" class="productId"/>
 					
 					<div class="control-group">
 						<label><s:message code="label.product.available" text="Product available"/></label>
@@ -130,7 +224,7 @@
 							<form:checkbox path="product.available" />
 						</div>
 					</div>
-					<div class="control-group">
+					<%-- <div class="control-group">
 						<label><s:message code="label.product.availabledate" text="Date available"/></label>
 						<div class="controls">
 							<input id="dateAvailable" name="dateAvailable" value="${product.dateAvailable}" class="small" type="text" data-date-format="<%=com.salesmanager.core.constants.Constants.DEFAULT_DATE_FORMAT%>" data-datepicker="datepicker"> 
@@ -139,7 +233,7 @@
 							</script>
 							<span class="help-inline"><form:errors path="dateAvailable" cssClass="error" /></span>
 						</div>
-					</div>
+					</div> --%>
 					<div class="control-group">
 						<label><s:message code="label.product.manufacturer" text="Manufacturer"/></label>
 						<div class="controls">
@@ -216,7 +310,8 @@
 						<div class="control-group">
 							<label class="required"><s:message code="is.variation" text="This product has multiple variations"/></label>
 							<div class="controls">
-								<input type="checkbox" id="isProductHaveVariants" name="isProductHaveVariants"/>
+								<input type="checkbox" id="productHaveVariant"/>
+								<form:hidden path="productHaveVariants" vlaue=""/>
 							</div>
 						</div>
 						
@@ -224,18 +319,23 @@
 							<div id="variant_lable" style="float: left; width: 100%; margin-bottom: 5px;">
 								<span style="float: left; width: 220px;"><label class="required"><s:message code="is.variation" text="Product Variations"/></label></span>
 								<span style="float: left; width: 150px;"><label class="required"><s:message code="is.variation" text="Type"/></label></span>
-								<span style="float: left; width: 250px;"><label class="required"><s:message code="is.variation" text="Value"/></label></span>
+								<span style="float: left; width: 275px;"><label class="required"><s:message code="is.variation" text="Value"/></label></span>
+								<span style="float: left; cursor: pointer;">
+									<label class="required" style="cursor: pointer; color: #0000FF; font: 12px 'Trebuchet MS',icon;" onclick="addMoreVariant();">+ add more</label>
+								</span>
 							</div>
-							<div id="variant_lable" style="float: left; width: 100%;">
-								<div style="float: left; width: 220px;">&nbsp;</div>
-								<div style="float: left; width: 140px;">
-									<input type="text" id="type" name="type" style="float: left; width: 130px;"/>
+							<div id="variant_master">
+								<div id="variant_div1" class="variant_div">
+									<input type="text" id="shades_variant1" class="shades_variant" value=""/>
+									<input type="hidden" id="shadeId1" value=""/>
+									<div id="packId1" class="sm input" style="float: left; height: 28px; margin-left: 10px; width: 275px; z-index: 1200;">
+										<input type="text" id="pack_size_variant1" class="pack_size_variant"/>
+									</div>
+									<span class="remove_variants" onclick="removeVariant(this);">&#x2716;</span>
 								</div>
-								<div style="float: left; width: 280px; margin-left: 10px;">
-									<input type="text" id="value" name="value" style="float: left; width: 270px;"/>
-								</div>
-								<div style="float: left; margin-left: 10px;">&#x2716;</div>
 							</div>
+							<form:hidden path="productVariants" vlaue=""/>
+							<!-- <input type="hidden" id="productVariants" name="productVariants" value=""/> -->
 						</div>
 						
 						<div class="control-group">
@@ -269,7 +369,7 @@
 							<span id="help-price" class="help-inline"><form:errors path="productPrice" cssClass="error" /></span>
 						</div>
 					</div>
-					<div class="control-group">
+					<%-- <div class="control-group">
 						<label><s:message code="label.productedit.qtyavailable" text="Quantity available"/></label>
 						<div class="controls">
 							<form:input id="quantity" cssClass="highlight" path="availability.productQuantity"/>
@@ -289,7 +389,7 @@
 							<form:input id="ordermax" cssClass="highlight" path="availability.productQuantityOrderMax"/>
 							<span class="help-inline"><form:errors path="availability.productQuantityOrderMax" cssClass="error" /></span>
 						</div>
-					</div>
+					</div> --%>
 					<div class="control-group">
 						<label><s:message code="label.product.shipeable" text="Product will be shipped"/></label>
 						<div class="controls">
@@ -301,7 +401,7 @@
 					<form:hidden path="availability.id" />
 					<form:hidden path="price.id" />
 					
-					<div class="control-group">
+					<%-- <div class="control-group">
 						<label><s:message code="label.product.weight" text="Weight"/></label>
 						<div class="controls">
 							<form:input id="weight" cssClass="" path="product.productWeight"/>
@@ -328,7 +428,7 @@
 							<form:input id="length" cssClass="" path="product.productLength"/>
 							<span class="help-inline"><form:errors path="product.productLength" cssClass="error" /></span>
 						</div>
-					</div>          
+					</div>  --%>         
 					<div class="control-group">
 						<label><s:message code="label.entity.order" text="Sort order"/></label>
 						<div class="controls">
@@ -359,7 +459,7 @@
 					</div>
 					<div class="form-actions">
 						<div class="pull-right">
-							<button type="submit" class="btn btn-success"><s:message code="button.label.submit2" text="Submit"/></button>
+							<button type="submit" class="btn btn-success" onclick="return setupShadeVariant();"><s:message code="button.label.submit2" text="Submit"/></button>
 						</div>
 					</div>
 				</form:form>
@@ -378,4 +478,12 @@
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+		if($('#productHaveVariants').val() == "true") {
+			$('#productHaveVariant').prop('checked', true);
+			
+			displayVaraint();
+			displayVariantOnLoad();
+		}
+	</script>
 </div>

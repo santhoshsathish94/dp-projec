@@ -63,17 +63,9 @@ public class OptionsValueController {
 	@Secured("PRODUCTS")
 	@RequestMapping(value="/admin/options/optionvalues.html", method=RequestMethod.GET)
 	public String displayOptions(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		
 		setMenu(model,request);
-
 		//subsequent ajax call
-
-		
 		return "catalogue-optionsvalues-list";
-		
-		
-		
 	}
 	
 	@Secured("PRODUCTS")
@@ -89,31 +81,21 @@ public class OptionsValueController {
 	}
 	
 	private String displayOption(Long optionId, HttpServletRequest request, HttpServletResponse response,Model model,Locale locale) throws Exception {
-
 		
 		this.setMenu(model, request);
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		
 		List<Language> languages = store.getLanguages();
-
 		Set<ProductOptionValueDescription> descriptions = new HashSet<ProductOptionValueDescription>();
-		
 		ProductOptionValue option = new ProductOptionValue();
 		
 		if(optionId!=null && optionId!=0) {//edit mode
-			
-			
 			option = productOptionValueService.getById(store, optionId);
-			
-			
 			if(option==null) {
 				return "redirect:/admin/options/optionsvalues.html";
 			}
-			
 			Set<ProductOptionValueDescription> optionDescriptions = option.getDescriptions();
-			
-			
-			
+
 			for(Language l : languages) {
 			
 				ProductOptionValueDescription optionDescription = null;
@@ -126,9 +108,7 @@ public class OptionsValueController {
 						if(code.equals(l.getCode())) {
 							optionDescription = description;
 						}
-						
 					}
-					
 				}
 				
 				if(optionDescription==null) {
@@ -137,37 +117,25 @@ public class OptionsValueController {
 				}
 				
 				descriptions.add(optionDescription);
-			
 			}
-
 		} else {
 			
 			for(Language l : languages) {
-				
 				ProductOptionValueDescription desc = new ProductOptionValueDescription();
 				desc.setLanguage(l);
 				descriptions.add(desc);
-				
 			}
-			
 			option.setDescriptions(descriptions);
-			
 		}
-		
-
 		
 		model.addAttribute("optionValue", option);
 		return "catalogue-optionsvalues-details";
-		
-		
 	}
 		
 	
 	@Secured("PRODUCTS")
 	@RequestMapping(value="/admin/options/saveOptionValue.html", method=RequestMethod.POST)
 	public String saveOption(@Valid @ModelAttribute("optionValue") ProductOptionValue optionValue, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
-		
-
 		//display menu
 		setMenu(model,request);
 		
@@ -175,15 +143,12 @@ public class OptionsValueController {
 		ProductOptionValue dbEntity =	null;	
 
 		if(optionValue.getId() != null && optionValue.getId() >0) { //edit entry
-			
 			//get from DB
 			dbEntity = productOptionValueService.getById(store,optionValue.getId());
 			
 			if(dbEntity==null) {
 				return "redirect:/admin/options/optionsvalues.html";
 			}
-			
-			
 		}
 		
 		//validate if it contains an existing code
@@ -192,20 +157,15 @@ public class OptionsValueController {
 			ObjectError error = new ObjectError("code",messages.getMessage("message.code.exist", locale));
 			result.addError(error);
 		}
-
 			
 		Map<String,Language> langs = languageService.getLanguagesMap();
-			
 
 		List<ProductOptionValueDescription> descriptions = optionValue.getDescriptionsList();
 		if(descriptions!=null && descriptions.size()>0) {
-			
 				Set<ProductOptionValueDescription> descs = new HashSet<ProductOptionValueDescription>();
-				
 				//if(descs==null || descs.size()==0) {			
 
 				//} else {
-				
 					optionValue.setDescriptions(descs);
 					for(ProductOptionValueDescription description : descriptions) {
 						
@@ -213,35 +173,23 @@ public class OptionsValueController {
 							ObjectError error = new ObjectError("name",messages.getMessage("message.name.required", locale));
 							result.addError(error);
 						} else {
-							
-						
 							String code = description.getLanguage().getCode();
 							Language l = langs.get(code);
 							description.setLanguage(l);
 							description.setProductOptionValue(optionValue);
 							descs.add(description);
-						
 						}
-						
-						
 					}
-
-				
 		} else {
-			
 			ObjectError error = new ObjectError("name",messages.getMessage("message.name.required", locale));
 			result.addError(error);
-			
 		}
-			
 
 		optionValue.setMerchantStore(store);
-
 		
 		if (result.hasErrors()) {
 			return "catalogue-optionsvalues-details";
 		}
-		
 
 		if(optionValue.getImage()!=null && !optionValue.getImage().isEmpty()) {
 
@@ -259,13 +207,9 @@ public class OptionsValueController {
 		
 		productOptionValueService.saveOrUpdate(optionValue);
 
-
-		
-
 		model.addAttribute("success","success");
 		return "catalogue-optionsvalues-details";
 	}
-
 	
 	
 	@SuppressWarnings("unchecked")
@@ -274,31 +218,19 @@ public class OptionsValueController {
 	public @ResponseBody String pageOptions(HttpServletRequest request, HttpServletResponse response) {
 		
 		String optionName = request.getParameter("name");
-
-
 		AjaxResponse resp = new AjaxResponse();
-
 		
 		try {
 			
-			
 			Language language = (Language)request.getAttribute("LANGUAGE");	
-		
 			MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
-			
 			List<ProductOptionValue> options = null;
 					
 			if(!StringUtils.isBlank(optionName)) {
-				
 				//productOptionValueService.getByName(store, optionName, language);
-				
 			} else {
-				
 				options = productOptionValueService.listByStore(store, language);
-				
 			}
-					
-					
 			
 			for(ProductOptionValue option : options) {
 				
@@ -311,40 +243,27 @@ public class OptionsValueController {
 				entry.put("name", description.getName());
 				entry.put("image", new StringBuilder().append(store.getCode()).append("/").append(FileContentType.PROPERTY.name()).append("/").append(option.getProductOptionValueImage()).toString());
 				resp.addDataEntry(entry);
-				
-				
 			}
-			
 			resp.setStatus(AjaxResponse.RESPONSE_STATUS_SUCCESS);
-			
-
-		
 		} catch (Exception e) {
 			LOGGER.error("Error while paging options", e);
 			resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
 		}
-		
 		String returnString = resp.toJSONString();
 		
 		return returnString;
-		
-		
 	}
 	
 	@Secured("PRODUCTS")
 	@RequestMapping(value="/admin/optionsvalues/remove.html", method=RequestMethod.POST, produces="application/json")
 	public @ResponseBody String deleteOptionValue(HttpServletRequest request, HttpServletResponse response, Locale locale) {
 		String sid = request.getParameter("optionValueId");
-
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
-		
 		AjaxResponse resp = new AjaxResponse();
 
-		
 		try {
 			
 			Long id = Long.parseLong(sid);
-			
 			ProductOptionValue entity = productOptionValueService.getById(store, id);
 
 			if(entity==null || entity.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
@@ -358,8 +277,6 @@ public class OptionsValueController {
 				resp.setStatus(AjaxResponse.RESPONSE_OPERATION_COMPLETED);
 				
 			}
-		
-		
 		} catch (Exception e) {
 			LOGGER.error("Error while deleting option", e);
 			resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
@@ -377,38 +294,28 @@ public class OptionsValueController {
 		String optionValueId = request.getParameter("optionId");
 
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
-		
 		AjaxResponse resp = new AjaxResponse();
-
 		
 		try {
 			
 			Long id = Long.parseLong(optionValueId);
 			
 			ProductOptionValue optionValue = productOptionValueService.getById(store, id);
-			
-
-			
 			contentService.removeFile(store.getCode(), FileContentType.PROPERTY, optionValue.getProductOptionValueImage());
 			
 			store.setStoreLogo(null);
 			optionValue.setProductOptionValueImage(null);
 			productOptionValueService.update(optionValue);
-		
-		
+
 		} catch (Exception e) {
 			LOGGER.error("Error while deleting product", e);
 			resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
 			resp.setErrorMessage(e);
 		}
-		
 		String returnString = resp.toJSONString();
 		
 		return returnString;
 	}
-	
-	
-
 	
 	private void setMenu(Model model, HttpServletRequest request) throws Exception {
 		
@@ -424,7 +331,6 @@ public class OptionsValueController {
 		model.addAttribute("currentMenu",currentMenu);
 		model.addAttribute("activeMenus",activeMenus);
 		//
-		
 	}
 
 }

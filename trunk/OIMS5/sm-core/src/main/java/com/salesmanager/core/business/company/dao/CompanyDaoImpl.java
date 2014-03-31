@@ -2,8 +2,6 @@ package com.salesmanager.core.business.company.dao;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
@@ -35,9 +33,9 @@ public class CompanyDaoImpl  extends SalesManagerEntityDaoImpl<Integer, Company>
 		JPQLQuery query = new JPAQuery (getEntityManager());
 		
 		query.from(qCompany)
-			.leftJoin(qCompany.companyCurrency)
-			.leftJoin(qCompany.companyCountry)
-			.leftJoin(qCompany.companyZone)
+			.leftJoin(qCompany.companyCurrency).fetch()
+			.leftJoin(qCompany.companyCountry).fetch()
+			.leftJoin(qCompany.companyZone).fetch()
 			.where(qCompany.id.eq(companyId));
 		
 		return query.uniqueResult(qCompany);

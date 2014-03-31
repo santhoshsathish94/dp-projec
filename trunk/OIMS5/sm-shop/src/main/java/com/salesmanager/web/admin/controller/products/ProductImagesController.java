@@ -174,7 +174,7 @@ public class ProductImagesController {
 			return ControllerConstants.Tiles.Product.productImages;
 		}
 		
-		if(product.getMerchantStore().getId()!=store.getId()) {
+		if(product.getMerchantStore().getId().compareTo(store.getId()) != 0) {
 			FieldError error = new FieldError("productImages","image",messages.getMessage("message.error", locale));
 			bindingResult.addError(error);
 		}
