@@ -28,8 +28,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.salesmanager.core.business.catalog.product.model.attribute.ProductOption;
 import com.salesmanager.core.business.catalog.product.model.attribute.ProductOptionDescription;
-import com.salesmanager.core.business.catalog.product.model.attribute.ProductOptionValue;
 import com.salesmanager.core.business.catalog.product.service.attribute.ProductOptionService;
+import com.salesmanager.core.business.generic.exception.ServiceException;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.reference.language.model.Language;
 import com.salesmanager.core.business.reference.language.service.LanguageService;
@@ -37,6 +37,7 @@ import com.salesmanager.core.utils.ajax.AjaxResponse;
 import com.salesmanager.web.admin.entity.web.Menu;
 import com.salesmanager.web.constants.Constants;
 import com.salesmanager.web.utils.LabelUtils;
+import com.salesmanager.web.utils.LogicUtils;
 
 @Controller
 public class OptionsController {
@@ -341,6 +342,21 @@ public class OptionsController {
 		String returnString = resp.toJSONString();
 		
 		return returnString;
+	}
+	
+	@RequestMapping(value={"/admin/options/loadShadeData.html"}, method=RequestMethod.POST, produces="application/json")
+	public @ResponseBody String loadAjaxData(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
+		
+		String fieldValue = request.getParameter("fieldValue");
+		
+		Language language = (Language)request.getAttribute("LANGUAGE");	
+		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
+		
+		List<ProductOption> productOptions = productOptionService.getByName(store, fieldValue, language);
+		
+		List<ProductOption.CustomProductOption> customOptions = new ProductOption().new CustomProductOption().getCustomProductOptions(productOptions);
+				
+		return LogicUtils.getJSONString(customOptions);
 	}
 
 }

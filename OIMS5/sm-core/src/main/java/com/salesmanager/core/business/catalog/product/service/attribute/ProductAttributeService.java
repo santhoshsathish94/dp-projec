@@ -12,18 +12,15 @@ import com.salesmanager.core.business.reference.language.model.Language;
 public interface ProductAttributeService extends
 		SalesManagerEntityService<Long, ProductAttribute> {
 
-	void saveOrUpdate(ProductAttribute productAttribute)
-			throws ServiceException;
+	void saveOrUpdate(ProductAttribute productAttribute) throws ServiceException;
 	
-	List<ProductAttribute> getByOptionId(MerchantStore store,
-			Long id) throws ServiceException;
+	List<ProductAttribute> getByOptionId(MerchantStore store, Long id) throws ServiceException;
 
-	List<ProductAttribute> getByOptionValueId(MerchantStore store,
-			Long id) throws ServiceException;
+	List<ProductAttribute> getByOptionValueId(MerchantStore store, Long id) throws ServiceException;
 
-	List<ProductAttribute> getByProductId(MerchantStore store, Product product, Language language)
-			throws ServiceException;
+	List<ProductAttribute> getByProductId(MerchantStore store, Product product, Language language) throws ServiceException;
 
-	List<ProductAttribute> getByAttributeIds(MerchantStore store, List<Long> ids)
-			throws ServiceException;
+	List<ProductAttribute> getByAttributeIds(MerchantStore store, List<Long> ids) throws ServiceException;
+	
+	List<ProductAttribute> getByProductID(MerchantStore store, Product product, Language language) throws ServiceException;
 }

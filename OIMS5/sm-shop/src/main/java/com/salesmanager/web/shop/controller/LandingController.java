@@ -53,7 +53,7 @@ public class LandingController {
 	//@Autowired
 	//CategoryService categoryService;
 	
-	@RequestMapping(value={"/shop/home.html","/shop/","/shop"}, method=RequestMethod.GET)
+	@RequestMapping(value={"/shop/home.html","/shop/","/shop","/shop/**"}, method=RequestMethod.GET)
 	public String displayLanding(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		
 		Language language = (Language)request.getAttribute(Constants.LANGUAGE);

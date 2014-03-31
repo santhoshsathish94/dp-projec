@@ -51,8 +51,6 @@ public class Company extends SalesManagerEntity<Integer, Company> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NotEmpty
-	@Pattern(regexp="^[a-zA-Z0-9_]*$")
 	@Column(name = "COMPANY_ADMIN", nullable=false, unique=true, length=100)
 	private String code;
 	
@@ -128,15 +126,15 @@ public class Company extends SalesManagerEntity<Integer, Company> {
 	@Column(name="COMPANY_INVOICE_TEMPLATE", length=25)
 	private String companyInvoiceTemplate;
 	
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Country.class)
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Country.class)
 	@JoinColumn(name="COMPANY_COUNTRY_ID", nullable=true, updatable=true)
 	private Country companyCountry;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER, targetEntity = Zone.class)
 	@JoinColumn(name="COMPANY_ZONE_ID", nullable=true, updatable=true)
 	private Zone companyZone;
 	
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Currency.class)
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Currency.class)
 	@JoinColumn(name = "COMPANY_CURRENCY_ID", nullable=true)
 	private Currency companyCurrency;
 	

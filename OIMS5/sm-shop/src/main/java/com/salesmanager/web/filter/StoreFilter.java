@@ -130,6 +130,13 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 	
 				String storeCode = request.getParameter(STORE_REQUEST_PARAMETER);
 				
+				String context = request.getServletPath();
+				if(!StringUtils.isBlank(context)) {
+					String[] arr = context.split("/");
+					storeCode = arr[arr.length - 1];
+				}
+				
+				
 				if(!StringUtils.isBlank(storeCode)) {
 					if(store!=null) {
 						if(!store.getCode().equals(storeCode)) {

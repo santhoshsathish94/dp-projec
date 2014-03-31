@@ -47,6 +47,7 @@ import com.salesmanager.core.utils.ajax.AjaxResponse;
 import com.salesmanager.web.admin.entity.web.Menu;
 import com.salesmanager.web.constants.Constants;
 import com.salesmanager.web.utils.LabelUtils;
+import com.salesmanager.web.utils.LogicUtils;
 import com.salesmanager.web.utils.UserUtils;
 
 @Controller
@@ -443,7 +444,7 @@ public class SupplierController {
 			if(StringUtils.endsWithIgnoreCase("company", searchFor))
 				dataList = companyService.getCompanyNameListByDisplayName(fieldValue);
 			
-			returnString = getJsonString(dataList);
+			returnString = LogicUtils.getJsonString(dataList);
 			
 		} catch (Exception e) {
 			LOGGER.error("loadAjaxData()", e);
@@ -452,7 +453,7 @@ public class SupplierController {
 		return returnString;
 	}
 	
-	private String getJsonString(List<String> stringList) {
+	/*private String getJsonString(List<String> stringList) {
 		StringBuffer sb = new StringBuffer("[");
 		for(int i=0; i < stringList.size(); i++) {
 			if(i < (stringList.size() - 1)) {
@@ -464,6 +465,6 @@ public class SupplierController {
 		sb.append("]");
 		
 		return sb.toString();
-	}
+	}*/
 	
 }

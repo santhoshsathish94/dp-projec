@@ -15,8 +15,7 @@ import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.reference.language.model.Language;
 
 @Service("productAttributeService")
-public class ProductAttributeServiceImpl extends
-		SalesManagerEntityServiceImpl<Long, ProductAttribute> implements ProductAttributeService {
+public class ProductAttributeServiceImpl extends SalesManagerEntityServiceImpl<Long, ProductAttribute> implements ProductAttributeService {
 	
 	private ProductAttributeDao productAttributeDao;
 
@@ -89,4 +88,12 @@ public class ProductAttributeServiceImpl extends
 		
 	}
 
+	/**
+	 * Returns all product attributes
+	 */
+	@Override
+	public List<ProductAttribute> getByProductID(MerchantStore store, Product product, Language language) throws ServiceException {
+		return productAttributeDao.getByProductID(store, product, language);
+		
+	}
 }

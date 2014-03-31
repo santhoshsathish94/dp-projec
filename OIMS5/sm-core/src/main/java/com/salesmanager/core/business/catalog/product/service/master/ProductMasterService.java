@@ -12,6 +12,8 @@ public interface ProductMasterService extends SalesManagerEntityService<Long, Va
 	
 	List<Variants> getVariantsList();
 	
+	List<String> getVariantNameList();
+	
 	Variants getVariantsByName(String variantName);
 	
 	void saveOrUpdate(Variants variants);
@@ -21,6 +23,8 @@ public interface ProductMasterService extends SalesManagerEntityService<Long, Va
 	Shades getShadesByShortCode(String shortCode);
 	
 	List<Shades> getShadesList();
+	
+	List<String> getShadeNameList();
 	
 	void saveOrUpdate(Shades shades);
 }

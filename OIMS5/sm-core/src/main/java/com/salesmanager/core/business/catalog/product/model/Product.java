@@ -23,6 +23,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.Cascade;
@@ -157,6 +158,12 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	@Column(name = "SKU")
 	private String sku;
 
+	@Column(name = "PRODUCT_HAS_VARIANT")
+	private boolean productHaveVariants = false;
+	
+	@Transient
+	private String productVariants;
+	
 	public Product() {
 	}
 
@@ -412,6 +419,34 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 			}
 		}
 		return productImage;
+	}
+
+	/**
+	 * @return the isProductHaveVariants
+	 */
+	public boolean isProductHaveVariants() {
+		return productHaveVariants;
+	}
+
+	/**
+	 * @param isProductHaveVariants the isProductHaveVariants to set
+	 */
+	public void setProductHaveVariants(boolean productHaveVariants) {
+		this.productHaveVariants = productHaveVariants;
+	}
+
+	/**
+	 * @return the productVariants
+	 */
+	public String getProductVariants() {
+		return productVariants;
+	}
+
+	/**
+	 * @param productVariants the productVariants to set
+	 */
+	public void setProductVariants(String productVariants) {
+		this.productVariants = productVariants;
 	}
 
 

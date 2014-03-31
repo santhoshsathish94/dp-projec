@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
 
+
 import com.salesmanager.core.business.catalog.product.model.availability.ProductAvailability;
 import com.salesmanager.core.business.catalog.product.model.description.ProductDescription;
 import com.salesmanager.core.business.catalog.product.model.image.ProductImage;
@@ -49,6 +50,10 @@ public class Product implements Serializable {
 	private String dateAvailable;
 
 	private ProductDescription description = null;
+	
+	private boolean productHaveVariants;
+	
+	private String productVariants;
 	
 	public String getDateAvailable() {
 		return dateAvailable;
@@ -105,6 +110,30 @@ public class Product implements Serializable {
 	}
 	public ProductDescription getDescription() {
 		return description;
+	}
+	/**
+	 * @return the productHaveVariants
+	 */
+	public boolean isProductHaveVariants() {
+		return productHaveVariants;
+	}
+	/**
+	 * @param productHaveVariants the productHaveVariants to set
+	 */
+	public void setProductHaveVariants(boolean productHaveVariants) {
+		this.productHaveVariants = productHaveVariants;
+	}
+	/**
+	 * @return the productVariants
+	 */
+	public String getProductVariants() {
+		return productVariants;
+	}
+	/**
+	 * @param productVariants the productVariants to set
+	 */
+	public void setProductVariants(String productVariants) {
+		this.productVariants = productVariants;
 	}
 	
 

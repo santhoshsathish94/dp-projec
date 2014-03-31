@@ -92,9 +92,7 @@ public class ProductAttributeController {
 		
 		model.addAttribute("product",product);
 		return "admin-products-attributes";
-		
 	}
-	
 	
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -104,8 +102,6 @@ public class ProductAttributeController {
 
 		//String attribute = request.getParameter("attribute");
 		String sProductId = request.getParameter("productId");
-		
-		
 		AjaxResponse resp = new AjaxResponse();
 		
 		Long productId;
@@ -119,14 +115,10 @@ public class ProductAttributeController {
 			String returnString = resp.toJSONString();
 			return returnString;
 		}
-
 		
 		try {
 			
-			
 			product = productService.getById(productId);
-			
-
 
 			Language language = (Language)request.getAttribute("LANGUAGE");
 			MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
@@ -160,9 +152,6 @@ public class ProductAttributeController {
 				entry.put("price", priceUtil.getAdminFormatedAmountWithCurrency(store,attr.getProductAttributePrice()));
 
 				resp.addDataEntry(entry);
-				
-				
-				
 			}
 
 			resp.setStatus(AjaxPageableResponse.RESPONSE_STATUS_SUCCESS);
@@ -175,30 +164,23 @@ public class ProductAttributeController {
 		
 		String returnString = resp.toJSONString();
 		return returnString;
-
-
 	}
 	
 	@Secured("PRODUCTS")
 	@RequestMapping(value="/admin/products/attributes/editAttribute.html", method=RequestMethod.GET)
 	public String displayAttributeEdit(@RequestParam("productId") Long productId, @RequestParam("id") Long id, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return displayAttribute(productId, id,model,request,response);
-
 	}
 	
 	@Secured("PRODUCTS")
 	@RequestMapping(value="/admin/products/attribute/createAttribute.html", method=RequestMethod.GET)
 	public String displayAttributeCreate(@RequestParam("productId") Long productId, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return displayAttribute(productId, null,model,request,response);
-
 	}
 	
 	private String displayAttribute(Long productId, Long id, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-
 		//display menu
 		setMenu(model,request);
-		
 		
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		Language language = (Language)request.getAttribute("LANGUAGE");
@@ -236,10 +218,7 @@ public class ProductAttributeController {
 				ProductOptionValueDescription desc = new ProductOptionValueDescription();
 				desc.setLanguage(l);
 				descriptions.add(desc);
-				
-				
 			}
-			
 			value.setDescriptions(descriptions);
 			attribute.setProductOptionValue(value);
 		}
@@ -254,8 +233,6 @@ public class ProductAttributeController {
 	@Secured("PRODUCTS")
 	@RequestMapping(value="/admin/attributes/attribute/save.html", method=RequestMethod.POST)
 	public String saveAttribute(@Valid @ModelAttribute("attribute") ProductAttribute attribute, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
-		
-
 		//display menu
 		setMenu(model,request);
 		
@@ -263,11 +240,8 @@ public class ProductAttributeController {
 		
 		model.addAttribute("product",product);
 		
-		
-		
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		Language language = (Language)request.getAttribute("LANGUAGE");
-		
 		
 		//get Options
 		List<ProductOption> options = productOptionService.listByStore(store, language);
@@ -326,7 +300,6 @@ public class ProductAttributeController {
 			result.addError(error);
 			return "admin-products-attribute-details";
 		}
-
 		
 		//check type
 		ProductOption option = attribute.getProductOption();
@@ -377,12 +350,8 @@ public class ProductAttributeController {
 				productOptionValueService.save(newValue);
 				attribute.setProductOptionValue(newValue);
 				attribute.setAttributeDisplayOnly(true);
-			
 			}
-			
 		}
-		
-
 		
 		if(attribute.getProductOptionValue().getId()==null) {
 			ObjectError error = new ObjectError("productOptionValue.id",messages.getMessage("message.productoptionvalue.required", locale));
@@ -390,7 +359,6 @@ public class ProductAttributeController {
 		}
 		
 		model.addAttribute("attribute",attribute);
-
 		
 		if (result.hasErrors()) {
 			return "admin-products-attribute-details";
@@ -405,18 +373,16 @@ public class ProductAttributeController {
 	@Secured("PRODUCTS")
 	@RequestMapping(value="/admin/attributes/attribute/remove.html", method=RequestMethod.POST, produces="application/json")
 	public @ResponseBody String deleteProductPrice(HttpServletRequest request, HttpServletResponse response, Locale locale) {
+		
 		String sAttributeid = request.getParameter("attributeId");
-
 		
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		AjaxResponse resp = new AjaxResponse();
-
 		
 		try {
 			
 			Long attributeId = Long.parseLong(sAttributeid);
 			ProductAttribute attribute = productAttributeService.getById(attributeId);
-			
 
 			if(attribute==null || attribute.getProduct().getMerchantStore().getId().intValue()!=store.getId()) {
 
@@ -424,14 +390,10 @@ public class ProductAttributeController {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);			
 				return resp.toJSONString();
 			} 
-			
 
 			productAttributeService.delete(attribute);
 			
-			
 			resp.setStatus(AjaxResponse.RESPONSE_OPERATION_COMPLETED);
-
-		
 		
 		} catch (Exception e) {
 			LOGGER.error("Error while deleting product price", e);
@@ -453,9 +415,6 @@ public class ProductAttributeController {
 		String sOptionId = request.getParameter("optionId");
 
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
-
-		
-		
 		AjaxResponse resp = new AjaxResponse();
 		
 		Long prodoptionId;
@@ -469,10 +428,8 @@ public class ProductAttributeController {
 			String returnString = resp.toJSONString();
 			return returnString;
 		}
-
 		
 		try {
-			
 			
 			productOption = productOptionService.getById(prodoptionId);
 			
@@ -487,13 +444,8 @@ public class ProductAttributeController {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);			
 				return resp.toJSONString();
 			}
-			
-
-
 
 			Map entry = new HashMap();
-			
-
 			
 			entry.put("type", productOption.getProductOptionType());
 			resp.addDataEntry(entry);
@@ -507,13 +459,9 @@ public class ProductAttributeController {
 		
 		String returnString = resp.toJSONString();
 		return returnString;
-
 	}
-
-	
 	
 	private void setMenu(Model model, HttpServletRequest request) throws Exception {
-		
 		//display menu
 		Map<String,String> activeMenus = new HashMap<String,String>();
 		activeMenus.put("catalogue", "catalogue");
@@ -526,7 +474,6 @@ public class ProductAttributeController {
 		model.addAttribute("currentMenu",currentMenu);
 		model.addAttribute("activeMenus",activeMenus);
 		//
-		
 	}
 
 }

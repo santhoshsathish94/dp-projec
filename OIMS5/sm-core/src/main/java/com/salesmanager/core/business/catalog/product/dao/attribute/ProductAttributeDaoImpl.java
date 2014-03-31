@@ -11,6 +11,7 @@ import com.salesmanager.core.business.catalog.product.model.QProduct;
 import com.salesmanager.core.business.catalog.product.model.attribute.ProductAttribute;
 import com.salesmanager.core.business.catalog.product.model.attribute.QProductAttribute;
 import com.salesmanager.core.business.catalog.product.model.attribute.QProductOption;
+import com.salesmanager.core.business.catalog.product.model.attribute.QProductOptionDescription;
 import com.salesmanager.core.business.catalog.product.model.attribute.QProductOptionValue;
 import com.salesmanager.core.business.catalog.product.model.attribute.QProductOptionValueDescription;
 import com.salesmanager.core.business.generic.dao.SalesManagerEntityDaoImpl;
@@ -18,8 +19,7 @@ import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.reference.language.model.Language;
 
 @Repository("productAttributeDao")
-public class ProductAttributeDaoImpl extends SalesManagerEntityDaoImpl<Long, ProductAttribute> 
-	implements ProductAttributeDao {
+public class ProductAttributeDaoImpl extends SalesManagerEntityDaoImpl<Long, ProductAttribute> implements ProductAttributeDao {
 	
 	
 	@Override
@@ -111,6 +111,31 @@ public class ProductAttributeDaoImpl extends SalesManagerEntityDaoImpl<Long, Pro
 			.leftJoin(qEntity.productOptionValue, qProductOptionValue).fetch()
 			.leftJoin(qProductOptionValue.merchantStore).fetch()
 			.join(qEntity.product,qProduct).fetch()
+			.leftJoin(qProductOptionValue.descriptions,qProductOptionValueDescription).fetch()
+			.where(qProduct.id.eq(product.getId())
+			.and(qProductOptionValue.merchantStore.id.eq(store.getId()))
+			.and(qProductOptionValueDescription.language.id.eq(language.getId())));
+		
+		return query.list(qEntity);
+	}
+	
+	@Override
+	public List<ProductAttribute> getByProductID(MerchantStore store, Product product, Language language) {
+		QProductAttribute qEntity = QProductAttribute.productAttribute;
+		QProductOption qProductOption = QProductOption.productOption;
+		QProductOptionDescription qProductOptionDescription = QProductOptionDescription.productOptionDescription;
+		QProductOptionValue qProductOptionValue = QProductOptionValue.productOptionValue;
+		QProductOptionValueDescription qProductOptionValueDescription = QProductOptionValueDescription.productOptionValueDescription;
+		QProduct qProduct = QProduct.product;
+		
+		JPQLQuery query = new JPAQuery (getEntityManager());
+		
+		query.from(qEntity)
+			.leftJoin(qEntity.productOption, qProductOption).fetch()
+			.leftJoin(qEntity.productOptionValue, qProductOptionValue).fetch()
+			.leftJoin(qProductOptionValue.merchantStore).fetch()
+			.join(qEntity.product,qProduct).fetch()
+			.leftJoin(qProductOption.descriptions,qProductOptionDescription).fetch()
 			.leftJoin(qProductOptionValue.descriptions,qProductOptionValueDescription).fetch()
 			.where(qProduct.id.eq(product.getId())
 			.and(qProductOptionValue.merchantStore.id.eq(store.getId()))

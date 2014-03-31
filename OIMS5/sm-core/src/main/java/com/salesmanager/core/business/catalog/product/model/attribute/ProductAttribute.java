@@ -129,8 +129,6 @@ public class ProductAttribute extends SalesManagerEntity<Long, ProductAttribute>
 		this.id = id;
 	}
 
-
-
 	public Integer getProductOptionSortOrder() {
 		return productOptionSortOrder;
 	}
@@ -235,7 +233,5 @@ public class ProductAttribute extends SalesManagerEntity<Long, ProductAttribute>
 	public void setProductAttributePrice(BigDecimal productAttributePrice) {
 		this.productAttributePrice = productAttributePrice;
 	}
-
-
 
 }
