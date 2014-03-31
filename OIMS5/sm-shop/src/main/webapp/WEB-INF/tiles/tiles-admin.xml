@@ -331,11 +331,7 @@
   	<definition name="admin-company-general" template="/layout/admin/layout.jsp">
   		<put-attribute name="body" value="/pages/admin/company/generalInfo.jsp" /> 
   	</definition>
-  	
-  	<definition name="admin-inventory" template="/layout/admin/layout.jsp">
-  		<put-attribute name="body" value="/pages/admin/inventory/createstock.jsp" /> 
-  	</definition>
-  	
+  	  	
   	<definition name="admin-supplier-list" template="/layout/admin/layout.jsp">
   		<put-attribute name="body" value="/pages/admin/supplier/suppliers.jsp" /> 
   	</definition>
@@ -366,6 +362,43 @@
   	
   	<definition name="admin-product-shade" template="/layout/admin/layout.jsp">
   		<put-attribute name="body" value="/pages/admin/products/shade.jsp" /> 
+  	</definition>
+  	
+  	
+  	<definition name="admin-inventory" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/createstock.jsp" /> 
+  	</definition>
+  	
+  		<definition name="admin-stock-create" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/createstock.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-stock-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/stocks.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-perchase-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/perchase-list.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-perchase" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/perchase-entery.jsp" /> 
+  	</definition>
+  	
+  		<definition name="admin-perchase-returned-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/perchase-returned-list.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-perchase-returned" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/perchase-entery-returned.jsp" />
+  	</definition>
+  		
+  	<definition name="admin-perchase-returned-list-other" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/perchase-returned-other-list.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-perchase-returned-other" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/perchase-entery-other-returned.jsp" /> 
   	</definition>
   	
 </tiles-definitions>

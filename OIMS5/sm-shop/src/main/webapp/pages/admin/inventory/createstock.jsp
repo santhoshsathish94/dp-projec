@@ -1,119 +1,154 @@
-
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ page session="false"%>
 
-
 <html>
 <head>
-    <script src="/resources/js/jquery-1.10.2.min.js"></script>
-    <link	href="<c:url value="/resources/css/bootstrap/css/datepicker.css" />"rel="stylesheet"></link>
-	<script	src="<c:url value="/resources/js/bootstrap/bootstrap-datepicker.js" />"></script>
+	<script src="<c:url value="/resources/js/jquery-1.10.2.min.js"/>"></script>
+	<link href="<c:url value="/resources/css/bootstrap/css/datepicker.css" />" rel="stylesheet"></link>
+	<script src="<c:url value="/resources/js/bootstrap/bootstrap-datepicker.js" />"></script>
 </head>
 
 <div class="tabbable">
 	<jsp:include page="/common/adminTabs.jsp" />
 	<h3>
-		<s:message code="label.company.inventoryManagement.title" text="" />
+		<s:message code="label.inventoryManagement.title" text="Add Stock" />
 	</h3>
 	<br />
 </div>
-<div style="float: left; margin-top: 10px; width: 100%;">
+<c:url var="saveStock" value="/admin/inventoryManagement/createstock.html" />
+<form:form method="POST" commandName="stock" action="${saveStock}">
 
-		<div class="control-group" style="float: left;">
-			<div style="float: left; width: 100px;">
-				<label><s:message code="label.accountingeriod.fromDate"
-						text="Date" /></label>
-			</div>
-			<div style="float: left; width: 200px;" class="controls">
-				<input id="fromSDate" name="fromSDate"
-					value="${accountingPeriod.fromSDate}" style="width: 150px;"
-					class="small" type="text"
-					data-date-format="<%=com.salesmanager.core.constants.Constants.DEFAULT_DATE_FORMAT%>"
-					data-datepicker="datepicker"> <span class="help-inline"><form:errors
-						path="fromSDate" cssClass="error" /></span>
-			</div>
-
-			<div style="float: left; width: 100px;">
-				<label><s:message code="label.accountingeriod.fromDate"
-						text="Comments" /></label>
-			</div>
-			<div style="float: left; width: 200px;" class="controls">
-				<input id="fromSDate" name="fromSDate"
-					value="${accountingPeriod.fromSDate}" style="width: 150px;"
-					class="small" type="text"> <span class="help-inline"><form:errors
-						path="fromSDate" cssClass="error" /></span>
-			</div>
-
+	<div class="control-group" style="float: left; width: 100%;">
+		<div style="float: left; width: 100px; margin-top: 15px;">
+			<label><s:message code="label.inventoryManagement.stock.stockSDate"
+					text="Date" /></label>
 		</div>
-<div id='container'>
-<table >
-   <thead>
-        <tr>
-		  <th><input width="5%"class='check_all' type='checkbox' onclick="select_all()"/></th>
-		  <th width="5%">Sr.No</th>
-          <th width="40%">Product</th>
-          <th width="10%">Quantity</th>
-          <th width="10%">UOM</th>
-          <th width="15%">Unit Price</th>
-          <th width="15%">Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-		<tr>
-			<td><input width="5%"type='checkbox' class='case'/></td>
-			<td width="5%"><span id='snum'>1.</span></td>
-			<td width="40%"><input type='text' id='Product' name='Product[]'style="width:98%"/></td>
-			<td width="10%"><input type='text' id='Quantity' name='Quantity[]'style="width:98%"/></td>
-			<td width="10%"><input type='text' id='UOM' name='UOM[]'style="width:98%"/></td>
-			<td width="15%"><input type='text' id='Unit-Price' name='Unit-Price[]'style="width:98%"/> </td>
-			<td width="15%"><input type='text' id='Amount' name='Amount[]'style="width:98%"/></td>
+		<div style="float: left; width: 200px; margin-top: 10px;"
+			class="controls">
+			<form:input style="width: 150px;" class="small" type="text"
+				data-date-format="<%=com.salesmanager.core.constants.Constants.DEFAULT_DATE_FORMAT%>"
+				data-datepicker="datepicker" path="stockSDate" />
+			<span class="help-inline"><form:errors path="stockSDate"
+					cssClass="error" /></span>
+		</div>
+
+		<div style="float: left; width: 120px; margin-top: 15px;">
+			<label style="margin-top: 0px;"><s:message
+					code="label.inventoryManagement.stock.stockComment" text="Comment"/></label>
+		</div>
+		<div style="float: left;" class="controls">
+			<form:textarea cssClass="input-large" path="stockComment"
+				cssStyle="width: 250px;" />
+			<span class="help-inline"><form:errors path="stockComment"
+					cssClass="error" /></span>
+		</div>
+
+	</div>
+	<div class="control-group" style="float: left; width: 100%;">
+		<div class="pull-left" style="width: 100%;">
+			<div style="float: left; width: 100%;" class="stockLabel">
+				<span style="float: left;">Product</span>
+				<span style="float: left; margin-left: 280px;">Quantity</span>
+				<span style="float: left; margin-left: 30px;">UOM</span>
+				<span style="float: left; margin-left: 30px;">Unit Price</span>
+				<span style="float: left; margin-left: 30px;">Amount</span>
+				
+				<span id="addNewRow" style="float: left; margin-left: 50px; cursor: pointer; text-decoration: underline; color: blue;">Add New Row</span>
+			</div>
 			
-	  </tr>
-      </tbody>
-  
-</table>
- 
-<button type="button" class='delete'>- Delete</button>
-<button type="button" class='addmore'>+ Add More</button>
-<p>
-<input type='submit' name='submit' value='submit' class='but'/></p>
-</div>
-</div>
+			<div style="float: left; width: 100%;margin-top: 10px;" class="master_div" id="master_div">
+				
+				<div id="value_holder1" style="float: left; width: 100%;">
+					<input type="text" style="float: left;width: 285px;" id="product_name1">
+					<input type="text" style="float: left; margin-left: 32px; width: 45px;" id="quantity1">
+					<input type="text" style="float: left; margin-left: 23px; width: 25px;" id="uom1">
+					<input type="text" style="float: left; margin-left: 25px; width: 60px;" id="unit_price1">
+					<input type="text" style="float: left; margin-left: 15px; width: 60px;" id="amount1">
+					<span style="float: left; margin: 5px; cursor: pointer;" onclick="deleteRow(this)">&#x2716;</span>
+				</div>
+				
+			</div>
+			<input type="hidden" id="openingStocks" name="openingStocks" value=""/>
+			
+		</div>
+		
+		<div class="pull-left" style="width: 100%; margin-top: 10px;">
+			<button type="submit" class="btn btn-success" onclick="return createStockEntryJson();">
+				<s:message code="button.label.submit2" text="Add Stock" />
+			</button>
+		</div>
+	</div>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<div class="sm-ui-component">
+		<h3><s:message code="label.inventoryManagement.stock.title" text="Stocks" /></h3>	
+		<br/>
+		<div class="sm-ui-component">
+			<!-- Listing grid include -->
+			<c:set value="/admin/inventoryManagement/paging.html" var="pagingUrl" scope="request" />
+			<c:set value="/admin/inventoryManagement/remove.html" var="removeUrl" scope="request" />
+			<c:set value="/admin/inventoryManagement/createstock.html" var="refreshUrl" scope="request" />
+			<c:set var="entityId" value="stockId" scope="request"/>
+			<c:set var="componentTitleKey" value="label.inventoryManagement.stock.title" scope="request" />
+			<c:set var="canRemoveEntry" value="true" scope="request" />
+			<c:set var="gridHeader" value="/pages/admin/inventory/stock-gridHeader.jsp" scope="request"/>
+			<jsp:include page="/pages/admin/components/list.jsp"></jsp:include>
+			<!-- End listing grid include -->
+		</div>
+	</div>
+	
+</form:form>
+
+			
 <script>
-$(".delete").on('click', function() {
-    $('.case:checkbox:checked').parents("tr").remove();
-    $('.check_all').prop("checked", false); 
-    check();
- 
-});
-var i=2;
-$(".addmore").on('click',function(){
-    count=$('table tr').length;
-    var data="<tr><td><input type='checkbox' class='case'style='width:98%'/></td><td><span id='snum"+i+"'>"+count+".</span></td>";
-    data +="<td><input type='text' id='Product"+i+"' name='Product[]'style='width:98%'/></td> <td><input type='text' id='Quantity"+i+"' name='Quantity[]'style='width:98%'/></td><td><input type='text' id='UOM"+i+"' name='UOM[]'style='width:98%'/></td><td><input type='text' id='Unit-Price"+i+"' name='Unit-Price[]'style='width:98%'/></td><td><input type='text' id='Amount"+i+"' name='Amount[]'style='width:98%'/></td>";
-    $('table').append(data);
-    i++;
-});
- 
-function select_all() {
-    $('input[class=case]:checkbox').each(function(){ 
-        if($('input[class=check_all]:checkbox:checked').length == 0){ 
-            $(this).prop("checked", false); 
-        } else {
-            $(this).prop("checked", true); 
-        } 
-    });
-}
- 
-function check(){
-    obj=$('table tr').find('span');
-    $.each( obj, function( key, value ) {
-    id=value.id;
-    $('#'+id).html(key+1);
-    });
-    }
- 
+	var rowCount = 1;
+	$("#addNewRow").click(function (){
+		addNewRow();
+	});
+
+	function addNewRow() {
+		rowCount = parseInt(rowCount) + 1;
+		var holderDiv = $('<div>').attr('style', 'float: left; width: 100%;').attr('id', 'value_holder'+rowCount);
+		var pName = $('<input>').attr('type', 'text').attr('style', 'float: left; width: 285px;').attr('id', 'product_name'+rowCount);
+		var quantity = $('<input>').attr('type', 'text').attr('style', 'float: left; margin-left: 32px; width: 45px;').attr('id', 'quantity'+rowCount);
+		var uom = $('<input>').attr('type', 'text').attr('style', 'float: left; margin-left: 23px; width: 25px;').attr('id', 'uom'+rowCount);
+		var unitPrice = $('<input>').attr('type', 'text').attr('style', 'float: left; margin-left: 25px; width: 60px;').attr('id', 'unit_price'+rowCount);
+		var amount = $('<input>').attr('type', 'text').attr('style', 'float: left; margin-left: 15px; width: 60px;').attr('id', 'amount'+rowCount);
+		var deleteRow = $('<span>').attr('style', 'float: left; margin: 5px; cursor: pointer;').attr('onclick', 'deleteRow(this)').html('&#x2716;');
+		
+		$(holderDiv).append(pName).append(quantity).append(uom).append(unitPrice).append(amount).append(deleteRow);
+
+		$('#master_div').append(holderDiv);		
+	}
+	
+	
+	function deleteRow(removeElement) {
+		$(removeElement).parent().remove();
+		if($.trim($('#master_div').html()) == '') {
+			addNewRow();
+		}
+	}
+
+
+	function createStockEntryJson() {
+		var objectAray = new Array();
+		var object = ""; 
+		for(var counter = 0; counter <= parseInt(rowCount); counter++) {
+			if($('#value_holder'+counter).length == 1) {
+				object = new Object();
+				object.stockSKU = $('#product_name'+counter).val();
+				object.stockQuantity = $('#quantity'+counter).val();
+				object.stockUOM = $('#uom'+counter).val();
+				object.stockUnitPrice = $('#unit_price'+counter).val();
+				object.stockAmount = $('#amount'+counter).val();
+
+				objectAray.push(object);
+			}
+		}
+
+		$('#openingStocks').val(JSON.stringify(objectAray));
+	}
+		
 </script>
