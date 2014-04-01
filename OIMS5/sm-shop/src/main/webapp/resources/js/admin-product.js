@@ -1,4 +1,22 @@
 
+function preProcessOnPageLoad() {
+	
+	if($.trim($('.productId').val()) == '') {
+		
+		$('#productHaveVariant').prop('checked', false);
+		$('#productHaveVariants').val('false');
+		
+		setupShadeAutoComplete('shades_variant1');
+		setupPackSize('pack_size_variant1');
+	} else {
+		if($('#productHaveVariants').val() == "true") {
+			$('#productHaveVariant').prop('checked', true);
+			
+			displayVaraint();
+			displayVariantOnLoad();
+		}
+	}
+}
 
 function displayVaraint() {
 	if($('#productHaveVariant').is(':checked')) {
@@ -86,7 +104,7 @@ function setupShadeAutoComplete(labelId) {
             $("#shadeId"+rowValue).val(i.item.val);
             $(this).val(i.item.label);
         },
-		minLength: 2
+		minLength: 1
 	});
 }
 
@@ -122,7 +140,7 @@ function setupShadeVariant() {
 
 function displayVariantOnLoad() {
 	
-	if($('.productId').val() != '' && $.trim(variants) != '') {
+	if($.trim(variants) != '') {
 		
 		$('#variant_master').html('');
 		var dataObj = eval(variants);

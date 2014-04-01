@@ -479,11 +479,6 @@ var counter = 1;
 		</div>
 	</div>
 	<script type="text/javascript">
-		if($('#productHaveVariants').val() == "true") {
-			$('#productHaveVariant').prop('checked', true);
-			
-			displayVaraint();
-			displayVariantOnLoad();
-		}
+		preProcessOnPageLoad();
 	</script>
 </div>
