@@ -12,17 +12,14 @@
 			<div class="sm-ui-component">
     <h3><s:message code="label.suppliers.title" text="Suppliers" /></h3> 
     <br/>
-    <!-- Listing grid include -->
-    <c:set value="/admin/supplier/paging.html" var="pagingUrl" scope="request"/>
-    <c:set value="/admin/supplier/deletesupplier.html" var="removeUrl" scope="request"/>
-    <c:set value="/admin/supplier/editsupplier.html" var="editUrl" scope="request"/>
-    <c:set value="/admin/supplier/suppliers.html" var="afterRemoveUrl" scope="request"/>
-    <c:set var="entityId" value="supplierId" scope="request"/>
-    <c:set var="componentTitleKey" value="label.suppliers.title" scope="request"/>
-    <c:set var="gridHeader" value="/pages/admin/supplier/suppliers-gridHeader.jsp" scope="request"/>
-    <c:set var="canRemoveEntry" value="true" scope="request"/>
-    
-    <jsp:include page="/pages/admin/components/list.jsp"></jsp:include> 
+	<!-- Listing grid include -->
+		<c:set value="/admin/inventoryManagement/purchaseReturn/paging.html" var="pagingUrl" scope="request" />
+		<c:set value="/admin/inventoryManagement/createpurchasereturndn.html" var="refreshUrl" scope="request" />
+		<c:set var="entityId" value="purchaseId" scope="request"/>
+		<c:set var="componentTitleKey" value="label.inventoryManagement.perchase.return.list" scope="request" />
+		<c:set var="canRemoveEntry" value="true" scope="request" />
+		<c:set var="gridHeader" value="/pages/admin/inventory/perchase-returned-gridHeader.jsp" scope="request"/>
+		<jsp:include page="/pages/admin/components/list.jsp"></jsp:include>
     <!-- End listing grid include -->
              
    </div>

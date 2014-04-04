@@ -11,12 +11,12 @@
 		<div class="tab-pane active" id="catalogue-section">
 			<div class="sm-ui-component">
 				<!-- Listing grid include -->
-				<c:set value="/admin/inventoryManagement/purchase/paging.html" var="pagingUrl" scope="request" />
-				<c:set value="/admin/inventoryManagement/createPurchaseEntry.html" var="refreshUrl" scope="request" />
-				<c:set var="entityId" value="purchaseId" scope="request"/>
-				<c:set var="componentTitleKey" value="label.inventoryManagement.perchase.entry.list" scope="request" />
+				<c:set value="/admin/inventoryManagement/branchTransfer/paging.html" var="pagingUrl" scope="request" />
+				<c:set value="/admin/inventoryManagement/createbranchtransfer.html" var="refreshUrl" scope="request" />
+				<c:set var="entityId" value="Id" scope="request"/>
+				<c:set var="componentTitleKey" value="label.inventoryManagement.branch.transfer.list" scope="request" />
 				<c:set var="canRemoveEntry" value="true" scope="request" />
-				<c:set var="gridHeader" value="/pages/admin/inventory/perchase-gridHeader.jsp" scope="request"/>
+				<c:set var="gridHeader" value="/pages/admin/inventory/branch-transfer-gridHeader.jsp" scope="request"/>
 				<jsp:include page="/pages/admin/components/list.jsp"></jsp:include>
 				<!-- End listing grid include -->
 			</div>

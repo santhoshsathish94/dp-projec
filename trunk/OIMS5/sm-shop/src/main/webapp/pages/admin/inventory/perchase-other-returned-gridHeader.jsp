@@ -7,10 +7,11 @@
 
 
 
-{title:"<s:message code="label.entity.id" text="Id"/>", name:"stockId", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockSKU" text="Product"/>", name:"stockSKU", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockQuantity" text="Quantity"/>", name:"stockQuantity", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockUOM" text="UOM"/>", name:"stockUOM", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockUnitPrice" text="Unit Price"/>", name:"stockUnitPrice", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockAmount" text="Amount"/>", name:"stockAmount", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockSDate" text="Date"/>", name:"stockSDate", canFilter:false}
+{title:"<s:message code="" text="Id"/>", name:"Id", canFilter:false},
+{title:"<s:message code="" text="Debit To"/>", name:"Debit_supplier", canFilter:false},
+{title:"<s:message code="" text="Date"/>", name:"SDate", canFilter:false},
+{title:"<s:message code="" text="Ref No"/>", name:"Debit_ref_number", canFilter:false},
+{title:"<s:message code="" text="Amount"/>", name:"Amount", canFilter:false},
+{title:"<s:message code="" text="Tax"/>", name:"Debit_tax", canFilter:false},
+{title:"<s:message code="" text="Total Amount"/>", name:"Debit_total_amount", canFilter:false},
+{title:"<s:message code="" text="Credit To"/>", name:"Debit_credit_to", canFilter:false}

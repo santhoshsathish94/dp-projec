@@ -401,4 +401,12 @@
   		<put-attribute name="body" value="/pages/admin/inventory/perchase-entery-other-returned.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-branch-transfer-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/branch-transfer-list.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-branch-transfer" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/inventory/branch-transfer.jsp" /> 
+  	</definition>
+  	
 </tiles-definitions>

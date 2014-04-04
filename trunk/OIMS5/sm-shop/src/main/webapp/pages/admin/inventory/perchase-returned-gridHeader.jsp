@@ -7,10 +7,10 @@
 
 
 
-{title:"<s:message code="label.entity.id" text="Id"/>", name:"stockId", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockSKU" text="Product"/>", name:"stockSKU", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockQuantity" text="Quantity"/>", name:"stockQuantity", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockUOM" text="UOM"/>", name:"stockUOM", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockUnitPrice" text="Unit Price"/>", name:"stockUnitPrice", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockAmount" text="Amount"/>", name:"stockAmount", canFilter:false},
-{title:"<s:message code="label.inventoryManagement.stock.stockSDate" text="Date"/>", name:"stockSDate", canFilter:false}
+{title:"<s:message code="label.entity.id" text="Id"/>", name:"Id", canFilter:false},
+{title:"<s:message code="" text="Name (Dabit To)"/>", name:"Supplier", canFilter:false},
+{title:"<s:message code="label.inventoryManagement.stock.stockSKU" text="Product"/>", name:"SKU", canFilter:false},
+{title:"<s:message code="label.inventoryManagement.stock.stockQuantity" text="Quantity"/>", name:"Quantity", canFilter:false},
+{title:"<s:message code="label.inventoryManagement.stock.stockUnitPrice" text="Unit Price"/>", name:"UnitPrice", canFilter:false},
+{title:"<s:message code="label.inventoryManagement.stock.stockAmount" text="Amount"/>", name:"Amount", canFilter:false},
+{title:"<s:message code="label.inventoryManagement.stock.stockSDate" text="Date"/>", name:"SDate", canFilter:false}
