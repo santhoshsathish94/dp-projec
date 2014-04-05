@@ -435,5 +435,61 @@
 	}}
 ]
 }}
+,
+{
+"menu":{
+"code":"account_Management",
+"icon":"icon-wrench", 
+"url":"/admin/account/createReceipt.html", 
+"role":"AUTH",
+"order":13,
+"menus":[
+			{"menu":{
+				"code":"cash-bank-receipt","role":"AUTH","order":0,"menus":
+				[
+					{"menu":{
+						"code":"create-receipt","url":"/admin/account/createReceipt.html","role":"AUTH","order":0
+					}},
+					{"menu":{
+						"code":"receipt-list","url":"/admin/account/receipts.html","role":"AUTH","order":1
+					}}
+				]
+			}},
+			{"menu":{
+				"code":"cash-bank-payment","role":"AUTH","order":0,"menus":
+				[
+					{"menu":{
+						"code":"create-payment","url":"/admin/account/createPayment.html","role":"AUTH","order":0
+					}},
+					{"menu":{
+						"code":"payment-list","url":"/admin/account/payments.html","role":"AUTH","order":1
+					}}
+				]
+			}},
+			{"menu":{
+				"code":"expense","role":"AUTH","order":0,"menus":
+				[
+					{"menu":{
+						"code":"expense-entry","url":"/admin/account/createExpense.html","role":"AUTH","order":0
+					}},
+					{"menu":{
+						"code":"expense-list","url":"/admin/account/expenses.html","role":"AUTH","order":1
+					}}
+				]
+			}},
+			{"menu":{
+				"code":"journal","role":"AUTH","order":0,"menus":
+				[
+					{"menu":{
+						"code":"create-journal","url":"/admin/account/createJournal.html","role":"AUTH","order":0
+					}},
+					{"menu":{
+						"code":"journal-list","url":"/admin/account/journals.html","role":"AUTH","order":1
+					}}
+				]
+			}}
+		]
+	}	
+}
 
 ]}

@@ -409,4 +409,37 @@
   		<put-attribute name="body" value="/pages/admin/inventory/branch-transfer.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-account-management-receipt" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/accountmanagement/cash-bank-receipt.jsp" /> 
+  	</definition>
+
+  	<definition name="admin-account-management-receipt-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/accountmanagement/cash-bank-receipt-list.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-account-management-create-payment" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/accountmanagement/create-payment.jsp" /> 
+  	</definition>
+
+  	<definition name="admin-account-management-payment-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/accountmanagement/payment-list.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-account-management-expense-entry" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/accountmanagement/expense-entry.jsp" /> 
+  	</definition>
+
+  	<definition name="admin-account-management-expense-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/accountmanagement/expense-list.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-account-management-create-journal" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/accountmanagement/create-journal.jsp" /> 
+  	</definition>
+
+  	<definition name="admin-account-management-journal-list" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/accountmanagement/journal-list.jsp" /> 
+  	</definition>
+  	
+  	
 </tiles-definitions>
