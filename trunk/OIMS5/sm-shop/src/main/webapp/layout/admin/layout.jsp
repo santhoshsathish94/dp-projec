@@ -424,7 +424,36 @@ response.setDateHeader ("Expires", -1);
 			$("#shades-create-link").click(function() {
 				window.location='<c:url value="/admin/catalogue/master/createshade.html" />';
 			});
-			
+
+			///  Account Management
+
+			$("#account_Management").click(function() {
+				window.location='<c:url value="/admin/account/createReceipt.html" />';
+			});
+			$("#create-receipt-link").click(function() {
+				window.location='<c:url value="/admin/account/createReceipt.html" />';
+			});			
+			$("#receipt-list-link").click(function() {
+				window.location='<c:url value="/admin/account/receipts.html" />';
+			});
+			$("#create-payment-link").click(function() {
+				window.location='<c:url value="/admin/account/createPayment.html" />';
+			});
+			$("#payment-list-link").click(function() {
+				window.location='<c:url value="/admin/account/payments.html" />';
+			});
+			$("#expense-entry-link").click(function() {
+				window.location='<c:url value="/admin/account/createExpense.html" />';
+			});
+			$("#expense-list-link").click(function() {
+				window.location='<c:url value="/admin/account/expenses.html" />';
+			});
+			$("#create-journal-link").click(function() {
+				window.location='<c:url value="/admin/account/createJournal.html" />';
+			});
+			$("#journal-list-link").click(function() {
+				window.location='<c:url value="/admin/account/journals.html" />';
+			});
 			
 		}); 
 		
