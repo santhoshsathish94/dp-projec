@@ -665,7 +665,7 @@ public class InventoryController {
 				return DateUtil.getDate(sDate);
 
 			} catch (Exception e) {
-				ObjectError error = new ObjectError("purchase_Sdate", messages.getMessage("message.invalid.date", locale));
+				ObjectError error = new ObjectError(dateFieldName, messages.getMessage("message.invalid.date", locale));
 				result.addError(error);
 				return null;
 			}

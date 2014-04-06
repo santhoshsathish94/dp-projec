@@ -18,12 +18,12 @@
 	</h3>
 	<br />
 </div>
-<c:url var="saveURL" value="/admin/account/createExpense.html" />
-<form:form method="POST" commandName="stock" action="${saveURL}">
+<c:url var="saveURL" value="/admin/account/createJournal.html" />
+<form:form method="POST" commandName="journal" action="${saveURL}">
 
 	<div style="float: left; width: 100%;">
 		
-		<div style="float: left; width: 200px;">
+		<div style="float: left; width: 230px;">
 			<label style="margin-top: 0px;"><s:message	code="" text="Date"/></label>
 		</div>		
 	
@@ -31,53 +31,44 @@
 			<label style="margin-top: 0px;"><s:message	code="" text="Reference No."/></label>
 		</div>		
 		
-		<div style="float: left; width: 200px; ">
-			<label style="margin-top: 0px;"><s:message	code="" text="Comment"/></label>
-		</div>	
-
+		
 	</div>
 	
 	<div style="float: left; width: 100%; margin-top: 0px;">
 	
 		
 	
-		<div style="float: left;"	class="controls">
+		<div style="float: left; width: 230px;"	class="controls">
 			<form:input style="width: 180px;" class="small" type="text"
 				data-date-format="<%=com.salesmanager.core.constants.Constants.DEFAULT_DATE_FORMAT%>"
-				data-datepicker="datepicker" path="" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+				data-datepicker="datepicker" path="journal_Sdate" />
+			<span class="help-inline"><form:errors path="journal_Sdate"	cssClass="error" /></span>
 		</div>
 		
 		<div style="float: left;" class="controls" >
-			<form:input cssClass="input-large" path=""	cssStyle="width: 180px;" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+			<form:input cssClass="input-large" path="journal_ref_no"	cssStyle="width: 180px;" />
+			<span class="help-inline"><form:errors path="journal_ref_no"	cssClass="error" /></span>
 		</div>
 		
-		<div style="float: left;" class="controls">
-			<form:textarea cssClass="input-large" path="" cssStyle="width: 180px;" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
-		</div>
 		
-
 	</div>
 		
 	
 	<div style="float: left; width: 100%;">
 		
-		<div style="float: left; width: 290px;">
-			<label style="margin-top: 0px;"><s:message	code="" text="Pay By"/></label>
-		</div>		
+				
+		<div style="float: left; width: 200px; ">
+			<label style="margin-top: 0px;"><s:message	code="" text="Narration"/></label>
+		</div>
 	
 	</div>
 	
 	<div style="float: left; width: 100%; margin-top: 0px;">
 		
-		<div style="float: left;"	class="controls">
-			<form:select cssClass="country-list highlight" path="">
-				<form:option value="Cash">Cash</form:option>
-				<form:option value="Bank">Bank</form:option>
-			</form:select>
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+				
+		<div style="float: left;" class="controls" >
+			<form:input cssClass="input-large" path="journal_narration"	cssStyle="width: 285px;" />
+			<span class="help-inline"><form:errors path="journal_narration"	cssClass="error" /></span>
 		</div>
 
 	</div>
@@ -204,8 +195,8 @@ function createStockEntryJson() {
 	for(var counter = 0; counter <= parseInt(rowCount); counter++) {
 		if($('#value_holder'+counter).length == 1) {
 			object = new Object();
-			object.stockSKU = $('#debit'+counter).val();
-			object.stockAmount = $('#debit_amount'+counter).val();
+			object.journal_debit = $('#debit'+counter).val();
+			object.journal_debit_ammount = $('#debit_amount'+counter).val();
 
 			objectAray.push(object);
 		}
@@ -221,8 +212,8 @@ function createStockEntryJson1() {
 	for(var counter = 0; counter <= parseInt(rowCount); counter++) {
 		if($('#value_holder'+counter).length == 1) {
 			object = new Object();
-			object.stockSKU = $('#credit'+counter).val();
-			object.stockAmount = $('#credit_amount'+counter).val();
+			object.journal_credit = $('#credit'+counter).val();
+			object.journal_credit_ammount = $('#credit_amount'+counter).val();
 
 			objectAray.push(object);
 		}
