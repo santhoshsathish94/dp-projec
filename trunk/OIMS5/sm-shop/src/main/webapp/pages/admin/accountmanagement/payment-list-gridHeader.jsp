@@ -8,7 +8,7 @@
 
 
 {title:"<s:message code="" text="Id"/>", name:"Id", canFilter:false},
-{title:"<s:message code="" text="From"/>", name:"From", canFilter:false},
+{title:"<s:message code="" text="To"/>", name:"To", canFilter:false},
 {title:"<s:message code="" text="Date"/>", name:"Date", canFilter:false},
 {title:"<s:message code="" text="Amount"/>", name:"Amount", canFilter:false},
 {title:"<s:message code="" text="Mode"/>", name:"Mode", canFilter:false},
