@@ -8,9 +8,10 @@
 
 
 {title:"<s:message code="" text="Id"/>", name:"Id", canFilter:false},
-{title:"<s:message code="" text="From"/>", name:"From", canFilter:false},
+{title:"<s:message code="" text="Ref No"/>", name:"Ref-No", canFilter:false},
 {title:"<s:message code="" text="Date"/>", name:"Date", canFilter:false},
-{title:"<s:message code="" text="Amount"/>", name:"Amount", canFilter:false},
-{title:"<s:message code="" text="Mode"/>", name:"Mode", canFilter:false},
-{title:"<s:message code="" text="Tran No"/>", name:"Tran-No", canFilter:false},
-{title:"<s:message code="" text="Comment"/>", name:"Comment", canFilter:false}
+{title:"<s:message code="" text="Debit"/>", name:"Debit", canFilter:false},
+{title:"<s:message code="" text="Debit Amount"/>", name:"Debit-Amount", canFilter:false},
+{title:"<s:message code="" text="Credit"/>", name:"Credit", canFilter:false},
+{title:"<s:message code="" text="Credit Amount"/>", name:"Credit-Amount", canFilter:false},
+{title:"<s:message code="" text="Narration"/>", name:"Narration", canFilter:false}

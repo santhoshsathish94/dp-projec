@@ -202,21 +202,6 @@ public class AccountManagementController {
 		return "admin-account-management-create-payment";
 	}
 
-	private void setMenu(Model model, HttpServletRequest request, String setActiveMenus) throws Exception {
-
-		// display menu
-		Map<String, String> activeMenus = new HashMap<String, String>();
-		activeMenus.put("account_Management", "account_Management");
-		activeMenus.put(setActiveMenus, setActiveMenus);
-
-		@SuppressWarnings("unchecked")
-		Map<String, Menu> menus = (Map<String, Menu>) request.getAttribute("MENUMAP");
-
-		Menu currentMenu = (Menu) menus.get("account_Management");
-		model.addAttribute("currentMenu", currentMenu);
-		model.addAttribute("activeMenus", activeMenus);
-	}
-
 	@Secured("AUTH")
 	@RequestMapping(value = "/admin/account/createJournal.html", method = RequestMethod.POST)
 	public String createJournal(@Valid @ModelAttribute("journal") Journal journal, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale)
@@ -299,7 +284,7 @@ public class AccountManagementController {
 		expense.setExpense_date(convertDate(expense.getExpense_Sdate(), "expense_Sdate", result, locale));
 
 		Iterator i = jsonArray.iterator();
-		
+
 		while (i.hasNext()) {
 			Expense expense1 = new Expense();
 			JSONObject slide = (JSONObject) i.next();
@@ -325,6 +310,21 @@ public class AccountManagementController {
 
 	}
 
+	private void setMenu(Model model, HttpServletRequest request, String setActiveMenus) throws Exception {
+
+		// display menu
+		Map<String, String> activeMenus = new HashMap<String, String>();
+		activeMenus.put("account_Management", "account_Management");
+		activeMenus.put(setActiveMenus, setActiveMenus);
+
+		@SuppressWarnings("unchecked")
+		Map<String, Menu> menus = (Map<String, Menu>) request.getAttribute("MENUMAP");
+
+		Menu currentMenu = (Menu) menus.get("account_Management");
+		model.addAttribute("currentMenu", currentMenu);
+		model.addAttribute("activeMenus", activeMenus);
+	}
+
 	private Date convertDate(String sDate, String dateFieldName, BindingResult result, Locale locale) {
 
 		if (!StringUtils.isBlank(sDate)) {
@@ -340,6 +340,191 @@ public class AccountManagementController {
 			return null;
 		}
 
+	}
+
+	@Secured("AUTH")
+	@RequestMapping(value = "/admin/accountManagement/payment/paging.html", method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody
+	String paymentPaging(HttpServletRequest request, HttpServletResponse response) {
+
+		AjaxResponse resp = new AjaxResponse();
+		String sCurrentUser = request.getRemoteUser();
+
+		try {
+
+			User currentUser = userService.getByUserName(sCurrentUser);
+			MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
+			List<Payment> payments = null;
+
+			if (UserUtils.userInGroup(currentUser, Constants.GROUP_ADMIN)) {
+				payments = accountmanagement_paymentService.getPayment(store);
+				for (Payment payment : payments) {
+					Map entry = new HashMap();
+					entry.put("Id", payment.getId());
+					entry.put("To", payment.getPayment_to());
+					entry.put("Date", DateUtil.formatDate(payment.getPayment_date()));
+					entry.put("Amount", payment.getPayment_ammount());
+					entry.put("Mode", payment.getPayment_mode());
+					entry.put("Tran-No", payment.getPayment_transaction_no());
+					entry.put("Comment", payment.getPayment_comment());
+
+					resp.addDataEntry(entry);
+				}
+
+			} else {
+				LOGGER.error("User not found.");
+				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
+			}
+			resp.setStatus(AjaxResponse.RESPONSE_STATUS_SUCCESS);
+
+		} catch (Exception e) {
+			LOGGER.error("Error while paging products", e);
+			resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
+		}
+		System.out.println("============Before====resp.toJSONString======================>>");
+		String returnString = resp.toJSONString();
+		System.out.println("============After====resp.returnString======================>>" + returnString);
+
+		return returnString;
+	}
+
+	@Secured("AUTH")
+	@RequestMapping(value = "/admin/accountManagement/receipt/paging.html", method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody
+	String receiptPaging(HttpServletRequest request, HttpServletResponse response) {
+
+		AjaxResponse resp = new AjaxResponse();
+		String sCurrentUser = request.getRemoteUser();
+
+		try {
+
+			User currentUser = userService.getByUserName(sCurrentUser);
+			MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
+			List<Receipt> receipts = null;
+
+			if (UserUtils.userInGroup(currentUser, Constants.GROUP_ADMIN)) {
+				receipts = receiptService.getReceipt(store);
+				for (Receipt receipt : receipts) {
+					Map entry = new HashMap();
+					entry.put("Id", receipt.getId());
+					entry.put("From", receipt.getReceipt_from());
+					entry.put("Date", DateUtil.formatDate(receipt.getReceipt_date()));
+					entry.put("Amount", receipt.getReceipt_ammount());
+					entry.put("Mode", receipt.getReceipt_mode());
+					entry.put("Tran-No", receipt.getReceipt_transaction_no());
+					entry.put("Comment", receipt.getReceipt_comment());
+
+					resp.addDataEntry(entry);
+				}
+
+			} else {
+				LOGGER.error("User not found.");
+				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
+			}
+			resp.setStatus(AjaxResponse.RESPONSE_STATUS_SUCCESS);
+
+		} catch (Exception e) {
+			LOGGER.error("Error while paging products", e);
+			resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
+		}
+		System.out.println("============Before====resp.toJSONString======================>>");
+		String returnString = resp.toJSONString();
+		System.out.println("============After====resp.returnString======================>>" + returnString);
+
+		return returnString;
+	}
+
+	@Secured("AUTH")
+	@RequestMapping(value = "/admin/accountManagement/expense/paging.html", method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody
+	String expensePaging(HttpServletRequest request, HttpServletResponse response) {
+
+		AjaxResponse resp = new AjaxResponse();
+		String sCurrentUser = request.getRemoteUser();
+
+		try {
+
+			User currentUser = userService.getByUserName(sCurrentUser);
+			MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
+			List<Expense> expenses = null;
+
+			if (UserUtils.userInGroup(currentUser, Constants.GROUP_ADMIN)) {
+				expenses = expenseService.getExpense(store);
+				for (Expense expense : expenses) {
+					Map entry = new HashMap();
+					entry.put("Id", expense.getId());
+					entry.put("Expense", expense.getExpense());
+					entry.put("Date", DateUtil.formatDate(expense.getExpense_date()));
+					entry.put("Amount", expense.getExpense_ammount());
+					entry.put("Mode", expense.getExpense_payment_mode());
+					entry.put("Ref-No", expense.getExpense_ref_no());
+					entry.put("Comment", expense.getExpense_comment());
+
+					resp.addDataEntry(entry);
+				}
+
+			} else {
+				LOGGER.error("User not found.");
+				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
+			}
+			resp.setStatus(AjaxResponse.RESPONSE_STATUS_SUCCESS);
+
+		} catch (Exception e) {
+			LOGGER.error("Error while paging products", e);
+			resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
+		}
+		System.out.println("============Before====resp.toJSONString======================>>");
+		String returnString = resp.toJSONString();
+		System.out.println("============After====resp.returnString======================>>" + returnString);
+
+		return returnString;
+	}
+
+	@Secured("AUTH")
+	@RequestMapping(value = "/admin/accountManagement/journal/paging.html", method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody
+	String journalPaging(HttpServletRequest request, HttpServletResponse response) {
+
+		AjaxResponse resp = new AjaxResponse();
+		String sCurrentUser = request.getRemoteUser();
+
+		try {
+
+			User currentUser = userService.getByUserName(sCurrentUser);
+			MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
+			List<Journal> journals = null;
+
+			if (UserUtils.userInGroup(currentUser, Constants.GROUP_ADMIN)) {
+				journals = journalService.getJournal(store);
+				for (Journal journal : journals) {
+					Map entry = new HashMap();
+					entry.put("Id", journal.getId());
+					entry.put("Ref-No", journal.getJournal_ref_no());
+					entry.put("Date", DateUtil.formatDate(journal.getJournal_date()));
+					entry.put("Debit", journal.getJournal_debit());
+					entry.put("Debit-Amount", journal.getJournal_debit_ammount());
+					entry.put("Credit", journal.getJournal_credit());
+					entry.put("Credit-Amount", journal.getJournal_credit_ammount());
+					entry.put("Narration", journal.getJournal_narration());
+
+					resp.addDataEntry(entry);
+				}
+
+			} else {
+				LOGGER.error("User not found.");
+				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
+			}
+			resp.setStatus(AjaxResponse.RESPONSE_STATUS_SUCCESS);
+
+		} catch (Exception e) {
+			LOGGER.error("Error while paging products", e);
+			resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
+		}
+		System.out.println("============Before====resp.toJSONString======================>>");
+		String returnString = resp.toJSONString();
+		System.out.println("============After====resp.returnString======================>>" + returnString);
+
+		return returnString;
 	}
 
 }
