@@ -19,7 +19,7 @@
 	<br />
 </div>
 <c:url var="saveURL" value="/admin/account/createExpense.html" />
-<form:form method="POST" commandName="stock" action="${saveURL}">
+<form:form method="POST" commandName="Expense" action="${saveURL}">
 
 	<div style="float: left; width: 100%;">
 		
@@ -44,18 +44,18 @@
 		<div style="float: left;"	class="controls">
 			<form:input style="width: 180px;" class="small" type="text"
 				data-date-format="<%=com.salesmanager.core.constants.Constants.DEFAULT_DATE_FORMAT%>"
-				data-datepicker="datepicker" path="" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+				data-datepicker="datepicker" path="expense_Sdate" />
+			<span class="help-inline"><form:errors path="expense_Sdate"	cssClass="error" /></span>
 		</div>
 		
 		<div style="float: left;" class="controls" >
-			<form:input cssClass="input-large" path=""	cssStyle="width: 180px;" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+			<form:input cssClass="input-large" path="expense_ref_no"	cssStyle="width: 180px;" />
+			<span class="help-inline"><form:errors path="expense_ref_no"	cssClass="error" /></span>
 		</div>
 		
 		<div style="float: left;" class="controls">
-			<form:textarea cssClass="input-large" path="" cssStyle="width: 180px;" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+			<form:textarea cssClass="input-large" path="expense_comment" cssStyle="width: 180px;" />
+			<span class="help-inline"><form:errors path="expense_comment"	cssClass="error" /></span>
 		</div>
 		
 
@@ -73,11 +73,11 @@
 	<div style="float: left; width: 100%; margin-top: 0px;">
 		
 		<div style="float: left;"	class="controls">
-			<form:select cssClass="country-list highlight" path="">
+			<form:select cssClass="country-list highlight" path="expense_payment_mode">
 				<form:option value="Cash">Cash</form:option>
 				<form:option value="Bank">Bank</form:option>
 			</form:select>
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+			<span class="help-inline"><form:errors path="expense_payment_mode"	cssClass="error" /></span>
 		</div>
 
 	</div>
@@ -95,8 +95,8 @@
 			<div style="float: left; width: 100%;margin-top: 10px;" class="master_div" id="master_div">
 				
 				<div id="value_holder1" style="float: left; width: 100%;">
-					<input type="text" style="float: left;width: 285px;" id="product_name1">
-					<input type="text" style="float: left; margin-left: 30px; width: 100px;" id="amount1">
+					<input type="text" style="float: left;width: 285px;" id="expense_debit1">
+					<input type="text" style="float: left; margin-left: 30px; width: 100px;" id="expense_debit_ammount1">
 					<span style="float: left; margin: 5px; cursor: pointer;" onclick="deleteRow(this)">&#x2716;</span>
 				</div>
 				
@@ -132,8 +132,8 @@ $("#addNewRow").click(function (){
 function addNewRow() {
 	rowCount = parseInt(rowCount) + 1;
 	var holderDiv = $('<div>').attr('style', 'float: left; width: 100%;').attr('id', 'value_holder'+rowCount);
-	var pName = $('<input>').attr('type', 'text').attr('style', 'float: left; width: 285px;').attr('id', 'product_name'+rowCount);
-	var amount = $('<input>').attr('type', 'text').attr('style', 'float: left; margin-left: 30px; width: 100px;').attr('id', 'amount'+rowCount);
+	var pName = $('<input>').attr('type', 'text').attr('style', 'float: left; width: 285px;').attr('id', 'expense_debit'+rowCount);
+	var amount = $('<input>').attr('type', 'text').attr('style', 'float: left; margin-left: 30px; width: 100px;').attr('id', 'expense_debit_ammount'+rowCount);
 	var deleteRow = $('<span>').attr('style', 'float: left; margin: 5px; cursor: pointer;').attr('onclick', 'deleteRow(this)').html('&#x2716;');
 	
 	$(holderDiv).append(pName).append(amount).append(deleteRow);
@@ -156,8 +156,8 @@ function createStockEntryJson() {
 	for(var counter = 0; counter <= parseInt(rowCount); counter++) {
 		if($('#value_holder'+counter).length == 1) {
 			object = new Object();
-			object.stockSKU = $('#product_name'+counter).val();
-			object.stockAmount = $('#amount'+counter).val();
+			object.expense_debit = $('#expense_debit'+counter).val();
+			object.expense_debit_ammount = $('#expense_debit_ammount'+counter).val();
 
 			objectAray.push(object);
 		}

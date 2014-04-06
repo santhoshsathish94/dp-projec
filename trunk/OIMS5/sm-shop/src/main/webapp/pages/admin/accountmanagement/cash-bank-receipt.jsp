@@ -19,7 +19,7 @@
 	<br />
 </div>
 <c:url var="saveURL" value="/admin/account/createReceipt.html" />
-<form:form method="POST" commandName="stock" action="${saveURL}">
+<form:form method="POST" commandName="receipt" action="${saveURL}">
 
 	<div style="float: left; width: 100%;">
 		
@@ -36,15 +36,15 @@
 	<div style="float: left; width: 100%; margin-top: 0px;">
 	
 		<div style="float: left; width: 290px;" class="controls" >
-			<form:input cssClass="input-large" path=""	cssStyle="width: 250px;" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+			<form:input cssClass="input-large" path="receipt_from"	cssStyle="width: 250px;" />
+			<span class="help-inline"><form:errors path="receipt_from"	cssClass="error" /></span>
 		</div>
 	
 		<div style="float: left;"	class="controls">
 			<form:input style="width: 80px;" class="small" type="text"
 				data-date-format="<%=com.salesmanager.core.constants.Constants.DEFAULT_DATE_FORMAT%>"
-				data-datepicker="datepicker" path="" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+				data-datepicker="datepicker" path="receipt_Sdate" />
+			<span class="help-inline"><form:errors path="receipt_Sdate"	cssClass="error" /></span>
 		</div>
 
 	</div>
@@ -72,16 +72,16 @@
 	<div style="float: left; width: 100%; margin-top: 0px;">
 	
 		<div style="float: left; width: 290px;" class="controls" >
-			<form:input cssClass="input-large" path=""	cssStyle="width: 250px;" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+			<form:input cssClass="input-large" path="receipt_ammount"	cssStyle="width: 250px;" />
+			<span class="help-inline"><form:errors path="receipt_ammount"	cssClass="error" /></span>
 		</div>
 	
 		<div style="float: left;"	class="controls">
-			<form:select cssClass="country-list highlight" path="">
+			<form:select cssClass="country-list highlight" path="receipt_mode">
 				<form:option value="Cash">Cash</form:option>
 				<form:option value="Bank">Bank</form:option>
 			</form:select>
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+			<span class="help-inline"><form:errors path="receipt_mode"	cssClass="error" /></span>
 		</div>
 
 	</div>
@@ -101,20 +101,20 @@
 	<div style="float: left; width: 100%; margin-top: 0px;">
 	
 		<div style="float: left; width: 290px;" class="controls" >
-			<form:input cssClass="input-large" path=""	cssStyle="width: 250px;" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+			<form:input cssClass="input-large" path="receipt_transaction_no"	cssStyle="width: 250px;" />
+			<span class="help-inline"><form:errors path="receipt_transaction_no"	cssClass="error" /></span>
 		</div>
 	
 		<div style="float: left;" class="controls">
-			<form:textarea cssClass="input-large" path="" cssStyle="width: 250px;" />
-			<span class="help-inline"><form:errors path=""	cssClass="error" /></span>
+			<form:textarea cssClass="input-large" path="receipt_comment" cssStyle="width: 250px;" />
+			<span class="help-inline"><form:errors path="receipt_comment"	cssClass="error" /></span>
 		</div>
 
 	</div>
 		
 	<div class="control-group" style="float: left; width: 100%;">
 		<div class="pull-left" style="width: 100%; margin-top: 10px;">
-			<button type="submit" class="btn btn-success" onclick="return createStockEntryJson();">
+			<button type="submit" class="btn btn-success">
 				<s:message code="button.label.submit2" text="Save" />
 			</button>
 		</div>
