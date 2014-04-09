@@ -23,4 +23,6 @@ public interface CustomerDAO extends SalesManagerEntityDao<Long, Customer> {
 	Customer getByCustomerCompany(String customerCompany);
 	
 	List<String> getCustomerListByCustomerCompany(String accountName);
+	
+	List<Customer> getCustomerListByCustomerCompany(MerchantStore store, String accountName);
 }

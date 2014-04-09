@@ -434,6 +434,28 @@
 		]
 	}}
 ]
+}},
+{
+"menu":{
+"code":"billing-setting",
+"icon":"icon-cog", 
+"url":"/admin/billing/saleinvoicesetting.html", 
+"role":"AUTH",
+"order":6,
+"menus":[
+	{"menu":{"code":"sales-invoice-setting","url":"/admin/billing/saleinvoicesetting.html","role":"AUTH","order":0}},
+	{"menu":{
+		"code":"sales-invoice","url":"","role":"AUTH","order":1,"menus":
+		[
+			{"menu":{
+				"code":"sales-invoice-list","url":"/admin/billing/invoide-list.html","role":"AUTH","order":0
+			}},
+			{"menu":{
+				"code":"sales-invoice-create","url":"/admin/billing/invoicecreate.html","role":"AUTH","order":1
+			}}
+		]
+	}}
+]
 }}
 ,
 {

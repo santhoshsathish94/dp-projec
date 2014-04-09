@@ -20,7 +20,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -126,15 +125,15 @@ public class Company extends SalesManagerEntity<Integer, Company> {
 	@Column(name="COMPANY_INVOICE_TEMPLATE", length=25)
 	private String companyInvoiceTemplate;
 	
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Country.class)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="COMPANY_COUNTRY_ID", nullable=true, updatable=true)
 	private Country companyCountry;
 	
-	@OneToOne(fetch = FetchType.EAGER, targetEntity = Zone.class)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="COMPANY_ZONE_ID", nullable=true, updatable=true)
 	private Zone companyZone;
 	
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Currency.class)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "COMPANY_CURRENCY_ID", nullable=true)
 	private Currency companyCurrency;
 	

@@ -17,7 +17,8 @@ public interface CustomerService  extends SalesManagerEntityService<Long, Custom
 	List<Customer> listByStore(MerchantStore store);
 
 	Customer getByNick(String nick);
-	void saveOrUpdate(Customer customer) throws ServiceException ;
+	
+	void saveOrUpdate(Customer customer) throws ServiceException;
 
 	CustomerList listByStore(MerchantStore store, CustomerCriteria criteria);
 
@@ -26,4 +27,6 @@ public interface CustomerService  extends SalesManagerEntityService<Long, Custom
 	Customer getByCustomerCompany(String customerCompany);
 
 	List<String> getCustomerListByCustomerCompany(String accountName);
+	
+	List<Customer> getCustomerListByCustomerCompany(MerchantStore store, String accountName) throws ServiceException;
 }
