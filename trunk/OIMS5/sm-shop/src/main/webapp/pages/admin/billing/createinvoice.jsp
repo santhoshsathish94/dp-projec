@@ -19,6 +19,8 @@
 <link href="<c:url value="/resources/css/bootstrap/css/datepicker.css" />" rel="stylesheet"></link>
 <script src="<c:url value="/resources/js/bootstrap/bootstrap-datepicker.js" />"></script>
 
+<script src="<c:url value="/resources/js/admin-common.js" />"></script>
+
 <style>
 .ui-autocomplete #customerName {
 	max-height: 100px;
