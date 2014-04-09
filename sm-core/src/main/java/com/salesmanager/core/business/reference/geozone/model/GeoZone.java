@@ -21,25 +21,27 @@ import com.salesmanager.core.business.reference.country.model.Country;
 // TODO : create DAO / Service
 public class GeoZone extends SalesManagerEntity<Long, GeoZone> {
 	private static final long serialVersionUID = -5992008645857938825L;
-
+	
 	@Id
 	@Column(name = "GEOZONE_ID")
 	@TableGenerator(name = "TABLE_GEN", table = "SM_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "GEOZONE_SEQ_NEXT_VAL")
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
 	private Long id;
-
+	
 	@OneToMany(mappedBy = "geoZone", cascade = CascadeType.ALL)
 	private List<GeoZoneDescription> descriptions = new ArrayList<GeoZoneDescription>();
-
+	
 	@OneToMany(mappedBy = "geoZone", targetEntity = Country.class)
 	private List<Country> countries = new ArrayList<Country>();
+	
 
+	
 	@Column(name = "GEOZONE_NAME")
 	private String name;
-
+	
 	@Column(name = "GEOZONE_CODE")
 	private String code;
-
+	
 	public GeoZone() {
 	}
 
@@ -52,6 +54,7 @@ public class GeoZone extends SalesManagerEntity<Long, GeoZone> {
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 
 	public String getName() {
 		return name;
@@ -84,5 +87,6 @@ public class GeoZone extends SalesManagerEntity<Long, GeoZone> {
 	public void setDescriptions(List<GeoZoneDescription> descriptions) {
 		this.descriptions = descriptions;
 	}
+
 
 }

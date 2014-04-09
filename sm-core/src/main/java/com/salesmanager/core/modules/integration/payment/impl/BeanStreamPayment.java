@@ -28,6 +28,7 @@ import com.salesmanager.core.business.payments.model.Payment;
 import com.salesmanager.core.business.payments.model.PaymentType;
 import com.salesmanager.core.business.payments.model.Transaction;
 import com.salesmanager.core.business.payments.model.TransactionType;
+import com.salesmanager.core.business.shoppingcart.model.ShoppingCartItem;
 import com.salesmanager.core.business.system.model.IntegrationConfiguration;
 import com.salesmanager.core.business.system.model.IntegrationModule;
 import com.salesmanager.core.business.system.model.MerchantLog;
@@ -58,7 +59,7 @@ public class BeanStreamPayment implements PaymentModule {
 
 	@Override
 	public Transaction authorize(MerchantStore store, Customer customer,
-			BigDecimal amount, Payment payment,
+			List<ShoppingCartItem> items, BigDecimal amount, Payment payment,
 			IntegrationConfiguration configuration, IntegrationModule module)
 			throws IntegrationException {
 		return processTransaction(store, customer, TransactionType.AUTHORIZE,
@@ -70,7 +71,7 @@ public class BeanStreamPayment implements PaymentModule {
 
 	@Override
 	public Transaction capture(MerchantStore store, Customer customer,
-			BigDecimal amount, Payment payment, Transaction transaction, 
+			List<ShoppingCartItem> items, BigDecimal amount, Payment payment, Transaction transaction, 
 			IntegrationConfiguration configuration, IntegrationModule module)
 			throws IntegrationException {
 
@@ -122,7 +123,7 @@ public class BeanStreamPayment implements PaymentModule {
 
 	@Override
 	public Transaction authorizeAndCapture(MerchantStore store, Customer customer,
-			BigDecimal amount, Payment payment,
+			List<ShoppingCartItem> items, BigDecimal amount, Payment payment,
 			IntegrationConfiguration configuration, IntegrationModule module)
 			throws IntegrationException {
 		return processTransaction(
@@ -466,7 +467,12 @@ public class BeanStreamPayment implements PaymentModule {
 		messageString.append("trnExpYear=").append(creditCardPayment.getExpirationYear()).append("&");
 		messageString.append("trnCardCvd=").append(creditCardPayment.getCredidCardValidationNumber()).append("&");
 		messageString.append("trnAmount=").append(amnt).append("&");
-		messageString.append("ordName=").append(customer.getBilling().getName()).append("&");
+		
+		StringBuilder nm = new StringBuilder();
+		nm.append(customer.getBilling().getFirstName()).append(" ").append(customer.getBilling().getLastName());
+		
+		
+		messageString.append("ordName=").append(nm.toString()).append("&");
 		messageString.append("ordAddress1=").append(customer.getBilling().getAddress()).append("&");
 		messageString.append("ordCity=").append(customer.getBilling().getCity()).append("&");
 		
@@ -477,8 +483,8 @@ public class BeanStreamPayment implements PaymentModule {
 		
 		messageString.append("ordProvince=").append(stateProvince).append("&");
 		messageString.append("ordPostalCode=").append(customer.getBilling().getPostalCode()).append("&");
-		messageString.append("ordCountry=").append(customer.getCountry().getName()).append("&");
-		messageString.append("ordPhoneNumber=").append(customer.getTelephone()).append("&");
+		messageString.append("ordCountry=").append(customer.getBilling().getCountry().getName()).append("&");
+		messageString.append("ordPhoneNumber=").append(customer.getBilling().getTelephone()).append("&");
 		messageString.append("ordEmailAddress=").append(customer.getEmailAddress());
 		
 		
@@ -534,9 +540,8 @@ public class BeanStreamPayment implements PaymentModule {
 			messageLogString.append("trnExpYear=").append(creditCardPayment.getExpirationYear()).append("&");
 			messageLogString.append("trnCardCvd=").append(creditCardPayment.getCredidCardValidationNumber()).append("&");
 			messageLogString.append("trnAmount=").append(amnt).append("&");
-			
-			
-			messageLogString.append("ordName=").append(customer.getBilling().getName()).append("&");
+
+			messageLogString.append("ordName=").append(nm.toString()).append("&");
 			messageLogString.append("ordAddress1=").append(customer.getBilling().getAddress()).append("&");
 			messageLogString.append("ordCity=").append(customer.getBilling().getCity()).append("&");
 			
@@ -544,8 +549,8 @@ public class BeanStreamPayment implements PaymentModule {
 			
 			messageLogString.append("ordProvince=").append(stateProvince).append("&");
 			messageLogString.append("ordPostalCode=").append(customer.getBilling().getPostalCode()).append("&");
-			messageLogString.append("ordCountry=").append(customer.getCountry().getName()).append("&");
-			messageLogString.append("ordPhoneNumber=").append(customer.getTelephone()).append("&");
+			messageLogString.append("ordCountry=").append(customer.getBilling().getCountry().getName()).append("&");
+			messageLogString.append("ordPhoneNumber=").append(customer.getBilling().getTelephone()).append("&");
 			messageLogString.append("ordEmailAddress=").append(customer.getEmailAddress());
 			
 			

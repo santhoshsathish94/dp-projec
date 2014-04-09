@@ -39,5 +39,5 @@ public class CountryDescription extends Description {
 	public void setCountry(Country country) {
 		this.country = country;
 	}
-
+	
 }

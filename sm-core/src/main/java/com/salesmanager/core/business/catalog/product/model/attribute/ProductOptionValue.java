@@ -72,6 +72,10 @@ public class ProductOptionValue extends SalesManagerEntity<Long, ProductOptionVa
 	
 	public ProductOptionValue() {
 	}
+	
+	public ProductOptionValue(Long id) {
+		this.id = id;
+	}
 
 	@Override
 	public Long getId() {
@@ -155,6 +159,56 @@ public class ProductOptionValue extends SalesManagerEntity<Long, ProductOptionVa
 	}
 
 
+	public class CustomProductOptionValues {
+		
+		private Long id;
+		
+		private String name;
+		
+		public List<CustomProductOptionValues> getCustomProductOptionValues(List<ProductOptionValue> productOptionValues) {
+			
+			List<CustomProductOptionValues> customProductOptionValues = new ArrayList<CustomProductOptionValues>();
+			CustomProductOptionValues customProductOptionValue = null;
+			for(ProductOptionValue pov: productOptionValues) {
+				customProductOptionValue = new CustomProductOptionValues();
+				
+				customProductOptionValue.setId(pov.id);
+				customProductOptionValue.setName(pov.getDescriptionsSettoList().get(0).getName());
+				
+				customProductOptionValues.add(customProductOptionValue);
+			}
+			
+			return customProductOptionValues;
+		}
 
+		
+		/**
+		 * @return the id
+		 */
+		public Long getId() {
+			return id;
+		}
+
+		/**
+		 * @param id the id to set
+		 */
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		/**
+		 * @return the name
+		 */
+		public String getName() {
+			return name;
+		}
+
+		/**
+		 * @param name the name to set
+		 */
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
 
 }

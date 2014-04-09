@@ -77,6 +77,11 @@
 		<class>com.salesmanager.core.business.shoppingcart.model.ShoppingCartAttributeItem</class>
 		<class>com.salesmanager.core.business.shoppingcart.model.ShoppingCartItem</class>
 		
+		<class>com.salesmanager.core.business.company.model.Company</class>
+		<class>com.salesmanager.core.business.company.model.AccountingPeriod</class>
+		<class>com.salesmanager.core.business.company.model.CompanyCurrencies</class>
+		<class>com.salesmanager.core.business.supplier.model.Supplier</class>
+		<class>com.salesmanager.core.business.supplier.model.PartyItemDefaultMargin</class>
 		
 	</persistence-unit>
 </persistence>

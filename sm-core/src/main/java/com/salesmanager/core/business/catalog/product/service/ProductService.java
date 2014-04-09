@@ -61,5 +61,8 @@ public interface ProductService extends SalesManagerEntityService<Long, Product>
 
 	Product getBySeUrl(MerchantStore store, String seUrl, Locale locale);
 	
+	Product getProductBySKU(String sku);
+	
+	List<String> getProductListBySKU(String sku);
 }
 	

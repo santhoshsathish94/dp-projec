@@ -21,22 +21,22 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.Valid;
 
 import org.hibernate.annotations.Cascade;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.salesmanager.core.business.catalog.product.model.review.ProductReview;
 import com.salesmanager.core.business.customer.model.attribute.CustomerAttribute;
 import com.salesmanager.core.business.generic.model.SalesManagerEntity;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
-import com.salesmanager.core.business.reference.country.model.Country;
 import com.salesmanager.core.business.reference.language.model.Language;
-import com.salesmanager.core.business.reference.zone.model.Zone;
 import com.salesmanager.core.business.user.model.Group;
 import com.salesmanager.core.constants.SchemaConstant;
 import com.salesmanager.core.utils.CloneUtils;
@@ -60,41 +60,23 @@ public class Customer extends SalesManagerEntity<Long, Customer> {
 	@Enumerated(value = EnumType.STRING)
 	private CustomerGender gender;
 
-	@Column(name="CUSTOMER_FIRSTNAME", length=32, nullable=false)
-	private String firstname;
-	
-	@Column(name="CUSTOMER_LASTNAME", length=32, nullable=false)
-	private String lastname;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="CUSTOMER_DOB")
 	private Date dateOfBirth;
 	
+	@Email
+	@NotEmpty
 	@Column(name="CUSTOMER_EMAIL_ADDRESS", length=96, nullable=false)
 	private String emailAddress;
 	
 	@Column(name="CUSTOMER_NICK", length=96)
 	private String nick;
-	
-	@Column(name="CUSTOMER_TELEPHONE", length=32, nullable=false)
-	private String telephone;
-	
-	@Column(name="CUSTOMER_ADDRESS", length=256, nullable=false)
-	private String streetAddress;
-	
-	@Column(name="CUSTOMER_POSTALCODE", length=20, nullable=false)
-	private String postalCode;
-	
-	@Column(name="CUSTOMER_CITY", length=100, nullable=false)
-	private String city;
-	
+
 	@Column(name="CUSTOMER_COMPANY", length=100)
 	private String company;
 	
-	@Column(name="CUSTOMER_STATE", length=100)
-	private String state;
 
-	
 	@Column(name="CUSTOMER_PASSWORD", length=50)
 	private String password;
 
@@ -102,14 +84,7 @@ public class Customer extends SalesManagerEntity<Long, Customer> {
 	@Column(name="CUSTOMER_ANONYMOUS")
 	private boolean anonymous;
 	
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="COUNTRY_ID", nullable=false)
-	private Country country;
-	
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="ZONE_ID", nullable=true)
-	private Zone zone;
-	
+
 	
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Language.class)
 	@JoinColumn(name = "LANGUAGE_ID", nullable=false)
@@ -124,9 +99,11 @@ public class Customer extends SalesManagerEntity<Long, Customer> {
 	@JoinColumn(name="MERCHANT_ID", nullable=false)
 	private MerchantStore merchantStore;
 	
+
 	@Embedded
 	private com.salesmanager.core.business.common.model.Delivery delivery = null;
 	
+	@Valid
 	@Embedded
 	private com.salesmanager.core.business.common.model.Billing billing = null;
 	
@@ -169,21 +146,6 @@ public class Customer extends SalesManagerEntity<Long, Customer> {
 	}
 
 
-	public String getFirstname() {
-		return firstname;
-	}
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-	public String getLastname() {
-		return lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
 
 	public Date getDateOfBirth() {
 		return CloneUtils.clone(dateOfBirth);
@@ -209,52 +171,12 @@ public class Customer extends SalesManagerEntity<Long, Customer> {
 		this.nick = nick;
 	}
 
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-
-	public String getStreetAddress() {
-		return streetAddress;
-	}
-
-	public void setStreetAddress(String streetAddress) {
-		this.streetAddress = streetAddress;
-	}
-
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
 	public String getCompany() {
 		return company;
 	}
 
 	public void setCompany(String company) {
 		this.company = company;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
 	}
 
 
@@ -277,21 +199,6 @@ public class Customer extends SalesManagerEntity<Long, Customer> {
 		this.anonymous = anonymous;
 	}
 
-	public Country getCountry() {
-		return country;
-	}
-
-	public void setCountry(Country country) {
-		this.country = country;
-	}
-
-	public Zone getZone() {
-		return zone;
-	}
-
-	public void setZone(Zone zone) {
-		this.zone = zone;
-	}
 
 	public List<ProductReview> getReviews() {
 		return reviews;

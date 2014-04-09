@@ -22,12 +22,14 @@ import com.salesmanager.core.business.order.model.Order;
 import com.salesmanager.core.business.order.model.orderstatus.OrderStatus;
 import com.salesmanager.core.business.order.model.orderstatus.OrderStatusHistory;
 import com.salesmanager.core.business.order.service.OrderService;
-import com.salesmanager.core.business.payments.model.CreditCardType;
 import com.salesmanager.core.business.payments.model.CreditCardPayment;
+import com.salesmanager.core.business.payments.model.CreditCardType;
 import com.salesmanager.core.business.payments.model.Payment;
-import com.salesmanager.core.business.payments.model.PaypalPayment;
+import com.salesmanager.core.business.payments.model.PaymentMethod;
+import com.salesmanager.core.business.payments.model.PaymentType;
 import com.salesmanager.core.business.payments.model.Transaction;
 import com.salesmanager.core.business.payments.model.TransactionType;
+import com.salesmanager.core.business.shoppingcart.model.ShoppingCartItem;
 import com.salesmanager.core.business.system.model.IntegrationConfiguration;
 import com.salesmanager.core.business.system.model.IntegrationModule;
 import com.salesmanager.core.business.system.model.MerchantConfiguration;
@@ -82,11 +84,67 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
-	public IntegrationModule getPaymentMethod(MerchantStore store, String moduleName) throws ServiceException {
+	public List<PaymentMethod> getAcceptedPaymentMethods(MerchantStore store) throws ServiceException {
+		
+		Map<String,IntegrationConfiguration> modules =  this.getPaymentModulesConfigured(store);
+
+		List<PaymentMethod> returnModules = new ArrayList<PaymentMethod>();
+		
+		for(String module : modules.keySet()) {
+			IntegrationConfiguration config = modules.get(module);
+			if(config.isActive()) {
+				
+				IntegrationModule md = this.getPaymentMethodByCode(store, config.getModuleCode());
+				if(md==null) {
+					continue;
+				}
+				PaymentMethod paymentMethod = new PaymentMethod();
+				
+				paymentMethod.setDefaultSelected(config.isDefaultSelected());
+				paymentMethod.setPaymentMethodCode(config.getModuleCode());
+				paymentMethod.setModule(md);
+				paymentMethod.setInformations(config);
+				PaymentType type = PaymentType.COD;
+				if(md.getType().equalsIgnoreCase(PaymentType.CREDITCARD.name())) {
+					type = PaymentType.CREDITCARD;
+				} else 	if(md.getType().equalsIgnoreCase(PaymentType.FREE.name())) {
+					type = PaymentType.FREE;
+				} else 	if(md.getType().equalsIgnoreCase(PaymentType.MONEYORDER.name())) {
+					type = PaymentType.MONEYORDER;
+				} else 	if(md.getType().equalsIgnoreCase(PaymentType.PAYPAL.name())) {
+					type = PaymentType.PAYPAL;
+				}
+				paymentMethod.setPaymentType(type);
+				returnModules.add(paymentMethod);
+			}
+		}
+		
+		return returnModules;
+		
+		
+	}
+	
+	@Override
+	public IntegrationModule getPaymentMethodByType(MerchantStore store, String type) throws ServiceException {
 		List<IntegrationModule> modules =  getPaymentMethods(store);
 
 		for(IntegrationModule module : modules) {
-			if(module.getModule().equals(moduleName)) {
+			if(module.getModule().equals(type)) {
+				
+				return module;
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public IntegrationModule getPaymentMethodByCode(MerchantStore store,
+			String code) throws ServiceException {
+		List<IntegrationModule> modules =  getPaymentMethods(store);
+
+		for(IntegrationModule module : modules) {
+			if(module.getCode().equals(code)) {
 				
 				return module;
 			}
@@ -111,6 +169,8 @@ public class PaymentServiceImpl implements PaymentService {
 		return null;
 		
 	}
+	
+
 	
 	@Override
 	public Map<String,IntegrationConfiguration> getPaymentModulesConfigured(MerchantStore store) throws ServiceException {
@@ -229,7 +289,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	public Transaction processPayment(Customer customer,
-			MerchantStore store, Payment payment, BigDecimal amount)
+			MerchantStore store, Payment payment, List<ShoppingCartItem> items, BigDecimal amount)
 			throws ServiceException {
 
 
@@ -238,6 +298,8 @@ public class PaymentServiceImpl implements PaymentService {
 		Validate.notNull(payment);
 		Validate.notNull(amount);
 		Validate.notNull(payment.getTransactionType());
+		
+		payment.setCurrency(store.getCurrency());
 		
 		if(payment.getTransactionType().name().equals(TransactionType.CAPTURE.name())) {
 			throw new ServiceException("This method does not allow to process capture transaction. Use processCapturePayment");
@@ -272,14 +334,14 @@ public class PaymentServiceImpl implements PaymentService {
 			validateCreditCard(creditCardPayment.getCreditCardNumber(),creditCardPayment.getCreditCard(),creditCardPayment.getExpirationMonth(),creditCardPayment.getExpirationYear());
 		}
 		
-		IntegrationModule integrationModule = getPaymentMethod(store,payment.getModuleName());
+		IntegrationModule integrationModule = getPaymentMethodByCode(store,payment.getModuleName());
 		
 		TransactionType transactionType = payment.getTransactionType();
 		Transaction transaction = null;
 		if(transactionType == TransactionType.AUTHORIZE)  {
-			transaction = module.authorize(store, customer, amount, payment, configuration, integrationModule);
+			transaction = module.authorize(store, customer, items, amount, payment, configuration, integrationModule);
 		} else if(transactionType == TransactionType.AUTHORIZECAPTURE)  {
-			transaction = module.authorizeAndCapture(store, customer, amount, payment, configuration, integrationModule);
+			transaction = module.authorizeAndCapture(store, customer, items, amount, payment, configuration, integrationModule);
 		} else if(transactionType == TransactionType.INIT)  {
 			transaction = module.initTransaction(store, customer, amount, payment, configuration, integrationModule);
 		}
@@ -295,8 +357,13 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 	
 	@Override
+	public PaymentModule getPaymentModule(String paymentModuleCode) throws ServiceException {
+		return paymentModules.get(paymentModuleCode);
+	}
+	
+	@Override
 	public Transaction processCapturePayment(Order order, Customer customer,
-			MerchantStore store, Payment payment, BigDecimal amount)
+			MerchantStore store, Payment payment, List<ShoppingCartItem> items, BigDecimal amount)
 			throws ServiceException {
 
 
@@ -306,6 +373,8 @@ public class PaymentServiceImpl implements PaymentService {
 		Validate.notNull(amount);
 		Validate.notNull(order);
 		Validate.notNull(payment.getTransactionType());
+		
+		payment.setCurrency(store.getCurrency());
 		
 		if(!payment.getTransactionType().name().equals(TransactionType.CAPTURE.name())) {
 			throw new ServiceException("This method is for capture transaction only");
@@ -340,17 +409,8 @@ public class PaymentServiceImpl implements PaymentService {
 			validateCreditCard(creditCardPayment.getCreditCardNumber(),creditCardPayment.getCreditCard(),creditCardPayment.getExpirationMonth(),creditCardPayment.getExpirationYear());
 		}
 		
-		if(payment instanceof PaypalPayment) {
-			PaypalPayment paypalPayment = (PaypalPayment)payment;
-/*			IntegrationConfiguration paypalConfiguration = this.getPaymentConfiguration("paypal", store);
-			String account = paypalConfiguration.getIntegrationKeys().get("account");
-			String api = paypalConfiguration.getIntegrationKeys().get("api");
-			String signature = paypalConfiguration.getIntegrationKeys().get("signature");*/
-			paypalPayment.setModuleName("paypal");
-			paypalPayment.setTransactionType(TransactionType.AUTHORIZECAPTURE);
-		}
 		
-		IntegrationModule integrationModule = getPaymentMethod(store,payment.getModuleName());
+		IntegrationModule integrationModule = getPaymentMethodByCode(store,payment.getModuleName());
 		
 		TransactionType transactionType = payment.getTransactionType();
 
@@ -359,7 +419,7 @@ public class PaymentServiceImpl implements PaymentService {
 		if(trx==null) {
 			throw new ServiceException("No capturable transaction for order id " + order.getId());
 		}
-		Transaction transaction = module.capture(store, customer, amount, payment, trx, configuration, integrationModule);
+		Transaction transaction = module.capture(store, customer, items, amount, payment, trx, configuration, integrationModule);
 		transaction.setOrder(order);
 		
 		
@@ -383,6 +443,7 @@ public class PaymentServiceImpl implements PaymentService {
 		Validate.notNull(store);
 		Validate.notNull(amount);
 		Validate.notNull(order);
+		
 		
 		BigDecimal orderTotal = order.getTotal();
 		
@@ -414,7 +475,7 @@ public class PaymentServiceImpl implements PaymentService {
 			partial = true;
 		}
 		
-		IntegrationModule integrationModule = getPaymentMethod(store,module);
+		IntegrationModule integrationModule = getPaymentMethodByCode(store,module);
 		
 		//get the associated transaction
 		Transaction refundable = transactionService.getRefundableTransaction(order);
@@ -575,6 +636,8 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 	
 	}
+
+
 	
 
 

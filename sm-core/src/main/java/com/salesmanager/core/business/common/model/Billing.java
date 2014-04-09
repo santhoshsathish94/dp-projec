@@ -6,18 +6,24 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.salesmanager.core.business.reference.country.model.Country;
 import com.salesmanager.core.business.reference.zone.model.Zone;
 
 @Embeddable
 public class Billing {
 	
+	@NotEmpty
+	@Column (name ="BILLING_LAST_NAME", length=64, nullable=false)
+	private String lastName;
+
+	@NotEmpty
+	@Column (name ="BILLING_FIRST_NAME", length=64, nullable=false)
+	private String firstName;
 	
 
-	
-	@Column (name ="BILLING_NAME", length=64)
-	private String name;
-	
+
 	@Column (name ="BILLING_COMPANY", length=100)
 	private String company;
 	
@@ -37,6 +43,7 @@ public class Billing {
 	@Column (name ="BILLING_STATE", length=100)
 	private String state;
 
+
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="BILLING_COUNTRY_ID", nullable=false)
 	private Country country;
@@ -45,13 +52,7 @@ public class Billing {
 	@JoinColumn(name="BILLING_ZONE_ID", nullable=true)
 	private Zone zone;
 
-	public String getName() {
-		return name;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public String getCompany() {
 		return company;
@@ -115,6 +116,23 @@ public class Billing {
 
 	public String getTelephone() {
 		return telephone;
+	}
+	
+	
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 	
 }

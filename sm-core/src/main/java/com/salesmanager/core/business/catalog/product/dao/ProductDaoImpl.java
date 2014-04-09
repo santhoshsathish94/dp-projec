@@ -12,9 +12,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import com.mysema.query.jpa.JPQLQuery;
+import com.mysema.query.jpa.impl.JPAQuery;
 import com.salesmanager.core.business.catalog.product.model.Product;
 import com.salesmanager.core.business.catalog.product.model.ProductCriteria;
 import com.salesmanager.core.business.catalog.product.model.ProductList;
+import com.salesmanager.core.business.catalog.product.model.QProduct;
 import com.salesmanager.core.business.catalog.product.model.attribute.AttributeCriteria;
 import com.salesmanager.core.business.generic.dao.SalesManagerEntityDaoImpl;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
@@ -926,6 +929,34 @@ public class ProductDaoImpl extends SalesManagerEntityDaoImpl<Long, Product> imp
 			return null;
 		}
 		
+	}
+	
+	@Override
+	public Product getProductBySKU(String sku) {
+		QProduct qProduct = QProduct.product;
+		
+		JPQLQuery query = new JPAQuery (getEntityManager());
+		
+		query.from(qProduct).where(qProduct.sku.eq(sku));
+		
+		return query.uniqueResult(qProduct);
+	}
+	
+	@Override
+	public List<String> getProductListBySKU(String sku) {
+		
+		StringBuilder qs = new StringBuilder();
+		qs.append("select p.sku from Product as p ");
+		qs.append("where p.sku like :sku ");
+		
+		String hql = qs.toString();
+		Query q = super.getEntityManager().createQuery(hql);
+		
+		q.setParameter("sku", sku+"%");
+		
+		List<String> productName = q.getResultList(); 
+		
+		return productName;
 	}
 }
 
