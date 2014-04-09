@@ -372,4 +372,23 @@ public class CustomerDAOImpl extends SalesManagerEntityDaoImpl<Long, Customer> i
 		
 		return companyNameList;
 	}
+	
+	@Override
+	public List<Customer> getCustomerListByCustomerCompany(MerchantStore store, String accountName) {
+		
+		StringBuilder qs = new StringBuilder();
+		qs.append("select c from Customer as c ");
+		qs.append("where c.merchantStore.id=:mId ");
+		qs.append("and c.company like :companyName ");
+		
+		String hql = qs.toString();
+		Query q = super.getEntityManager().createQuery(hql);
+		
+		q.setParameter("mId", store.getId());
+		q.setParameter("companyName", accountName+"%");
+		
+		List<Customer> companyList = q.getResultList(); 
+		
+		return companyList;
+	}
 }

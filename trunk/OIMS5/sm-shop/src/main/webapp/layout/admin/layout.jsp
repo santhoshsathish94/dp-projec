@@ -412,7 +412,7 @@ response.setDateHeader ("Expires", -1);
 				window.location='<c:url value="/admin/inventoryManagement/createbranchtransfer.html" />';
 			});
 			
-			$("#pack-size-list-link").click(function() {
+			/*$("#pack-size-list-link").click(function() {
 				window.location='<c:url value="/admin/catalogue/master/listpacksize.html" />';
 			});
 			$("#pack-size-create-link").click(function() {
@@ -423,7 +423,7 @@ response.setDateHeader ("Expires", -1);
 			});
 			$("#shades-create-link").click(function() {
 				window.location='<c:url value="/admin/catalogue/master/createshade.html" />';
-			});
+			});*/
 
 			///  Account Management
 
@@ -453,6 +453,17 @@ response.setDateHeader ("Expires", -1);
 			});
 			$("#journal-list-link").click(function() {
 				window.location='<c:url value="/admin/account/journals.html" />';
+			});
+			
+			
+			$("#sales-invoice-setting-link").click(function() {
+				window.location='<c:url value="/admin/billing/saleinvoicesetting.html" />';
+			});
+			$("#sales-invoice-list-link").click(function() {
+				window.location='<c:url value="/admin/billing/invoide-list.html" />';
+			});
+			$("#sales-invoice-create-link").click(function() {
+				window.location='<c:url value="/admin/billing/invoicecreate.html" />';
 			});
 			
 		}); 

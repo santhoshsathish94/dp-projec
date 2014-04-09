@@ -441,5 +441,16 @@
   		<put-attribute name="body" value="/pages/admin/accountmanagement/journal-list.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-invoice-settings" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/billing/invoicesetting.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-sales-invoice" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/billing/createinvoice.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-sales-invoice-listing" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/billing/invoicelisting.jsp" /> 
+  	</definition>
   	
 </tiles-definitions>

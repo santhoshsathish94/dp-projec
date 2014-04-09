@@ -101,5 +101,10 @@ public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<Long, Cus
 	public List<String> getCustomerListByCustomerCompany(String accountName) {
 		return customerDAO.getCustomerListByCustomerCompany(accountName);
 	}
+	
+	@Override
+	public List<Customer> getCustomerListByCustomerCompany(MerchantStore store, String accountName) {
+		return customerDAO.getCustomerListByCustomerCompany(store, accountName);
+	}
 
 }
