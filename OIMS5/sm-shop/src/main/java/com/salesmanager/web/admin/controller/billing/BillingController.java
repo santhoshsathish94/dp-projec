@@ -46,6 +46,8 @@ import com.salesmanager.core.business.customer.service.CustomerService;
 import com.salesmanager.core.business.generic.exception.ServiceException;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.reference.language.model.Language;
+import com.salesmanager.core.business.tax.model.taxclass.TaxClass;
+import com.salesmanager.core.business.tax.service.TaxClassService;
 import com.salesmanager.core.utils.ajax.AjaxResponse;
 import com.salesmanager.web.admin.entity.web.Menu;
 import com.salesmanager.web.constants.Constants;
@@ -68,6 +70,9 @@ public class BillingController {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private TaxClassService taxClassService;
 	
 	@Secured("AUTH")
 	@RequestMapping(value="/admin/billing/saleinvoicesetting.html", method=RequestMethod.GET)
@@ -106,19 +111,18 @@ public class BillingController {
 	
 	@Secured("AUTH")
 	@RequestMapping(value = "/admin/billing/paging.html", method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody String partyItemDefaultMarginPaging(HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody String invoiceSettingPaging(HttpServletRequest request, HttpServletResponse response) {
 		AjaxResponse resp = new AjaxResponse();
 		
 		try {
 
-			String listType = request.getParameter("listType");
-			
-			List<InvoiceSetting> invoiceSettingList = invoiceSettingService.getInvoiceSettingBySettingTypeId(Long.valueOf(listType));
+			List<InvoiceSetting> invoiceSettingList = invoiceSettingService.getInvoiceSettingList();
 			
 			for(InvoiceSetting is: invoiceSettingList) {
 				
 				Map<String, String> entry = new HashMap<String, String>();
 				
+				entry.put("invoiceType", is.getType().getText());
 				entry.put("numberSeries", ""+is.getPrefix()+"-"+is.getStartingNumber());
 				entry.put("currentNumber", ""+is.getCurrentNumber());
 				entry.put("currentSeries", "");
@@ -355,16 +359,6 @@ public class BillingController {
 		
 		SalesInvoice dbSalesInvoice = salesInvoiceService.getSalesInvoiceById(newSalesInvoice.getId());
 		
-		/*dbSalesInvoice.setInvoiceDate(DateUtil.formatDate(dbSalesInvoice.getDate())); 
-		
-		if(dbSalesInvoice.getDueDate() != null) {
-			dbSalesInvoice.setTempDueDate(DateUtil.formatDate(dbSalesInvoice.getDueDate()));
-		}
-		
-		List<SalesInvoiceProduct> salesInvoiceProduct = salesInvoiceService.salesInvoiceProductListBySalesInvoiceId(newSalesInvoice.getId());
-		List<SalesInvoiceProductEntity> sipe = SalesInvoiceProductEntity.getProductInfoJson(salesInvoiceProduct);
-		dbSalesInvoice.setProductJson(LogicUtils.getJSONString(sipe));*/
-		
 		return displayInvoice(dbSalesInvoice, model, request, response, locale);
 	}
 	
@@ -376,16 +370,6 @@ public class BillingController {
 		if(dbSalesInvoice == null) {
 			return "admin-sales-invoice-listing";
 		}
-		
-		/*dbSalesInvoice.setInvoiceDate(DateUtil.formatDate(dbSalesInvoice.getDate())); 
-		
-		if(dbSalesInvoice.getDueDate() != null) {
-			dbSalesInvoice.setTempDueDate(DateUtil.formatDate(dbSalesInvoice.getDueDate()));
-		}
-		
-		List<SalesInvoiceProduct> salesInvoiceProduct = salesInvoiceService.salesInvoiceProductListBySalesInvoiceId(dbSalesInvoice.getId());
-		List<SalesInvoiceProductEntity> sipe = SalesInvoiceProductEntity.getProductInfoJson(salesInvoiceProduct);
-		dbSalesInvoice.setProductJson(LogicUtils.getJSONString(sipe));*/
 		
 		return displayInvoice(dbSalesInvoice, model, request, response, locale);
 	}

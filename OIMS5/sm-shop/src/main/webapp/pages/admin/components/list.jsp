@@ -80,7 +80,7 @@
 
 							    <c:if test="${groupByEntity!=null && groupByEntity!=''}">
 							    groupStartOpen:"all",
-							    groupByField: '<c:out value="${groupByEntity}"/>',
+							    groupByField: "<c:out value="${groupByEntity}"/>",
 							    </c:if>
 
     							createRecordComponent : function (record, colNum) {  

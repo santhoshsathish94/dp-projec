@@ -6,7 +6,7 @@
 <%@ page session="false" %>	
 
 
-
+{title:"<s:message code="label.entity.party.name" text="Invoice Type"/>", name:"invoiceType", canFilter:false, showIf:"false"},
 {title:"<s:message code="label.entity.party.name" text="Number Series"/>", name:"numberSeries", canFilter:false},	
 {title:"<s:message code="label.generic.item.name" text="Current Number"/>", name:"currentNumber", canFilter:false},
 {title:"<s:message code="label.generic.company.name" text="Current Series"/>", name:"currentSeries", canFilter:false}
