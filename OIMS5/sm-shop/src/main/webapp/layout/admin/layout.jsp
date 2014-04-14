@@ -465,6 +465,12 @@ response.setDateHeader ("Expires", -1);
 			$("#sales-invoice-create-link").click(function() {
 				window.location='<c:url value="/admin/billing/invoicecreate.html" />';
 			});
+			$("#credit-note-list-link").click(function() {
+				window.location='<c:url value="/admin/billing/creditnote-list.html" />';
+			});
+			$("#credit-note-create-link").click(function() {
+				window.location='<c:url value="/admin/billing/createcreditnote.html" />';
+			});
 			
 		}); 
 		

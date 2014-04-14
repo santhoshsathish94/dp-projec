@@ -20,16 +20,16 @@ import com.salesmanager.core.business.generic.model.SalesManagerEntity;
 import com.salesmanager.core.business.tax.model.taxclass.TaxClass;
 
 @Entity
-@Table(name="SALES_INVOICE_PRODUCT_INFO")
-public class SalesInvoiceProduct extends SalesManagerEntity<Long, SalesInvoiceProduct> {
+@Table(name="CREDIT_NOTE_PRODUCT")
+public class CreditNoteProduct extends SalesManagerEntity<Long, CreditNoteProduct> implements Comparable<CreditNoteProduct> {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8671495159493662296L;
+	private static final long serialVersionUID = 132004984117385215L;
 	
 	@Id
-	@Column(name="PRODUCT_INFO_ID", nullable=false)
+	@Column(name="CN_PRODUCT_ID", nullable=false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
@@ -41,13 +41,20 @@ public class SalesInvoiceProduct extends SalesManagerEntity<Long, SalesInvoicePr
 	@JoinColumn(name = "PRODUCT_ATTRIBUTE_ID", nullable=true)
 	private ProductAttribute productAttribute;
 	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+	@JoinColumn(name="TAX_CLASS_ID", nullable=true)
+	private TaxClass taxClass;
+	
+	@ManyToOne
+	@JoinColumn(name="CREDIT_NOTE_ID", nullable=false)
+	private CreditNote creditNote;
+	
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = SalesInvoice.class)
 	@JoinColumn(name = "SALES_INVOICE_ID", nullable=true)
 	private SalesInvoice salesInvoice;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-	@JoinColumn(name="TAX_CLASS_ID", nullable=true)
-	private TaxClass taxClass;
+	@Column(name = "PRODUCT_NAME")
+	private String productName;
 	
 	@Column(name = "DESCRIPTION")
 	private String description;
@@ -55,24 +62,27 @@ public class SalesInvoiceProduct extends SalesManagerEntity<Long, SalesInvoicePr
 	@Column(name = "QUANTITY")
 	private Integer quantiry;
 	
-	@Column(name = "UOM", length = 10)
-	private String uom;
-
 	@Column(name = "UNIT_PRICE")
 	private BigDecimal unitPrice;
+	
+	@Column(name = "TAX_AMOUNT")
+	private BigDecimal taxAmount;
 	
 	@Column(name = "UPDATED")
 	private Date updated;
 	
-	@Column(name = "PRODUCT_NAME")
-	private String productName;
 	
-	
+	/**
+	 * @return the id
+	 */
 	@Override
 	public Long getId() {
 		return id;
 	}
 
+	/**
+	 * @param id the id to set
+	 */
 	@Override
 	public void setId(Long id) {
 		this.id = id;
@@ -93,17 +103,17 @@ public class SalesInvoiceProduct extends SalesManagerEntity<Long, SalesInvoicePr
 	}
 
 	/**
-	 * @return the salesInvoice
+	 * @return the productAttribute
 	 */
-	public SalesInvoice getSalesInvoice() {
-		return salesInvoice;
+	public ProductAttribute getProductAttribute() {
+		return productAttribute;
 	}
 
 	/**
-	 * @param salesInvoice the salesInvoice to set
+	 * @param productAttribute the productAttribute to set
 	 */
-	public void setSalesInvoice(SalesInvoice salesInvoice) {
-		this.salesInvoice = salesInvoice;
+	public void setProductAttribute(ProductAttribute productAttribute) {
+		this.productAttribute = productAttribute;
 	}
 
 	/**
@@ -118,6 +128,48 @@ public class SalesInvoiceProduct extends SalesManagerEntity<Long, SalesInvoicePr
 	 */
 	public void setTaxClass(TaxClass taxClass) {
 		this.taxClass = taxClass;
+	}
+
+	/**
+	 * @return the creditNote
+	 */
+	public CreditNote getCreditNote() {
+		return creditNote;
+	}
+
+	/**
+	 * @param creditNote the creditNote to set
+	 */
+	public void setCreditNote(CreditNote creditNote) {
+		this.creditNote = creditNote;
+	}
+
+	/**
+	 * @return the salesInvoice
+	 */
+	public SalesInvoice getSalesInvoice() {
+		return salesInvoice;
+	}
+
+	/**
+	 * @param salesInvoice the salesInvoice to set
+	 */
+	public void setSalesInvoice(SalesInvoice salesInvoice) {
+		this.salesInvoice = salesInvoice;
+	}
+
+	/**
+	 * @return the productName
+	 */
+	public String getProductName() {
+		return productName;
+	}
+
+	/**
+	 * @param productName the productName to set
+	 */
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 
 	/**
@@ -149,20 +201,6 @@ public class SalesInvoiceProduct extends SalesManagerEntity<Long, SalesInvoicePr
 	}
 
 	/**
-	 * @return the uom
-	 */
-	public String getUom() {
-		return uom;
-	}
-
-	/**
-	 * @param uom the uom to set
-	 */
-	public void setUom(String uom) {
-		this.uom = uom;
-	}
-
-	/**
 	 * @return the unitPrice
 	 */
 	public BigDecimal getUnitPrice() {
@@ -174,6 +212,20 @@ public class SalesInvoiceProduct extends SalesManagerEntity<Long, SalesInvoicePr
 	 */
 	public void setUnitPrice(BigDecimal unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	/**
+	 * @return the taxAmount
+	 */
+	public BigDecimal getTaxAmount() {
+		return taxAmount;
+	}
+
+	/**
+	 * @param taxAmount the taxAmount to set
+	 */
+	public void setTaxAmount(BigDecimal taxAmount) {
+		this.taxAmount = taxAmount;
 	}
 
 	/**
@@ -189,33 +241,38 @@ public class SalesInvoiceProduct extends SalesManagerEntity<Long, SalesInvoicePr
 	public void setUpdated(Date updated) {
 		this.updated = updated;
 	}
-
-	/**
-	 * @return the productName
-	 */
-	public String getProductName() {
-		return productName;
+	
+	
+	@Override
+	public int compareTo(CreditNoteProduct o) {
+		if(this.getId() != null && o.getId() != null) {
+			
+			if(this.getId() < o.getId()) {
+				return -1;
+			}
+			
+			return this.getId() == o.getId() ? 0 : 1;
+		} else {
+			return 0;
+		}
+	}
+	
+	@Override
+	public boolean equals(Object object){
+		if(((CreditNoteProduct)object).getId() != null) {
+			return getId().equals(((CreditNoteProduct)object).getId());
+		} else {
+			return false;
+		}
 	}
 
-	/**
-	 * @param productName the productName to set
-	 */
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
-
-	/**
-	 * @return the productAttribute
-	 */
-	public ProductAttribute getProductAttribute() {
-		return productAttribute;
-	}
-
-	/**
-	 * @param productAttribute the productAttribute to set
-	 */
-	public void setProductAttribute(ProductAttribute productAttribute) {
-		this.productAttribute = productAttribute;
+	@Override
+	public int hashCode(){
+		if(getId() != null) {
+			return getId().hashCode();
+		} else {
+			return 0;
+		}
 	}
 
 }

@@ -453,4 +453,12 @@
   		<put-attribute name="body" value="/pages/admin/billing/invoicelisting.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-credit-note" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/billing/creditnote.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-credit-note-listing" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/billing/creditnotelisting.jsp" /> 
+  	</definition>
+  	
 </tiles-definitions>

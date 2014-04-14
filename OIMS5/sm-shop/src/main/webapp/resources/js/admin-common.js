@@ -205,7 +205,7 @@ function setupProductAutoComplete(labelId) {
 			$.ajax({
 				type: 'POST',
 				url: '/ishop/admin/billing/loadProductInfo.html',
-				data: {fieldValue: $( "#"+labelId ).val(), fieldValue: 'SALESINVOICE'},
+				data: {fieldValue: $( "#"+labelId ).val(), searchType: 'SALESINVOICE'},
 				dataType: 'json',
 				success: function(data) {
 					response($.map(data, function(item) {
