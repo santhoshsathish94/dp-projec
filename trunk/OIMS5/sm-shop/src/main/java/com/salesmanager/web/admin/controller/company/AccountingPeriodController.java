@@ -209,11 +209,13 @@ public class AccountingPeriodController {
 			}
 			accPeriod.setUpdated(new Date());
 		} else {
-			sessionCompany = (Company)request.getAttribute(Constants.ADMIN_COMPANY);
+			sessionCompany = (Company)request.getSession().getAttribute(Constants.ADMIN_COMPANY);
 			if(sessionCompany == null) {
 				sessionCompany = companyService.getByCode(Company.DEFAULT_ADMIN);
 				request.getSession().setAttribute(Constants.ADMIN_COMPANY, sessionCompany);
 			}
+			
+			accPeriod.setCompany(sessionCompany);
 		}
 		
 		Date date = null;
