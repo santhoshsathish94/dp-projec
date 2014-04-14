@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.salesmanager.core.business.company.model.Company;
+import com.salesmanager.core.business.company.service.CompanyService;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.merchant.service.MerchantStoreService;
 import com.salesmanager.core.business.reference.language.model.Language;
@@ -46,6 +48,9 @@ public class AdminFilter extends HandlerInterceptorAdapter {
 	@Autowired
 	private CacheUtils cache;
 	
+	@Autowired
+	private CompanyService companyService;
+	
 	public boolean preHandle(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -64,7 +69,7 @@ public class AdminFilter extends HandlerInterceptorAdapter {
 		
 		String storeCode = MerchantStore.DEFAULT_STORE;
 		MerchantStore store = (MerchantStore)request.getSession().getAttribute(Constants.ADMIN_STORE);
-		
+		Company company = (Company)request.getSession().getAttribute(Constants.ADMIN_COMPANY);
 		
 		String userName = request.getRemoteUser();
 		
@@ -123,11 +128,7 @@ public class AdminFilter extends HandlerInterceptorAdapter {
 				language = store.getDefaultLanguage();
 			}
 			
-			
-			
 			request.getSession().setAttribute("LANGUAGE", language);
-			
-
 		}
 		
 
@@ -172,12 +173,17 @@ public class AdminFilter extends HandlerInterceptorAdapter {
 		
 		} 
 		
-		
 		List<Menu> list = new ArrayList<Menu>(menus.values());
-
 		request.setAttribute("MENULIST", list);
 
 		
+		if(company == null) {
+			company = companyService.getByCode(Constants.ADMIN_COMPANY);
+			
+			request.getSession().setAttribute(Constants.ADMIN_COMPANY, company);
+		}
+		
+		request.setAttribute(Constants.ADMIN_COMPANY, company);
 		
 		request.setAttribute("MENUMAP", menus);
 		response.setCharacterEncoding("UTF-8");

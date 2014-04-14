@@ -78,8 +78,10 @@ public class CompanyController {
 		if(sessionCompany == null) {
 			company = companyService.getByCode(Company.DEFAULT_ADMIN);
 			request.getSession().setAttribute(Constants.ADMIN_COMPANY, company);
+			request.setAttribute(Constants.ADMIN_COMPANY, company);
+		} else {
+			company = sessionCompany;
 		}
-		request.setAttribute(Constants.ADMIN_COMPANY, company);
 		
 		if(company == null) {
 			company = new Company();
