@@ -454,6 +454,17 @@
 				"code":"sales-invoice-create","url":"/admin/billing/invoicecreate.html","role":"AUTH","order":1
 			}}
 		]
+	}},
+	{"menu":{
+		"code":"credit-note","url":"","role":"AUTH","order":2,"menus":
+		[
+			{"menu":{
+				"code":"credit-note-list","url":"/admin/billing/creditnote-list.html","role":"AUTH","order":0
+			}},
+			{"menu":{
+				"code":"credit-note-create","url":"/admin/billing/creditnote-create.html","role":"AUTH","order":1
+			}}
+		]
 	}}
 ]
 }}

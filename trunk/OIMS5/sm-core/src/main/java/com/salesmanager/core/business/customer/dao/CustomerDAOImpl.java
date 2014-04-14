@@ -379,13 +379,13 @@ public class CustomerDAOImpl extends SalesManagerEntityDaoImpl<Long, Customer> i
 		StringBuilder qs = new StringBuilder();
 		qs.append("select c from Customer as c ");
 		qs.append("where c.merchantStore.id=:mId ");
-		qs.append("and c.company like :companyName ");
+		qs.append("and c.billing.company like :companyName ");
 		
 		String hql = qs.toString();
 		Query q = super.getEntityManager().createQuery(hql);
 		
 		q.setParameter("mId", store.getId());
-		q.setParameter("companyName", accountName+"%");
+		q.setParameter("companyName", "%" + accountName + "%");
 		
 		List<Customer> companyList = q.getResultList(); 
 		

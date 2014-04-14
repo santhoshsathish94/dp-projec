@@ -3,6 +3,7 @@ package com.salesmanager.core.business.tax.model.taxclass;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -69,7 +70,7 @@ public class TaxClass extends SalesManagerEntity<Long, TaxClass> {
 	private MerchantStore merchantStore;
 
 	
-	@OneToMany(mappedBy = "taxClass")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "taxClass")
 	private List<TaxRate> taxRates = new ArrayList<TaxRate>();
 	
 	public TaxClass() {

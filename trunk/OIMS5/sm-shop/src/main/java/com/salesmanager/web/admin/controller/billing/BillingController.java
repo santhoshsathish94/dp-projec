@@ -1,5 +1,6 @@
 package com.salesmanager.web.admin.controller.billing;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,11 +31,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.salesmanager.core.business.adapter.CustomCustomer;
+import com.salesmanager.core.business.billing.model.CreditNote;
+import com.salesmanager.core.business.billing.model.CreditNoteProduct;
+import com.salesmanager.core.business.billing.model.CreditNoteProductEntity;
 import com.salesmanager.core.business.billing.model.InvoiceSetting;
 import com.salesmanager.core.business.billing.model.InvoiceSettingType;
 import com.salesmanager.core.business.billing.model.SalesInvoice;
 import com.salesmanager.core.business.billing.model.SalesInvoiceProduct;
 import com.salesmanager.core.business.billing.model.SalesInvoiceProductEntity;
+import com.salesmanager.core.business.billing.service.CreditNoteService;
 import com.salesmanager.core.business.billing.service.InvoiceSettingService;
 import com.salesmanager.core.business.billing.service.SalesInvoiceService;
 import com.salesmanager.core.business.catalog.product.model.Product;
@@ -73,6 +78,9 @@ public class BillingController {
 	
 	@Autowired
 	private TaxClassService taxClassService;
+	
+	@Autowired
+	private CreditNoteService creditNoteService;
 	
 	@Secured("AUTH")
 	@RequestMapping(value="/admin/billing/saleinvoicesetting.html", method=RequestMethod.GET)
@@ -165,7 +173,7 @@ public class BillingController {
 	
 	@Secured("AUTH")
 	@RequestMapping(value="/admin/billing/invoide-list.html", method=RequestMethod.GET)
-	public String SalesInvoiceList(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public String salesInvoiceList(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		setMenu(model,request, "sales-invoice");
 		return "admin-sales-invoice-listing";
 	}
@@ -389,7 +397,7 @@ public class BillingController {
 			CustomCustomer cc = new CustomCustomer();
 			
 			cc.id = customer.getId();
-			cc.name = customer.getCompany();
+			cc.name = customer.getBilling().getCompany();
 			
 			customCustomerList.add(cc);
 		}
@@ -401,6 +409,8 @@ public class BillingController {
 	public @ResponseBody String loadProductInfo(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
 		
 		String fieldValue = request.getParameter("fieldValue");
+		String searchType = request.getParameter("searchType");
+		
 		Language language = (Language)request.getAttribute("LANGUAGE");
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		
@@ -410,9 +420,13 @@ public class BillingController {
 		
 		List<Product> pList = productList.getProducts();
 		
-		List<SalesInvoiceProductEntity> customProdList = getcustomProdList(pList, fieldValue);
-		
-		return LogicUtils.getJSONString(customProdList);
+		if(searchType.equals("SALESINVOICE")) {
+			List<SalesInvoiceProductEntity> customProdList = getcustomProdList(pList, fieldValue);
+			return LogicUtils.getJSONString(customProdList);
+		} else {
+			List<CreditNoteProductEntity> customProdList = getcustomProdListForCreditNote(pList, fieldValue);
+			return LogicUtils.getJSONString(customProdList);
+		}
 	}
 	
 	private List<SalesInvoiceProductEntity> getcustomProdList(List<Product> productList, String fieldValue) {
@@ -460,6 +474,191 @@ public class BillingController {
 				}
 			}
 		}
+	}
+	
+	@Secured("AUTH")
+	@RequestMapping(value="/admin/billing/createcreditnote.html", method=RequestMethod.GET)
+	public String createCreditNote(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		
+		CreditNote creditNote = new CreditNote();
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		creditNote.setTempNoteDate(format.format(new Date()));
+		
+		return displayCreditNote(creditNote, model, request, response, locale);
+	}
+	
+	private String displayCreditNote(CreditNote creditNote, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		
+		setMenu(model,request, "credit-note");
+		
+		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
+		
+		if(creditNote.getId() != null) {
+			
+			if(creditNote.getCreditNoteType().equals("PRODUCT")) {
+				//creditNote.setProductJson(productJson);
+				
+				List<CreditNoteProduct> creditNoteProductProduct = creditNoteService.creditNoteProductByCreditNoteId(creditNote.getId());
+				List<CreditNoteProductEntity> cnpe = CreditNoteProductEntity.getProductJsonFromCustomProducts(creditNoteProductProduct);
+				creditNote.setProductJson(LogicUtils.getJSONString(cnpe));
+			}
+			
+		}
+		
+		if(creditNote.getNoteDate() != null) {
+			creditNote.setTempNoteDate(DateUtil.formatDate(creditNote.getNoteDate()));
+		} else {
+			creditNote.setTempNoteDate(DateUtil.formatDate(new Date()));
+		}
+		
+		List<TaxClass> taxClasses = taxClassService.listByStore(store);
+		
+		Map<Long, BigDecimal> taxRateMap = new HashMap<Long, BigDecimal>();
+		for(TaxClass tc: taxClasses) {
+			if(tc.getTaxRates() != null && tc.getTaxRates().size() > 0) {
+				taxRateMap.put(tc.getId(), tc.getTaxRates().iterator().next().getTaxRate());
+			} else {
+				taxRateMap.put(tc.getId(), new BigDecimal(0));
+			}
+		}
+		
+		
+		model.addAttribute("taxClasses", taxClasses);
+		model.addAttribute("taxRateMap", LogicUtils.getJSONStringFromMap(taxRateMap));
+		model.addAttribute("creditNote", creditNote);
+		
+		return "admin-credit-note";
+	}
+	
+	private List<CreditNoteProductEntity> getcustomProdListForCreditNote(List<Product> productList, String fieldValue) {
+		
+		List<CreditNoteProductEntity> customProdList = CreditNoteProductEntity.getCreditNoteProductEntity(productList, fieldValue);
+		
+		return customProdList;
+	}
+	
+	@Secured("AUTH")
+	@RequestMapping(value="/admin/billing/savecreditnote.html", method=RequestMethod.POST)
+	public String saveCreditNote(@Valid @ModelAttribute("creditNote") CreditNote creditNote, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		
+		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
+		
+		if(creditNote.getCreditNoteType().equals("PRODUCT")) {
+			
+			creditNote.setOtherAmount(null);
+			creditNote.setTaxClassOther(null);
+			
+			//creditNote.setCreditNoteProduct(new TreeSet<CreditNoteProduct>(getCreditNoteProductFromJSON(creditNote.getProductJson()))); 
+			//List<CreditNoteProduct> creditNoteProducts = getCreditNoteProductFromJSON(creditNote.getProductJson());
+		}
+		
+		Date date = new Date();
+		if(!StringUtils.isBlank(creditNote.getTempNoteDate())) {
+			try {
+				date = DateUtil.getDate(creditNote.getTempNoteDate());
+				creditNote.setNoteDate(date);
+			} catch (Exception e) {
+				/*ObjectError error = new ObjectError("dateBusinessSince",messages.getMessage("message.invalid.date", locale));
+				result.addError(error);*/
+			}
+		}
+		
+		if(creditNote.getOrder().getId() == null) {
+			creditNote.setOrder(null);
+		}
+		
+		creditNote.setMerchantStore(store);
+		creditNote.setUpdated(new Date());
+		
+		creditNoteService.SaveOrUpdate(creditNote);
+		
+		if(creditNote.getCreditNoteType().equals("PRODUCT")) {
+			getCreditNoteProductFromJSON(creditNote.getProductJson(), creditNote);
+		}
+		
+		model.addAttribute("success","success");
+		
+		CreditNote persistedCreditNote = creditNoteService.getCreditNoteById(creditNote.getId());
+		
+		return displayCreditNote(persistedCreditNote, model, request, response, locale);
+	}
+	
+	private void getCreditNoteProductFromJSON(String creditNoteProductJson, CreditNote creditNote) throws ServiceException {
+		
+		JsonArray jsonArr = new JsonParser().parse(creditNoteProductJson).getAsJsonArray();
+		if(jsonArr.size() > 0) {
+			for(int i = 0; i < jsonArr.size(); i++) {
+				JsonObject arrayrObject = jsonArr.get(i).getAsJsonObject();
+				if(arrayrObject != null) {
+					
+					CreditNoteProductEntity creditNoteProductEntity = new Gson().fromJson(arrayrObject, CreditNoteProductEntity.class);
+					
+					CreditNoteProduct creditNoteProduct = CreditNoteProductEntity.populateCreditNoteProduct(creditNoteProductEntity);
+					creditNoteProduct.setCreditNote(creditNote);
+					
+					creditNoteService.SaveOrUpdate(creditNoteProduct);
+					
+					//creditNoteProdList.add(CreditNoteProductEntity.populateCreditNoteProduct(creditNoteProductEntity));
+				}
+			}
+		}
+	}
+	
+	@Secured("AUTH")
+	@RequestMapping(value="/admin/billing/editcredtnote.html", method=RequestMethod.GET)
+	public String editCreditNote(@ModelAttribute("id") Long id, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		
+		CreditNote creditNote = creditNoteService.getCreditNoteById(id);
+		
+		if(creditNote == null)
+			return "admin-credit-note-listing";
+		
+		return displayCreditNote(creditNote, model, request, response, locale);
+	}
+	
+	@Secured("AUTH")
+	@RequestMapping(value="/admin/billing/creditnote-list.html", method=RequestMethod.GET)
+	public String creditNoteList(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		
+		setMenu(model,request, "credit-note");
+		
+		return "admin-credit-note-listing";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Secured("AUTH")
+	@RequestMapping(value = "/admin/billing/creditnotepaging.html", method = RequestMethod.POST, produces = "application/json")
+	public @ResponseBody String creditNotePaging(HttpServletRequest request, HttpServletResponse response) {
+		AjaxResponse resp = new AjaxResponse();
+		
+		try {
+			
+			List<CreditNote> creditNoteList = creditNoteService.creditNoteList();
+			
+			for(CreditNote cn: creditNoteList) {
+				
+				@SuppressWarnings("rawtypes")
+				Map entry = new HashMap();
+				
+				entry.put("creditNoteId", cn.getId());
+				entry.put("creditCustomer", cn.getCreditCustomer().getBilling().getCompany());
+				entry.put("debitCustomer", cn.getDebitCustomer().getBilling().getCompany());
+				entry.put("noteDate", cn.getNoteDate().toString());
+				entry.put("creditNoteType", cn.getCreditNoteType());
+				
+				entry.put("edit", "Edit");
+				resp.addDataEntry(entry);
+			}
+			
+			resp.setStatus(AjaxResponse.RESPONSE_STATUS_SUCCESS);
+			
+		} catch(Exception e) {
+			LOGGER.error("Error while paging Sales Invoice", e);
+			resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
+		}
+		
+		String returnString = resp.toJSONString();
+		return returnString;
 	}
 }
