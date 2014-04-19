@@ -306,7 +306,7 @@ public class AccountManagementController {
 
 		model.addAttribute("expense", new Expense());
 		setMenu(model, request, "expense");
-		return "admin-account-management-create-expense";
+		return "admin-account-management-expense-entry";
 
 	}
 
