@@ -15,7 +15,7 @@ import javax.persistence.TableGenerator;
 import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
-@Table (name="ORDER_PRODUCT_DOWNLOAD", schema=SchemaConstant.SALESMANAGER_SCHEMA)
+@Table (name="ORDER_PRODUCT_DOWNLOAD")
 public class OrderProductDownload implements Serializable {
 	private static final long serialVersionUID = -8935511990745477240L;
 	

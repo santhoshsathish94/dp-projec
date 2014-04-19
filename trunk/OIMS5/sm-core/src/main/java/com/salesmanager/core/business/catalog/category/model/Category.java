@@ -31,7 +31,7 @@ import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
 @EntityListeners(value = AuditListener.class)
-@Table(name = "CATEGORY", schema= SchemaConstant.SALESMANAGER_SCHEMA,uniqueConstraints=
+@Table(name = "CATEGORY",uniqueConstraints=
     @UniqueConstraint(columnNames = {"MERCHANT_ID", "CODE"}) )
 
 

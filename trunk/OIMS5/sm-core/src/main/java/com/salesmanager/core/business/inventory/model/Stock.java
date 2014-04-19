@@ -30,7 +30,7 @@ import com.salesmanager.core.constants.SchemaConstant;
  */
 
 @Entity
-@Table(name = "STOCK", schema = SchemaConstant.SALESMANAGER_SCHEMA)
+@Table(name = "STOCK")
 public class Stock extends SalesManagerEntity<Long, Stock> {
 
 	/**

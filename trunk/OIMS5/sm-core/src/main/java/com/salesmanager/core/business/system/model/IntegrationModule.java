@@ -27,7 +27,7 @@ import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
 @EntityListeners(value = AuditListener.class)
-@Table(name = "MODULE_CONFIGURATION", schema= SchemaConstant.SALESMANAGER_SCHEMA)
+@Table(name = "MODULE_CONFIGURATION")
 
 
 public class IntegrationModule extends SalesManagerEntity<Long, IntegrationModule> implements Serializable, Auditable {

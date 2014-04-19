@@ -26,7 +26,7 @@ import com.salesmanager.core.business.tax.model.taxrate.TaxRate;
 import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
-@Table(name = "TAX_CLASS", schema = SchemaConstant.SALESMANAGER_SCHEMA,uniqueConstraints=
+@Table(name = "TAX_CLASS", uniqueConstraints=
     @UniqueConstraint(columnNames = {"MERCHANT_ID", "TAX_CLASS_CODE"}) )
 public class TaxClass extends SalesManagerEntity<Long, TaxClass> {
 	private static final long serialVersionUID = -325750148480212355L;
