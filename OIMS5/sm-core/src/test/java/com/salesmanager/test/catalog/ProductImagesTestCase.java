@@ -152,7 +152,7 @@ public class ProductImagesTestCase extends AbstractSalesManagerCoreTestCase {
    
         
         
-        final File file1 = new File( "/Users/csamson777/Documents/workspace2/files/images/watch.jpg" );
+        final File file1 = new File( "D:/DESK_23Mar2014/tshirt.jpg" );
 
         if ( !file1.exists() || !file1.canRead() )
         {
@@ -183,7 +183,7 @@ public class ProductImagesTestCase extends AbstractSalesManagerCoreTestCase {
         Assert.assertNotNull(contentFile);
         
         //print image
-   	 	OutputStream outputStream = new FileOutputStream ("/Users/csamson777/Documents/workspace2/files/images/small_" + contentFile.getFileName()); 
+   	 	OutputStream outputStream = new FileOutputStream ("D:/DESK_23Mar2014/tshirt1.jpg"); 
 
    	 	ByteArrayOutputStream baos =  contentFile.getFile();
    	 	baos.writeTo(outputStream);
@@ -195,7 +195,7 @@ public class ProductImagesTestCase extends AbstractSalesManagerCoreTestCase {
         Assert.assertNotNull(contentFile);
         
         //print image
-   	 	outputStream = new FileOutputStream ("/Users/csamson777/Documents/workspace2/files/images/large_" + contentFile.getFileName()); 
+   	 	outputStream = new FileOutputStream ("D:/DESK_23Mar2014/tshirt.jpg"); 
 
    	 	baos =  contentFile.getFile();
    	 	baos.writeTo(outputStream);

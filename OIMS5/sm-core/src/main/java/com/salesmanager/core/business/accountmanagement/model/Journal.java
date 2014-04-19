@@ -19,7 +19,7 @@ import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
-@Table(name = "JOURNAL", schema = SchemaConstant.SALESMANAGER_SCHEMA)
+@Table(name = "JOURNAL")
 public class Journal extends SalesManagerEntity<Long, Journal> {
 
 	/**

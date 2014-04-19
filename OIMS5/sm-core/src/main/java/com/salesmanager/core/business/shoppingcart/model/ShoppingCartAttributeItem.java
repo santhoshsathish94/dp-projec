@@ -23,7 +23,7 @@ import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
 @EntityListeners(value = AuditListener.class)
-@Table(name = "SHOPPING_CART_ATTR_ITEM", schema=SchemaConstant.SALESMANAGER_SCHEMA)
+@Table(name = "SHOPPING_CART_ATTR_ITEM")
 public class ShoppingCartAttributeItem extends SalesManagerEntity<Long, ShoppingCartAttributeItem> implements Auditable {
 
 

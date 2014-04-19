@@ -17,7 +17,7 @@ import com.salesmanager.core.business.generic.model.SalesManagerEntity;
 import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
-@Table(name="CUSTOMER_ATTRIBUTE", schema=SchemaConstant.SALESMANAGER_SCHEMA,
+@Table(name="CUSTOMER_ATTRIBUTE",
 	uniqueConstraints={
 		@UniqueConstraint(columnNames={
 				"OPTION_ID",

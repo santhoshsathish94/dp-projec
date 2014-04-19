@@ -16,7 +16,7 @@ import javax.persistence.TableGenerator;
 import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
-@Table (name="ORDER_PRODUCT_ATTRIBUTE" , schema=SchemaConstant.SALESMANAGER_SCHEMA)
+@Table (name="ORDER_PRODUCT_ATTRIBUTE" )
 public class OrderProductAttribute implements Serializable {
 	private static final long serialVersionUID = 6037571119918073015L;
 

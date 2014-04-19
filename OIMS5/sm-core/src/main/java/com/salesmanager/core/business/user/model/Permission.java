@@ -29,7 +29,7 @@ import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
 @EntityListeners(value = AuditListener.class)
-@Table(name = "PERMISSION", schema=SchemaConstant.SALESMANAGER_SCHEMA)
+@Table(name = "PERMISSION")
 public class Permission extends SalesManagerEntity<Integer, Permission> implements Auditable {
 
 	
@@ -56,7 +56,7 @@ public class Permission extends SalesManagerEntity<Integer, Permission> implemen
 	private String permissionName;
 	
 	@ManyToMany(fetch=FetchType.LAZY, cascade = {CascadeType.REFRESH})
-	@JoinTable(name = "PERMISSION_GROUP", schema=SchemaConstant.SALESMANAGER_SCHEMA, joinColumns = { 
+	@JoinTable(name = "PERMISSION_GROUP", joinColumns = { 
 			@JoinColumn(name = "PERMISSION_ID", nullable = false, updatable = false) }
 			, 
 			inverseJoinColumns = { @JoinColumn(name = "GROUP_ID", 

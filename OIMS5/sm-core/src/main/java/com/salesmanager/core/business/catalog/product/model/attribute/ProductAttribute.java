@@ -20,7 +20,7 @@ import com.salesmanager.core.business.generic.model.SalesManagerEntity;
 import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
-@Table(name="PRODUCT_ATTRIBUTE", schema=SchemaConstant.SALESMANAGER_SCHEMA,
+@Table(name="PRODUCT_ATTRIBUTE",
 	uniqueConstraints={
 		@UniqueConstraint(columnNames={
 				"OPTION_ID",
@@ -78,6 +78,9 @@ public class ProductAttribute extends SalesManagerEntity<Long, ProductAttribute>
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="OPTION_VALUE_ID", nullable=false)
 	private ProductOptionValue productOptionValue;
+	
+	@Column(name="PRODUCT_ATTRIBUTE_QUANTITY")
+	private Integer productOptionQuantity;
 	
 	
 	/**
@@ -232,6 +235,14 @@ public class ProductAttribute extends SalesManagerEntity<Long, ProductAttribute>
 
 	public void setProductAttributePrice(BigDecimal productAttributePrice) {
 		this.productAttributePrice = productAttributePrice;
+	}
+
+	public Integer getProductOptionQuantity() {
+		return productOptionQuantity;
+	}
+
+	public void setProductOptionQuantity(Integer productOptionQuantity) {
+		this.productOptionQuantity = productOptionQuantity;
 	}
 
 }

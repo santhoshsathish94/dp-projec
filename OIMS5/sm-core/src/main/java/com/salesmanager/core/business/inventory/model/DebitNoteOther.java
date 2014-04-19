@@ -30,7 +30,7 @@ import com.salesmanager.core.constants.SchemaConstant;
  */
 
 @Entity
-@Table(name = "DEBIT_NOTE_OTHER", schema = SchemaConstant.SALESMANAGER_SCHEMA)
+@Table(name = "DEBIT_NOTE_OTHER")
 public class DebitNoteOther extends SalesManagerEntity<Long, DebitNoteOther> {
 
 	/**

@@ -30,7 +30,7 @@ import com.salesmanager.core.constants.SchemaConstant;
  */
 
 @Entity
-@Table(name = "BRANCH_TRANSFER", schema = SchemaConstant.SALESMANAGER_SCHEMA)
+@Table(name = "BRANCH_TRANSFER")
 public class BranchTransfer extends SalesManagerEntity<Long, BranchTransfer> {
 
 	/**

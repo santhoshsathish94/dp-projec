@@ -30,7 +30,7 @@ import com.salesmanager.core.utils.CloneUtils;
 
 
 @Entity
-@Table(name="PRODUCT_AVAILABILITY", schema=SchemaConstant.SALESMANAGER_SCHEMA)
+@Table(name="PRODUCT_AVAILABILITY")
 public class ProductAvailability extends SalesManagerEntity<Long, ProductAvailability> {
 	private static final long serialVersionUID = 7449264635180797762L;
 

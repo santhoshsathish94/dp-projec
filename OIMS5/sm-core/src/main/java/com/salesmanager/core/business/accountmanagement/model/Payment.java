@@ -19,7 +19,7 @@ import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.constants.SchemaConstant;
 
 @Entity
-@Table(name = "PAYMENT", schema = SchemaConstant.SALESMANAGER_SCHEMA)
+@Table(name = "PAYMENT")
 public class Payment extends SalesManagerEntity<Long, Payment> {
 
 	/**
