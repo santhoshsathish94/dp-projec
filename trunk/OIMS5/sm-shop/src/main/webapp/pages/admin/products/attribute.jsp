@@ -107,8 +107,16 @@ function checkReadOnlyAttribute(optionId){
 
 
 				<c:url var="attributeSave" value="/admin/attributes/attribute/save.html"/>
+				<c:url var="attributeNew" value="/admin/products/attribute/createAttribute.html?productId=${product.id}"/>
 
+				
 
+                  		<div class="pull-right">
+                  			<a class="btn btn-success" href="${attributeNew}">New Attribute</a>              			
+
+                  		</div>
+
+            	
 				<form:form method="POST" commandName="attribute" action="${attributeSave}">
 
       							
@@ -120,7 +128,8 @@ function checkReadOnlyAttribute(optionId){
 			    <div class="control-group">
                         <label><s:message code="label.product.attribute.option.name" text="Option / attribute name"/></label>
                         <div class="controls">    
-	                        <div class="controls">		
+	                        <div class="controls">	
+	                        <input	value="${options}"/>	
 	                        		<form:select cssClass="highlight" id="productOption" path="productOption.id">
 					  					<form:options items="${options}" itemValue="id" itemLabel="descriptionsSettoList[0].name"/>
 				       				</form:select>
@@ -129,10 +138,10 @@ function checkReadOnlyAttribute(optionId){
                         </div>
                  </div>	
 
-                 <div class="control-group">
+                 <div class="control-group" style="display:none;">
                         <label><s:message code="label.product.attribute.display" text="Display only"/></label>
                         <div class="controls">
-                                    <form:checkbox id="displayOnly" path="attributeDisplayOnly"/>
+                                    <form:checkbox id="displayOnly" path="attributeDisplayOnly" checked="true"/>
                                     <span class="help-inline"><form:errors path="attributeDisplayOnly" cssClass="error" /></span>
                         </div>
                   </div>
@@ -171,7 +180,7 @@ function checkReadOnlyAttribute(optionId){
                    </div>
 
 						
-				 <div class="control-group">
+				 <div class="control-group" style="display:none;">
                         <label><s:message code="label.product.productoptions.price" text="Price"/></label>
                         <div class="controls">
                                     <form:input id="productPriceAmount" cssClass="highlight" path="attributePrice"/>
@@ -192,25 +201,25 @@ function checkReadOnlyAttribute(optionId){
 
 
                   
-                  <div class="control-group">
+                  <div class="control-group" style="display:none;">
                         <label><s:message code="label.product.attribute.default" text="Default"/></label>
                         <div class="controls">
-                                    <form:checkbox path="attributeDefault"/>	
+                                    <form:checkbox path="attributeDefault" checked="false"/>	
                                     <span class="help-inline"><form:errors path="attributeDefault" cssClass="error" /></span>
                         </div>
                   </div>
                   
-                 <div class="control-group">
+                 <div class="control-group"style="display:none;">
                         <label><s:message code="label.product.attribute.required" text="Required"/></label>
                         <div class="controls">
-                                   	<form:checkbox path="attributeRequired"/>
+                                   	<form:checkbox path="attributeRequired" checked="true"/>
                                     <span class="help-inline"><form:errors path="attributeRequired" cssClass="error" /></span>
                         </div>
                   </div>
                   
 
                   
-                  <div class="control-group">
+                  <div class="control-group"style="display:none;">
                         <label class="required"><s:message code="label.product.attribute.otherweight" text="Additional weight"/></label>
                         <div class="controls">
                                     <form:input id="weight" cssClass="highlight" path="attributeAdditionalWeight"/>

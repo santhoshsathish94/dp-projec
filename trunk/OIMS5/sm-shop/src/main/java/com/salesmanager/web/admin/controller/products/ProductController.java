@@ -131,7 +131,7 @@ public class ProductController {
 
 		//display menu
 		setMenu(model,request);
-		
+		model.addAttribute("editMode", "false");
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		Language language = (Language)request.getAttribute("LANGUAGE");
 
@@ -144,7 +144,7 @@ public class ProductController {
 		List<ProductDescription> descriptions = new ArrayList<ProductDescription>();
 
 		if(productId!=null && productId!=0) {//edit mode
-
+			model.addAttribute("editMode", "true");
 			Product dbProduct = productService.getById(productId);
 			
 			if(dbProduct==null || dbProduct.getMerchantStore().getId().intValue()!=store.getId().intValue()) {
@@ -215,7 +215,7 @@ public class ProductController {
 			product.setDateAvailable(DateUtil.formatDate(dbProduct.getDateAvailable()));
 			product.setProductHaveVariants(dbProduct.isProductHaveVariants());
 			
-			List<ProductAttribute> productAttributeList = productAttributeService.getByProductID(store, dbProduct, language);
+			List<ProductAttribute> productAttributeList = productAttributeService.getByProductIDVariantOnly(store, dbProduct, language);
 			
 			model.addAttribute("variants", new CustomProductAttribute().getProductAttributeAsJson(productAttributeList));
 			

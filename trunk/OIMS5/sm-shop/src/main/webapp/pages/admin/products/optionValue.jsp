@@ -102,7 +102,7 @@
                   </c:forEach>
                   
 
-                 <div class="control-group">
+                 <div class="control-group" style="display:none;">
                         <label><s:message code="label.product.image" text="Image"/>&nbsp;<c:if test="${optionValue.productOptionValueImage!=null && optionValue.productOptionValueImage!=''}"><span id="imageControlRemove"> - <a href="#" onClick="removeImage('${optionValue.id}')"><s:message code="label.generic.remove" text="Remove"/></a></span></c:if></label>
                         <div class="controls" id="imageControl">
                         		<c:choose>

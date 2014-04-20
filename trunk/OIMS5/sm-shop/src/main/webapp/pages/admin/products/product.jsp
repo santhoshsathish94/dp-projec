@@ -6,6 +6,7 @@
 
 <%@ page session="false" %>			
 <script type="text/javascript">
+	var editMode = ${editMode}
 	var priceFormatMessage = '<s:message code="message.price.cents" text="Wrong format" />';
 	var variantList = ${variantList}
 	<c:choose>
@@ -13,7 +14,7 @@
 			var variants = ${variants}
 		</c:when>
 		<c:otherwise>
-		var variants = '';
+			var variants = '';
 		</c:otherwise>
 	</c:choose>
 </script>
@@ -369,14 +370,14 @@ var counter = 1;
 							<span id="help-price" class="help-inline"><form:errors path="productPrice" cssClass="error" /></span>
 						</div>
 					</div>
-					<%-- <div class="control-group">
+					<div class="control-group">
 						<label><s:message code="label.productedit.qtyavailable" text="Quantity available"/></label>
 						<div class="controls">
 							<form:input id="quantity" cssClass="highlight" path="availability.productQuantity"/>
 							<span class="help-inline"><form:errors path="availability.productQuantity" cssClass="error" /></span>
 						</div>
 					</div>
-					<div class="control-group">
+					<%-- <div class="control-group">
 						<label><s:message code="label.product.ordermin" text="Quantity order minimum"/></label>
 						<div class="controls">
 							<form:input id="ordermin" cssClass="highlight" path="availability.productQuantityOrderMin"/>
@@ -464,7 +465,7 @@ var counter = 1;
 					</div>
 				</form:form>
 				
-				<%-- <c:if test="${product.product.id!=null && product.product.id>0}">      
+				<c:if test="${product.product.id!=null && product.product.id>0}">      
 					<c:url var="createSimilar" value="/admin/products/product/duplicate.html"/>
 					<form:form method="POST" enctype="multipart/form-data" commandName="product" action="${createSimilar}">
 						<input type="hidden" name="productId" value="${product.product.id}" />
@@ -474,7 +475,7 @@ var counter = 1;
 							</div>
 						</div>
 					</form:form>
-				</c:if> --%>
+				</c:if>
 			</div>
 		</div>
 	</div>

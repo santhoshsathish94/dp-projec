@@ -80,14 +80,14 @@
                                    
 	                        <div class="controls">			
 	                        		<form:select path="productOptionType">
-	                        			<s:message code="label.product.productoption.type.text" text="Text" var="vText" />
+	                        			<s:message code="label.product.productoption.type.text" text="Attribute" var="vText" />
 	                        			<s:message code="label.product.productoption.type.select" text="Select" var="vSelect"/>
-	                        			<s:message code="label.product.productoption.type.radio" text="Radio" var="vRadio"/>
+	                        			<s:message code="label.product.productoption.type.radio" text="Vriant" var="vRadio"/>
 	                        			<s:message code="label.product.productoption.type.checkbox" text="Checkbox" var="vCheckbox"/>
 	                        			<form:option value="text" label="${vText}" />
-	                        			<form:option value="select" label="${vSelect}" />
+	                        			<%-- <form:option value="select" label="${vSelect}" /> --%>
 	                        			<form:option value="radio" label="${vRadio}" />
-	                        			<form:option value="checkbox" label="${vCheckbox}" />
+	                        			<%-- <form:option value="checkbox" label="${vCheckbox}" /> --%>
 				       				</form:select>
 	                                <span class="help-inline"><form:errors path="productOptionType" cssClass="error" /></span>
 	                        </div>
