@@ -16,7 +16,7 @@ import com.salesmanager.core.business.reference.language.model.Language;
 
 @Service("productAttributeService")
 public class ProductAttributeServiceImpl extends SalesManagerEntityServiceImpl<Long, ProductAttribute> implements ProductAttributeService {
-	
+
 	private ProductAttributeDao productAttributeDao;
 
 	@Autowired
@@ -24,68 +24,78 @@ public class ProductAttributeServiceImpl extends SalesManagerEntityServiceImpl<L
 		super(productAttributeDao);
 		this.productAttributeDao = productAttributeDao;
 	}
-	
+
 	@Override
 	public ProductAttribute getById(Long id) {
-		
+
 		return productAttributeDao.getById(id);
-		
+
 	}
-	
-	
+
 	@Override
-	public List<ProductAttribute> getByOptionId(MerchantStore store,
-			Long id) throws ServiceException {
-		
+	public ProductAttribute getByIdAttrOnly(Long id) {
+
+		return productAttributeDao.getByIdAttrOnly(id);
+
+	}
+
+	@Override
+	public List<ProductAttribute> getByOptionId(MerchantStore store, Long id) throws ServiceException {
+
 		return productAttributeDao.getByOptionId(store, id);
-		
+
 	}
-	
+
 	@Override
-	public List<ProductAttribute> getByAttributeIds(MerchantStore store,
-			List<Long> ids) throws ServiceException {
-		
+	public List<ProductAttribute> getByAttributeIds(MerchantStore store, List<Long> ids) throws ServiceException {
+
 		return productAttributeDao.getByAttributeIds(store, ids);
-		
+
 	}
-	
+
 	@Override
-	public List<ProductAttribute> getByOptionValueId(MerchantStore store,
-			Long id) throws ServiceException {
-		
+	public List<ProductAttribute> getByOptionValueId(MerchantStore store, Long id) throws ServiceException {
+
 		return productAttributeDao.getByOptionValueId(store, id);
-		
+
 	}
-	
+
 	/**
 	 * Returns all product attributes
 	 */
 	@Override
-	public List<ProductAttribute> getByProductId(MerchantStore store,
-			Product product, Language language) throws ServiceException {
+	public List<ProductAttribute> getByProductId(MerchantStore store, Product product, Language language) throws ServiceException {
 		return productAttributeDao.getByProduct(store, product, language);
-		
+
 	}
 
+	/**
+	 * Returns all product attributes
+	 */
+	@Override
+	public List<ProductAttribute> getByProductIDVariantOnly(MerchantStore store, Product product, Language language) throws ServiceException {
+		return productAttributeDao.getByProductIDVariantOnly(store, product, language);
+
+	}
 
 	@Override
-	public void saveOrUpdate(ProductAttribute productAttribute)
-			throws ServiceException {
-		if(productAttribute.getId()!=null && productAttribute.getId()>0) {
+	public void saveOrUpdate(ProductAttribute productAttribute) throws ServiceException {
+		if (productAttribute.getId() != null && productAttribute.getId() > 0) {
 			productAttributeDao.update(productAttribute);
 		} else {
 			productAttributeDao.save(productAttribute);
 		}
-		
+
 	}
-	
+
 	@Override
 	public void delete(ProductAttribute attribute) throws ServiceException {
-		
-		//override method, this allows the error that we try to remove a detached instance
+
+		// override method, this allows the error that we try to remove a
+		// detached instance
 		attribute = this.getById(attribute.getId());
 		super.delete(attribute);
-		
+
 	}
 
 	/**
@@ -94,6 +104,6 @@ public class ProductAttributeServiceImpl extends SalesManagerEntityServiceImpl<L
 	@Override
 	public List<ProductAttribute> getByProductID(MerchantStore store, Product product, Language language) throws ServiceException {
 		return productAttributeDao.getByProductID(store, product, language);
-		
+
 	}
 }

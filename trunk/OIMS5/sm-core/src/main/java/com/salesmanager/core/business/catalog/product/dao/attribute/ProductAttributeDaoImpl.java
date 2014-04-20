@@ -44,6 +44,28 @@ public class ProductAttributeDaoImpl extends SalesManagerEntityDaoImpl<Long, Pro
 	}
 	
 	@Override
+	public ProductAttribute getByIdAttrOnly(Long id) {
+		QProductAttribute qEntity = QProductAttribute.productAttribute;
+		QProductOption qProductOption = QProductOption.productOption;
+		QProductOptionValue qProductOptionValue = QProductOptionValue.productOptionValue;
+		
+		
+		JPQLQuery query = new JPAQuery (getEntityManager());
+		
+		query.from(qEntity)
+			.join(qEntity.product).fetch()
+			.leftJoin(qEntity.productOption, qProductOption).fetch()
+			.leftJoin(qEntity.productOptionValue, qProductOptionValue).fetch()
+			.leftJoin(qProductOption.descriptions).fetch()
+			.leftJoin(qProductOptionValue.descriptions).fetch()
+			.leftJoin(qProductOption.merchantStore).fetch()
+			.where(qEntity.id.eq(id)
+			.and(qEntity.productOption.productOptionType.eq("text")));
+		
+		return query.uniqueResult(qEntity);
+	}
+	
+	@Override
 	public List<ProductAttribute> getByOptionId(MerchantStore store, Long id) {
 		QProductAttribute qEntity = QProductAttribute.productAttribute;
 		QProductOption qProductOption = QProductOption.productOption;
@@ -140,6 +162,32 @@ public class ProductAttributeDaoImpl extends SalesManagerEntityDaoImpl<Long, Pro
 			.where(qProduct.id.eq(product.getId())
 			.and(qProductOptionValue.merchantStore.id.eq(store.getId()))
 			.and(qProductOptionValueDescription.language.id.eq(language.getId())));
+		
+		return query.list(qEntity);
+	}
+	
+	@Override
+	public List<ProductAttribute> getByProductIDVariantOnly(MerchantStore store, Product product, Language language) {
+		QProductAttribute qEntity = QProductAttribute.productAttribute;
+		QProductOption qProductOption = QProductOption.productOption;
+		QProductOptionDescription qProductOptionDescription = QProductOptionDescription.productOptionDescription;
+		QProductOptionValue qProductOptionValue = QProductOptionValue.productOptionValue;
+		QProductOptionValueDescription qProductOptionValueDescription = QProductOptionValueDescription.productOptionValueDescription;
+		QProduct qProduct = QProduct.product;
+		
+		JPQLQuery query = new JPAQuery (getEntityManager());
+		
+		query.from(qEntity)
+			.leftJoin(qEntity.productOption, qProductOption).fetch()
+			.leftJoin(qEntity.productOptionValue, qProductOptionValue).fetch()
+			.leftJoin(qProductOptionValue.merchantStore).fetch()
+			.join(qEntity.product,qProduct).fetch()
+			.leftJoin(qProductOption.descriptions,qProductOptionDescription).fetch()
+			.leftJoin(qProductOptionValue.descriptions,qProductOptionValueDescription).fetch()
+			.where(qProduct.id.eq(product.getId())
+			.and(qProductOptionValue.merchantStore.id.eq(store.getId()))
+			.and(qProductOptionValueDescription.language.id.eq(language.getId()))
+			.and(qEntity.productOption.productOptionType.ne("text")));
 		
 		return query.list(qEntity);
 	}

@@ -37,6 +37,27 @@ public class ProductOptionDaoImpl extends SalesManagerEntityDaoImpl<Long, Produc
 		
 	}
 	
+	
+	
+	@Override
+	public List<ProductOption> listByStoreAttrOnly(MerchantStore store, Language language) {
+		
+		QProductOption qProductOption = QProductOption.productOption;
+		QProductOptionDescription qDescription = QProductOptionDescription.productOptionDescription;
+		
+		JPQLQuery query = new JPAQuery (getEntityManager());
+		
+		query.from(qProductOption)
+			.leftJoin(qProductOption.descriptions, qDescription).fetch()
+			.leftJoin(qProductOption.merchantStore).fetch()
+			.where(qProductOption.merchantStore.id.eq(store.getId())
+			.and(qDescription.language.id.eq(language.getId()))
+			.and(qProductOption.productOptionType.eq("text")))
+			.orderBy(qProductOption.id.asc());
+		
+		return query.listDistinct(qProductOption);
+		
+	}
 	@Override
 	public ProductOption getById(Long id) {
 		QProductOption qProductOption = QProductOption.productOption;
@@ -67,6 +88,25 @@ public class ProductOptionDaoImpl extends SalesManagerEntityDaoImpl<Long, Produc
 			.and(qProductOption.merchantStore.id.eq(store.getId())));
 		
 
+		
+		List<ProductOption> options = query.list(qProductOption);
+		return options;
+	}
+	
+	@Override
+	public List<ProductOption> getByNameShadeOnly(MerchantStore store, String name, Language language) {
+		QProductOption qProductOption = QProductOption.productOption;
+		QProductOptionDescription qDescription = QProductOptionDescription.productOptionDescription;
+		
+		JPQLQuery query = new JPAQuery (getEntityManager());
+		
+		query.from(qProductOption)
+			.leftJoin(qProductOption.descriptions, qDescription).fetch()
+			.leftJoin(qProductOption.merchantStore).fetch()
+			.where(qDescription.name.like("%" + name + "%")
+			.and(qDescription.language.id.eq(language.getId()))
+			.and(qProductOption.merchantStore.id.eq(store.getId()))
+			.and(qProductOption.productOptionType.ne("text")));
 		
 		List<ProductOption> options = query.list(qProductOption);
 		return options;
@@ -119,6 +159,7 @@ public class ProductOptionDaoImpl extends SalesManagerEntityDaoImpl<Long, Produc
 		
 		return query.uniqueResult(qProductOption);
 	}
+
 
 
 
