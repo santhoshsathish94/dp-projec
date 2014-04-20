@@ -12,19 +12,22 @@ public interface ProductOptionDao extends SalesManagerEntityDao<Long, ProductOpt
 
 	List<ProductOption> listByStore(MerchantStore store, Language language);
 
-	List<ProductOption> getByName(MerchantStore store, String name,
-			Language language);
+	List<ProductOption> listByStoreAttrOnly(MerchantStore store, Language language);
+
+	List<ProductOption> getByName(MerchantStore store, String name, Language language);
+
+	List<ProductOption> getByNameShadeOnly(MerchantStore store, String name, Language language);
 
 	void saveOrUpdate(ProductOption entity) throws ServiceException;
 
 	/**
 	 * Get read only attributes.
+	 * 
 	 * @param store
 	 * @param language
 	 * @return
 	 */
-	List<ProductOption> getReadOnly(MerchantStore store,
-			Language language);
+	List<ProductOption> getReadOnly(MerchantStore store, Language language);
 
 	ProductOption getByCode(MerchantStore store, String optionCode);
 

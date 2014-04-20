@@ -52,6 +52,9 @@ public class ProductImage extends SalesManagerEntity<Long, ProductImage> {
 	@JoinColumn(name = "PRODUCT_ID", nullable = false)
 	private Product product;
 	
+	@Column(name = "IMAGE_PRODUCT_OPTION")
+	private Long image_product_option;
+	
 	@Transient
 	private InputStream image = null;
 	
@@ -124,6 +127,14 @@ public class ProductImage extends SalesManagerEntity<Long, ProductImage> {
 
 	public void setImage(InputStream image) {
 		this.image = image;
+	}
+
+	public Long getImage_product_option() {
+		return image_product_option;
+	}
+
+	public void setImage_product_option(Long image_product_option) {
+		this.image_product_option = image_product_option;
 	}
 
 
