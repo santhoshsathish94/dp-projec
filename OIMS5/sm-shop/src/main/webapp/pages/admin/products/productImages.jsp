@@ -26,7 +26,7 @@
 				
 			<!--  Add content images -->
 			<c:url var="saveProductImages" value="/admin/products/images/save.html" />
-			<form:form method="POST" enctype="multipart/form-data" commandName="contentImages" action="${saveProductImages}">
+			<form:form method="POST" enctype="multipart/form-data" commandName="productImages" action="${saveProductImages}">
 			<form:errors path="*" cssClass="alert alert-error" element="div" />
 			<div id="store.success" class="alert alert-success"	style="<c:choose><c:when test="${success!=null}">display:block;</c:when><c:otherwise>display:none;</c:otherwise></c:choose>">
 					<s:message code="message.success" text="Request successfull" />
@@ -41,7 +41,18 @@
 					<input class="input-file" id="image3" name="image[3]" type="file"><br /> -->
 				</div>
 			</div>
-			
+			<div class="control-group">
+                        <label><s:message code="" text="Shades"/></label>
+                        <div class="controls">    
+	                        <div class="controls">	
+	                           		<form:select cssClass="highlight" id="productOption" path="image_product_option">
+	                           			<form:option value="" selected="true">--Select--</form:option>
+					  					<form:options items="${options}" itemValue="id" itemLabel="descriptionsSettoList[0].name"/>
+				       				</form:select>
+	                                <span class="help-inline"><form:errors path="image_product_option" cssClass="error" /></span>
+	                        </div>
+                        </div>
+                 </div>	
 			
 			<div class="form-actions">
 

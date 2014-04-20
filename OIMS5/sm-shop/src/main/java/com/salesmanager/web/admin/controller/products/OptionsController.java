@@ -352,7 +352,7 @@ public class OptionsController {
 		Language language = (Language)request.getAttribute("LANGUAGE");	
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
 		
-		List<ProductOption> productOptions = productOptionService.getByName(store, fieldValue, language);
+		List<ProductOption> productOptions = productOptionService.getByNameShadeOnly(store, fieldValue, language);
 		
 		List<ProductOption.CustomProductOption> customOptions = new ProductOption().new CustomProductOption().getCustomProductOptions(productOptions);
 				

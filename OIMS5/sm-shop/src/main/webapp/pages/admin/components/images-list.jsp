@@ -35,7 +35,7 @@
 								isc.TileGrid.create({
 								    ID:"imageList",
 								    tileWidth:150,
-								    tileHeight:200,
+								    tileHeight:210,
 								    dataSource:"dataSource",
 								    autoFetchData:true,
 								    showAllRecords:true,
@@ -44,7 +44,8 @@
 								    fields: [
 										{name:"id", cellStyle: "name"},
 								        {name:"picture", type:"image", imageWidth:150},
-								        {name:"name", cellStyle: "name"}
+								        {name:"name", cellStyle: "name"},
+								        {name:"shade", cellStyle: "shade"}
 								    ],
 
 								    getTile : function (record) {
