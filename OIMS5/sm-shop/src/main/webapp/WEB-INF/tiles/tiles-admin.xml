@@ -461,4 +461,12 @@
   		<put-attribute name="body" value="/pages/admin/billing/creditnotelisting.jsp" /> 
   	</definition>
   	
+  	<!-- <definition name="admin-sales-order-booking-listing" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/orders/salesorderbookings.jsp" /> 
+  	</definition> -->
+  	
+  	<definition name="admin-create-sales-order-booking" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/orders/salesorderbooking.jsp" /> 
+  	</definition>
+  	
 </tiles-definitions>

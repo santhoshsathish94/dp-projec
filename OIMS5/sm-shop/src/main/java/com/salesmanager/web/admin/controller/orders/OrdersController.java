@@ -23,6 +23,7 @@ import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.order.model.Order;
 import com.salesmanager.core.business.order.model.OrderCriteria;
 import com.salesmanager.core.business.order.model.OrderList;
+import com.salesmanager.core.business.order.model.SalesOrderBooking;
 import com.salesmanager.core.business.order.service.OrderService;
 import com.salesmanager.core.business.reference.language.model.Language;
 import com.salesmanager.core.business.system.model.IntegrationModule;
@@ -65,7 +66,7 @@ public class OrdersController {
 	@RequestMapping(value="/admin/orders/list.html", method=RequestMethod.GET)
 	public String displayOrders(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		setMenu(model,request);
+		setMenu(model,request, "order");
 
 		//the list of orders is from page method
 		
@@ -158,11 +159,12 @@ public class OrdersController {
 	}
 	
 	
-	private void setMenu(Model model, HttpServletRequest request) throws Exception {
+	private void setMenu(Model model, HttpServletRequest request, String selectedMenu) throws Exception {
 		
 		//display menu
 		Map<String,String> activeMenus = new HashMap<String,String>();
 		activeMenus.put("order", "order");
+		activeMenus.put(selectedMenu, selectedMenu);
 
 		@SuppressWarnings("unchecked")
 		Map<String, Menu> menus = (Map<String, Menu>)request.getAttribute("MENUMAP");
@@ -171,7 +173,25 @@ public class OrdersController {
 		model.addAttribute("currentMenu",currentMenu);
 		model.addAttribute("activeMenus",activeMenus);
 		//
+	}
+	
+	
+	@Secured("ORDER")
+	@RequestMapping(value="/admin/orders/createsaleorderbooking.html", method=RequestMethod.GET)
+	public String salesOrderBooking(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		
+		SalesOrderBooking salesOrderBooking = new SalesOrderBooking();
+		
+		return displaySalesOrderBooking(salesOrderBooking, model, request, response, locale);
+	}
+
+	private String displaySalesOrderBooking(SalesOrderBooking salesOrderBooking, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		
+		setMenu(model,request, "sale-order-booking");
+		
+		model.addAttribute("salesOrderBooking", salesOrderBooking);
+		
+		return "admin-create-sales-order-booking";
 	}
 
 }

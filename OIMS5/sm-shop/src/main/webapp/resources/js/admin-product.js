@@ -1,6 +1,4 @@
 
-
-var loading=true;
 function preProcessOnPageLoad() {
 	
 	if($.trim($('.productId').val()) == '') {
@@ -13,13 +11,17 @@ function preProcessOnPageLoad() {
 	} else {
 		if($('#productHaveVariants').val() == "true") {
 			$('#productHaveVariant').prop('checked', true);
-			$('#productHaveVariant').prop( "disabled", true );
+			
 			displayVaraint();
 			displayVariantOnLoad();
 			
+		} else {
+			
+			setupShadeAutoComplete('shades_variant1');
+			setupPackSize('pack_size_variant1');
+			
 		}
 	}
-	loading=false;
 }
 
 function displayVaraint() {
@@ -34,7 +36,7 @@ function removeImage(imageId) {
 	$("#store.error").show();
 	$.ajax({
 	  type: 'POST',
-	  url: '/admin/products/product/removeImage.html',
+	  url: '/ishop/admin/products/product/removeImage.html',
 	  data: 'imageId=' + imageId,
 	  dataType: 'json',
 	  success: function(response){
@@ -168,10 +170,7 @@ function populateVariantMasterDiv(count) {
 	var hiddenId = $('<input>').attr('type', 'hidden').attr('id', 'shadeId'+count).attr('value', '');
 	var v_div = $('<div>').attr('class', 'sm input').attr('style', 'float: left; height: 28px; margin-left: 10px; width: 275px;').attr('id', 'packId'+count);
 	var v_in = $('<input>').attr('type', 'text').attr('id', 'pack_size_variant'+count).attr('class', 'pack_size_variant');
-	var r_s="";
-	if(!loading){
-	r_s = $('<span>').attr('class', 'remove_variants').attr('onclick', 'removeVariant(this);').html('&#x2716;');
-	}
+	var r_s = $('<span>').attr('class', 'remove_variants').attr('onclick', 'removeVariant(this);').html('&#x2716;');
 	
 	$(v_div).append(v_in);
 	$(vv_d).append($(sv_in)).append($(hiddenId)).append($(v_div)).append($(r_s));
@@ -185,20 +184,11 @@ function prePopulateShade(count, shadeObj) {
 	
 	$('#shades_variant'+count).val(shadeObj.name);
 	$('#shadeId'+count).val(shadeObj.id);
-//	alert(editMode);
-	if(editMode){
-	//	alert("ok");
-		$('#shades_variant'+count).prop( "disabled", true );
-	}
 }
 
 function prePopulateVariant(count, variantObj) {
-	//alert(count);
-	
 	$("#pack_size_variant"+count).tokenInput(variantList, {
         theme: "facebook",
         prePopulate: variantObj
     });
-	//$('#packId'+count).prop("disabled", true );
-	
 }
