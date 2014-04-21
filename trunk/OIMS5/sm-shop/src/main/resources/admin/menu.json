@@ -338,7 +338,15 @@
 "order":9,
 "menus":[
 	{"menu":{
-		"code":"order-list","url":"/admin/orders/list.html","role":"ORDER","order":0
+		"code":"order-list","url":"","role":"ORDER","order":1,"menus":
+		[
+			{"menu":{
+				"code":"order-list","url":"/admin/orders/list.html","role":"ORDER","order":0
+			}},
+			{"menu":{
+				"code":"sale-order-booking-create","url":"/admin/orders/createsaleorderbooking.html","role":"ORDER","order":1
+			}}
+		]
 	}}
 ]
 }},
@@ -448,7 +456,7 @@
 		"code":"sales-invoice","url":"","role":"AUTH","order":1,"menus":
 		[
 			{"menu":{
-				"code":"sales-invoice-list","url":"/admin/billing/invoide-list.html","role":"AUTH","order":0
+				"code":"sales-invoice-list","url":"/admin/billing/invoise-list.html","role":"AUTH","order":0
 			}},
 			{"menu":{
 				"code":"sales-invoice-create","url":"/admin/billing/invoicecreate.html","role":"AUTH","order":1

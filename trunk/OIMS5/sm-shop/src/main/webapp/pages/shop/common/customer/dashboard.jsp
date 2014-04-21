@@ -146,8 +146,8 @@ $(document).ready(function() {
 									<p><font color="#FF8C00"><s:message code="label.customer.myaccount" text="My account"/></font></p>
 								</span>
 								<ul>
-									<li><a href="<c:out value="/customer/account.html"/>"><s:message code="menu.profile" text="Profile"/></a></li>
-									<li><a href="<c:out value="/customer/billing.html"/>"><s:message code="label.customer.billingshipping" text="Billing & shipping information"/></a></li>
+									<li><a href="<c:url value="/shop/customer/account.html"/>"><s:message code="menu.profile" text="Profile"/></a></li>
+									<li><a href="<c:url value="/shop/customer/billing.html"/>"><s:message code="label.customer.billingshipping" text="Billing & shipping information"/></a></li>
 								</ul>
 							</div>
 	

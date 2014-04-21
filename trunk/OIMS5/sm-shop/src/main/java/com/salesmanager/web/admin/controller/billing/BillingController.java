@@ -172,7 +172,7 @@ public class BillingController {
 	
 	
 	@Secured("AUTH")
-	@RequestMapping(value="/admin/billing/invoide-list.html", method=RequestMethod.GET)
+	@RequestMapping(value="/admin/billing/invoise-list.html", method=RequestMethod.GET)
 	public String salesInvoiceList(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		setMenu(model,request, "sales-invoice");
 		return "admin-sales-invoice-listing";

@@ -472,6 +472,13 @@ response.setDateHeader ("Expires", -1);
 				window.location='<c:url value="/admin/billing/createcreditnote.html" />';
 			});
 			
+			$("#order-list-link").click(function() {
+				window.location='<c:url value="/admin/orders/list.html" />';
+			});
+			$("#sale-order-booking-create-link").click(function() {
+				window.location='<c:url value="/admin/orders/createsaleorderbooking.html" />';
+			});
+			
 		}); 
 		
 		
