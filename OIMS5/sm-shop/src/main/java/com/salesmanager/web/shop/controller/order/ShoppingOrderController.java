@@ -59,204 +59,187 @@ import com.salesmanager.web.utils.LabelUtils;
 
 @Controller
 public class ShoppingOrderController extends AbstractController {
-	
-	private static final Logger LOGGER = LoggerFactory
-	.getLogger(ShoppingOrderController.class);
-	
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingOrderController.class);
+
 	@Autowired
 	private ShoppingCartFacade shoppingCartFacade;
-	
-    @Autowired
-    private ShoppingCartService shoppingCartService;
-	
 
-	
+	@Autowired
+	private ShoppingCartService shoppingCartService;
+
 	@Autowired
 	private PaymentService paymentService;
-	
 
 	@Autowired
 	private OrderService orderService;
-	
+
 	@Autowired
 	private CountryService countryService;
-	
+
 	@Autowired
 	private ZoneService zoneService;
-	
+
 	@Autowired
 	private OrderFacade orderFacade;
-	
+
 	@Autowired
 	private LabelUtils messages;
-	
+
 	@Autowired
 	private PricingService pricingService;
-	
-	
+
 	@RequestMapping("/shop/order/checkout.html")
 	public String displayCheckout(@CookieValue("cart") String cookie, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
 		System.out.println("======/shop/order/checkout.html========================================");
-		Language language = (Language)request.getAttribute("LANGUAGE");
-		MerchantStore store = (MerchantStore)request.getAttribute(Constants.MERCHANT_STORE);
-		Customer customer = (Customer)request.getSession().getAttribute(Constants.CUSTOMER);
+		Language language = (Language) request.getAttribute("LANGUAGE");
+		MerchantStore store = (MerchantStore) request.getAttribute(Constants.MERCHANT_STORE);
+		Customer customer = (Customer) request.getSession().getAttribute(Constants.CUSTOMER);
 
-		
 		/**
 		 * Shopping cart
 		 * 
-		 * ShoppingCart should be in the HttpSession
-		 * Otherwise the cart id is in the cookie
-		 * Otherwise the customer is in the session and a cart exist in the DB
-		 * Else -> Nothing to display
+		 * ShoppingCart should be in the HttpSession Otherwise the cart id is in
+		 * the cookie Otherwise the customer is in the session and a cart exist
+		 * in the DB Else -> Nothing to display
 		 */
-		
-		//check if an existing order exist
-		ShopOrder order = null;
-		
-		order = super.getSessionAttribute(Constants.ORDER, request);
-		
 
-		
-		//Get the cart from the DB
-		String shoppingCartCode  = (String)request.getSession().getAttribute(Constants.SHOPPING_CART);
+		// check if an existing order exist
+		ShopOrder order = null;
+
+		order = super.getSessionAttribute(Constants.ORDER, request);
+
+		// Get the cart from the DB
+		String shoppingCartCode = (String) request.getSession().getAttribute(Constants.SHOPPING_CART);
 		com.salesmanager.core.business.shoppingcart.model.ShoppingCart cart = null;
-	
-	    if(!StringUtils.isBlank(shoppingCartCode)) {
-				cart = shoppingCartFacade.getShoppingCartModel(shoppingCartCode, store);
-	    }
-	
-	    if(cart==null && customer!=null) {
-				cart=shoppingCartFacade.getShoppingCartModel(customer, store);
-	    }
-			
-	
-			
-	    if(shoppingCartCode==null && cart==null) {//error
-				return "redirect:/shop/cart/shoppingCart.html";
-	    }
-			
-	
-	    if(customer!=null) {
-			if(cart.getCustomerId()!=customer.getId().longValue()) {
-					return "redirect:/shop/shoppingCart.html";
-			}
-	     } else {
-				customer = orderFacade.initEmptyCustomer(store);
-	     }
-	
-	     Set<ShoppingCartItem> items = cart.getLineItems();
-	     if(CollectionUtils.isEmpty(items)) {
+
+		if (!StringUtils.isBlank(shoppingCartCode)) {
+			cart = shoppingCartFacade.getShoppingCartModel(shoppingCartCode, store);
+		}
+
+		if (cart == null && customer != null) {
+			cart = shoppingCartFacade.getShoppingCartModel(customer, store);
+		}
+
+		if (shoppingCartCode == null && cart == null) {// error
+			return "redirect:/shop/cart/shoppingCart.html";
+		}
+
+		if (customer != null) {
+			if (cart.getCustomerId() != customer.getId().longValue()) {
 				return "redirect:/shop/shoppingCart.html";
-	     }
-		
-	     if(order==null) {
-	
-	
+			}
+		} else {
+			customer = orderFacade.initEmptyCustomer(store);
+		}
+
+		Set<ShoppingCartItem> items = cart.getLineItems();
+		if (CollectionUtils.isEmpty(items)) {
+			return "redirect:/shop/shoppingCart.html";
+		}
+
+		if (order == null) {
+
 			order = orderFacade.initializeOrder(store, customer, cart, language);
-		
-		  }
+
+		}
 
 		boolean freeShoppingCart = shoppingCartService.isFreeShoppingCart(cart);
-		
+
 		/** shipping **/
 		ShippingQuote quote = orderFacade.getShippingQuote(cart, order, store, language);
 		model.addAttribute("shippingQuote", quote);
 
-		if(quote!=null) {
+		if (quote != null) {
 
-			if(StringUtils.isBlank(quote.getShippingReturnCode())) {
-			
+			if (StringUtils.isBlank(quote.getShippingReturnCode())) {
+
 				ShippingSummary summary = orderFacade.getShippingSummary(quote, store, language);
 				order.setShippingSummary(summary);
-				if(order.getSelectedShippingOption()==null) {
+				if (order.getSelectedShippingOption() == null) {
 					order.setSelectedShippingOption(quote.getSelectedShippingOption());
 				}
-				
-				//save quotes in HttpSession
+
+				// save quotes in HttpSession
 				List<ShippingOption> options = quote.getShippingOptions();
 				request.getSession().setAttribute("SHIPPING_SUMMARY", summary);
 				request.getSession().setAttribute("SHIPPING_OPTIONS", options);
-			
+
 			}
-			
-			
-			//get shipping countries
+
+			// get shipping countries
 			List<Country> shippingCountriesList = orderFacade.getShipToCountry(store, language);
 			model.addAttribute("countries", shippingCountriesList);
 		} else {
-			//get all countries
+			// get all countries
 			List<Country> countries = countryService.getCountries(language);
 			model.addAttribute("countries", countries);
 		}
-		
-		if(quote!=null && quote.getShippingReturnCode()!=null && quote.getShippingReturnCode().equals(ShippingQuote.NO_SHIPPING_MODULE_CONFIGURED)) {
+
+		if (quote != null && quote.getShippingReturnCode() != null && quote.getShippingReturnCode().equals(ShippingQuote.NO_SHIPPING_MODULE_CONFIGURED)) {
 			LOGGER.error("Shipping quote error " + quote.getShippingReturnCode());
 			model.addAttribute("errorMessages", quote.getShippingReturnCode());
 		}
-		
-		if(quote!=null && !StringUtils.isBlank(quote.getQuoteError())) {
+
+		if (quote != null && !StringUtils.isBlank(quote.getQuoteError())) {
 			LOGGER.error("Shipping quote error " + quote.getQuoteError());
 			model.addAttribute("errorMessages", quote.getQuoteError());
 		}
-		
-		if(quote!=null && quote.getShippingReturnCode()!=null && quote.getShippingReturnCode().equals(ShippingQuote.NO_SHIPPING_TO_SELECTED_COUNTRY)) {
+
+		if (quote != null && quote.getShippingReturnCode() != null && quote.getShippingReturnCode().equals(ShippingQuote.NO_SHIPPING_TO_SELECTED_COUNTRY)) {
 			LOGGER.error("Shipping quote error " + quote.getShippingReturnCode());
 			model.addAttribute("errorMessages", quote.getShippingReturnCode());
 		}
 		/** end shipping **/
 
-		//get payment methods
+		// get payment methods
 		List<PaymentMethod> paymentMethods = paymentService.getAcceptedPaymentMethods(store);
 
-		//not free and no payment methods
-		if(CollectionUtils.isEmpty(paymentMethods) && !freeShoppingCart) {
+		// not free and no payment methods
+		if (CollectionUtils.isEmpty(paymentMethods) && !freeShoppingCart) {
 			LOGGER.error("No payment method configured");
 			model.addAttribute("errorMessages", "No payments configured");
 		}
-		
-		if(!CollectionUtils.isEmpty(paymentMethods)) {//select default payment method
+
+		if (!CollectionUtils.isEmpty(paymentMethods)) {// select default payment
+														// method
 			PaymentMethod defaultPaymentSelected = null;
-			for(PaymentMethod paymentMethod : paymentMethods) {
-				if(paymentMethod.isDefaultSelected()) {
+			for (PaymentMethod paymentMethod : paymentMethods) {
+				if (paymentMethod.isDefaultSelected()) {
 					defaultPaymentSelected = paymentMethod;
 					break;
 				}
 			}
-			
-			if(defaultPaymentSelected==null) {//forced default selection
+
+			if (defaultPaymentSelected == null) {// forced default selection
 				defaultPaymentSelected = paymentMethods.get(0);
 				defaultPaymentSelected.setDefaultSelected(true);
 			}
-			
-			
+
 		}
-		
-		//readable shopping cart items for order summary box
-        ShoppingCartData shoppingCart = shoppingCartFacade.getShoppingCartData(cart);
-        model.addAttribute( "cart", shoppingCart );
-		
 
+		// readable shopping cart items for order summary box
+		ShoppingCartData shoppingCart = shoppingCartFacade.getShoppingCartData(cart);
+		model.addAttribute("cart", shoppingCart);
 
-		//order total
+		// order total
 		OrderTotalSummary orderTotalSummary = orderFacade.calculateOrderTotal(store, order, language);
 		order.setOrderTotalSummary(orderTotalSummary);
 
-		model.addAttribute("order",order);
+		model.addAttribute("order", order);
 		model.addAttribute("paymentMethods", paymentMethods);
 		System.out.println("===============checkout done===============");
 		/** template **/
 		StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Checkout.checkout).append(".").append(store.getStoreTemplate());
-		System.out.println("=============template>>>"+template);
+		System.out.println("=============template>>>" + template);
 		return template.toString();
 
-		
 	}
-	
-	
+
 	/**
 	 * Method that saves the order to the database
+	 * 
 	 * @param model
 	 * @param request
 	 * @param response
@@ -267,122 +250,113 @@ public class ShoppingOrderController extends AbstractController {
 	@RequestMapping("/shop/order/commit.html")
 	public String commitOrder(Model model, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
-		
 		ShopOrder order = super.getSessionAttribute(Constants.ORDER, request);
-		if(order==null) {
+		if (order == null) {
 			throw new Exception("Time out in transaction order is null");
 		}
-		
-		try {
-			
-			return this.commitOrder(order, bindingResult, model, request, response, locale);
-			
-		} catch(Exception e) {
-			LOGGER.error("Error while commiting order",e);
-			throw e;		
-			
-		}
-		
 
-		
+		try {
+
+			return this.commitOrder(order, bindingResult, model, request, response, locale);
+
+		} catch (Exception e) {
+			LOGGER.error("Error while commiting order", e);
+			throw e;
+
+		}
+
 	}
-	
+
 	@RequestMapping("/shop/order/commitShopOrder.html")
-	public String commitShopOrder(@Valid @ModelAttribute(value="order") ShopOrder order, BindingResult bindingResult, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
-
-		MerchantStore store = (MerchantStore)request.getAttribute(Constants.MERCHANT_STORE);
+	public String commitShopOrder(@Valid @ModelAttribute(value = "order") ShopOrder order, BindingResult bindingResult, Model model, HttpServletRequest request, HttpServletResponse response,
+			Locale locale) throws Exception {
+		System.out.println("==========in /shop/order/commitShopOrder.html==");
+		MerchantStore store = (MerchantStore) request.getAttribute(Constants.MERCHANT_STORE);
 		try {
-			
-	        if ( bindingResult.hasErrors() )
-	        {
-	            LOGGER.info( "found {} validation error while validating in customer registration ",
-	                         bindingResult.getErrorCount() );
-	    		StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Checkout.checkout).append(".").append(store.getStoreTemplate());
-	    		return template.toString();
+			System.out.println("bindingResult.hasErrors()>>>>>>>>>>>" + bindingResult.hasErrors());
+			if (bindingResult.hasErrors()) {
+				LOGGER.info("found {} validation error while validating in customer registration ", bindingResult.getErrorCount());
+				StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Checkout.checkout).append(".").append(store.getStoreTemplate());
+				return template.toString();
 
-	        }
-			
+			}
+			System.out.println("going tocommit>>>>>>>>>>>");
 			return this.commitOrder(order, bindingResult, model, request, response, locale);
-			
-		} catch(Exception e) {
-			LOGGER.error("Error while commiting order",e);
-			throw e;		
-			
+
+		} catch (Exception e) {
+			LOGGER.error("Error while commiting order", e);
+			throw e;
+
 		}
-		
+
 	}
-	
-	
+
 	private String commitOrder(ShopOrder order, BindingResult bindingResult, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
-		
 
-			
+		MerchantStore store = super.getSessionAttribute(Constants.MERCHANT_STORE, request);
 
-			MerchantStore store = super.getSessionAttribute(Constants.MERCHANT_STORE, request);
+		// validate order shipping and billing
+		if (StringUtils.isBlank(order.getCustomer().getBilling().getFirstName())) {
+			FieldError error = new FieldError("customer.billing.firstName", "customer.billing.firstName", messages.getMessage("NotEmpty.customer.firstName", locale));
+			bindingResult.addError(error);
+		}
 
-			//validate order shipping and billing
-			if(StringUtils.isBlank(order.getCustomer().getBilling().getFirstName())) {
-				FieldError error = new FieldError("customer.billing.firstName","customer.billing.firstName",messages.getMessage("NotEmpty.customer.firstName", locale));
-            	bindingResult.addError(error);
-			}
-			
-			if(StringUtils.isBlank(order.getCustomer().getBilling().getLastName())) {
-				FieldError error = new FieldError("customer.billing.lastName","customer.billing.lastName",messages.getMessage("NotEmpty.customer.lastName", locale));
-            	bindingResult.addError(error);
-			}
-			
-			if(StringUtils.isBlank(order.getCustomer().getEmailAddress())) {
-				FieldError error = new FieldError("customer.emailAddress","customer.emailAddress",messages.getMessage("NotEmpty.customer.emailAddress", locale));
-            	bindingResult.addError(error);
-			}
-			
-			if(StringUtils.isBlank(order.getCustomer().getBilling().getAddress())) {
-				
-			}
-			
-			if(StringUtils.isBlank(order.getCustomer().getBilling().getCity())) {
-				
-			}
-			
-			if(StringUtils.isBlank(order.getCustomer().getBilling().getCountry())) {
-				
-			}
-			
-			if(StringUtils.isBlank(order.getCustomer().getBilling().getZone()) && StringUtils.isBlank(order.getCustomer().getBilling().getStateProvince())) {
-				
-			}
-			
-			if(StringUtils.isBlank(order.getCustomer().getBilling().getPhone())) {
-				
-			}
-			
-			if(StringUtils.isBlank(order.getCustomer().getBilling().getPostalCode())) {
-				
-			}
-			
-			//validate payment
-			
-			//validate shipping
-			
-			//validate credit card
-	
-			//validate additional fields
-			
-	        if ( bindingResult.hasErrors() )
-	        {
-	            LOGGER.info( "found {} validation error while validating in customer registration ",
-	                         bindingResult.getErrorCount() );
-	    		StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Checkout.checkout).append(".").append(store.getStoreTemplate());
-	    		return template.toString();
+		if (StringUtils.isBlank(order.getCustomer().getBilling().getLastName())) {
+			FieldError error = new FieldError("customer.billing.lastName", "customer.billing.lastName", messages.getMessage("NotEmpty.customer.lastName", locale));
+			bindingResult.addError(error);
+		}
 
-	        }
-			
-			return null;
+		if (StringUtils.isBlank(order.getCustomer().getEmailAddress())) {
+			FieldError error = new FieldError("customer.emailAddress", "customer.emailAddress", messages.getMessage("NotEmpty.customer.emailAddress", locale));
+			bindingResult.addError(error);
+		}
+
+		if (StringUtils.isBlank(order.getCustomer().getBilling().getAddress())) {
+
+		}
+
+		if (StringUtils.isBlank(order.getCustomer().getBilling().getCity())) {
+
+		}
+
+		if (StringUtils.isBlank(order.getCustomer().getBilling().getCountry())) {
+
+		}
+
+		if (StringUtils.isBlank(order.getCustomer().getBilling().getZone()) && StringUtils.isBlank(order.getCustomer().getBilling().getStateProvince())) {
+
+		}
+
+		if (StringUtils.isBlank(order.getCustomer().getBilling().getPhone())) {
+
+		}
+
+		if (StringUtils.isBlank(order.getCustomer().getBilling().getPostalCode())) {
+
+		}
+
+		// validate payment
+
+		// validate shipping
+
+		// validate credit card
+
+		// validate additional fields
+
+		if (bindingResult.hasErrors()) {
+			LOGGER.info("found {} validation error while validating in customer registration ", bindingResult.getErrorCount());
+			StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Checkout.checkout).append(".").append(store.getStoreTemplate());
+			return template.toString();
+
+		}
+
+		return null;
 
 	}
-	
+
 	/**
 	 * Recalculates shipping and tax following a change in country or province
+	 * 
 	 * @param order
 	 * @param request
 	 * @param response
@@ -390,106 +364,103 @@ public class ShoppingOrderController extends AbstractController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value={"/shop/order/shippingQuotes.html"}, method=RequestMethod.POST)
-	public @ResponseBody ReadableShopOrder calculateShipping(@ModelAttribute(value="order") ShopOrder order, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
-		
-		Language language = (Language)request.getAttribute("LANGUAGE");
-		MerchantStore store = (MerchantStore)request.getAttribute(Constants.MERCHANT_STORE);
-		String shoppingCartCode  = getSessionAttribute(Constants.SHOPPING_CART, request);
-		
-		Validate.notNull(shoppingCartCode,"shoppingCartCode does not exist in the session");
-		
+	@RequestMapping(value = { "/shop/order/shippingQuotes.html" }, method = RequestMethod.POST)
+	public @ResponseBody
+	ReadableShopOrder calculateShipping(@ModelAttribute(value = "order") ShopOrder order, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+
+		Language language = (Language) request.getAttribute("LANGUAGE");
+		MerchantStore store = (MerchantStore) request.getAttribute(Constants.MERCHANT_STORE);
+		String shoppingCartCode = getSessionAttribute(Constants.SHOPPING_CART, request);
+
+		Validate.notNull(shoppingCartCode, "shoppingCartCode does not exist in the session");
+
 		ReadableShopOrder readableOrder = new ReadableShopOrder();
 		try {
 
-			//re-generate cart
+			// re-generate cart
 			com.salesmanager.core.business.shoppingcart.model.ShoppingCart cart = shoppingCartFacade.getShoppingCartModel(shoppingCartCode, store);
-	
-			
-			
+
 			ReadableShopOrderPopulator populator = new ReadableShopOrderPopulator();
 			populator.populate(order, readableOrder, store, language);
-			
+
 			ShippingQuote quote = orderFacade.getShippingQuote(cart, order, store, language);
-			
-			if(quote!=null) {
-				if(StringUtils.isBlank(quote.getShippingReturnCode())) {
+
+			if (quote != null) {
+				if (StringUtils.isBlank(quote.getShippingReturnCode())) {
 					ShippingSummary summary = orderFacade.getShippingSummary(quote, store, language);
-					order.setShippingSummary(summary);//for total calculation
-					
-					
+					order.setShippingSummary(summary);// for total calculation
+
 					ReadableShippingSummary readableSummary = new ReadableShippingSummary();
 					ReadableShippingSummaryPopulator readableSummaryPopulator = new ReadableShippingSummaryPopulator();
 					readableSummaryPopulator.setPricingService(pricingService);
 					readableSummaryPopulator.populate(summary, readableSummary, store, language);
-					
+
 					readableSummary.setSelectedShippingOption(quote.getSelectedShippingOption());
 
-					//save quotes in HttpSession
+					// save quotes in HttpSession
 					List<ShippingOption> options = quote.getShippingOptions();
 					readableSummary.setShippingOptions(options);
-					
+
 					readableOrder.setShippingSummary(readableSummary);
 					request.getSession().setAttribute("SHIPPING_SUMMARY", summary);
 					request.getSession().setAttribute("SHIPPING_OPTIONS", options);
-				
+
 				}
 
-				if(quote.getShippingReturnCode()!=null && quote.getShippingReturnCode().equals(ShippingQuote.NO_SHIPPING_MODULE_CONFIGURED)) {
+				if (quote.getShippingReturnCode() != null && quote.getShippingReturnCode().equals(ShippingQuote.NO_SHIPPING_MODULE_CONFIGURED)) {
 					LOGGER.error("Shipping quote error " + quote.getShippingReturnCode());
 					readableOrder.setErrorMessage(messages.getMessage("message.noshipping", locale));
 				}
-				
-				if(quote.getShippingReturnCode()!=null && quote.getShippingReturnCode().equals(ShippingQuote.NO_SHIPPING_TO_SELECTED_COUNTRY)) {
+
+				if (quote.getShippingReturnCode() != null && quote.getShippingReturnCode().equals(ShippingQuote.NO_SHIPPING_TO_SELECTED_COUNTRY)) {
 					LOGGER.error("Shipping quote error " + quote.getShippingReturnCode());
 					readableOrder.setErrorMessage(messages.getMessage("message.noshipping", locale));
 				}
-				
-				if(!StringUtils.isBlank(quote.getQuoteError())) {
+
+				if (!StringUtils.isBlank(quote.getQuoteError())) {
 					LOGGER.error("Shipping quote error " + quote.getQuoteError());
 					readableOrder.setErrorMessage(messages.getMessage("message.noshippingerror", locale));
 				}
-				
-				
+
 			}
-			
-			//set list of shopping cart items for core price calculation
+
+			// set list of shopping cart items for core price calculation
 			List<ShoppingCartItem> items = new ArrayList<ShoppingCartItem>(cart.getLineItems());
 			order.setShoppingCartItems(items);
-			
+
 			OrderTotalSummary orderTotalSummary = orderFacade.calculateOrderTotal(store, order, language);
-			
-			
+
 			ReadableOrderTotalPopulator totalPopulator = new ReadableOrderTotalPopulator();
 			totalPopulator.setMessages(messages);
 			totalPopulator.setPricingService(pricingService);
 
 			List<ReadableOrderTotal> subtotals = new ArrayList<ReadableOrderTotal>();
-			for(OrderTotal total : orderTotalSummary.getTotals()) {
-				if(!total.getOrderTotalCode().equals("order.total.total")) {
+			for (OrderTotal total : orderTotalSummary.getTotals()) {
+				if (!total.getOrderTotalCode().equals("order.total.total")) {
 					ReadableOrderTotal t = new ReadableOrderTotal();
 					totalPopulator.populate(total, t, store, language);
 					subtotals.add(t);
-				} else {//grand total
+				} else {// grand total
 					ReadableOrderTotal ot = new ReadableOrderTotal();
 					totalPopulator.populate(total, ot, store, language);
 					readableOrder.setGrandTotal(ot.getTotal());
 				}
 			}
-			
-			
+
 			readableOrder.setSubTotals(subtotals);
-		
-		} catch(Exception e) {
-			LOGGER.error("Error while getting shipping quotes",e);
+
+		} catch (Exception e) {
+			LOGGER.error("Error while getting shipping quotes", e);
 			readableOrder.setErrorMessage(messages.getMessage("message.error", locale));
 		}
-		
+
 		return readableOrder;
 	}
-	
+
 	/**
-	 * Calculates the order total following price variation like changing a shipping option
+	 * Calculates the order total following price variation like changing a
+	 * shipping option
+	 * 
 	 * @param order
 	 * @param request
 	 * @param response
@@ -497,131 +468,128 @@ public class ShoppingOrderController extends AbstractController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value={"/shop/order/calculateOrderTotal.html"}, method=RequestMethod.POST)
-	public @ResponseBody ReadableShopOrder calculateOrderTotal(@ModelAttribute(value="order") ShopOrder order, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
-		
-		Language language = (Language)request.getAttribute("LANGUAGE");
-		MerchantStore store = (MerchantStore)request.getAttribute(Constants.MERCHANT_STORE);
-		String shoppingCartCode  = getSessionAttribute(Constants.SHOPPING_CART, request);
-		
-		Validate.notNull(shoppingCartCode,"shoppingCartCode does not exist in the session");
-		
+	@RequestMapping(value = { "/shop/order/calculateOrderTotal.html" }, method = RequestMethod.POST)
+	public @ResponseBody
+	ReadableShopOrder calculateOrderTotal(@ModelAttribute(value = "order") ShopOrder order, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+
+		Language language = (Language) request.getAttribute("LANGUAGE");
+		MerchantStore store = (MerchantStore) request.getAttribute(Constants.MERCHANT_STORE);
+		String shoppingCartCode = getSessionAttribute(Constants.SHOPPING_CART, request);
+
+		Validate.notNull(shoppingCartCode, "shoppingCartCode does not exist in the session");
+
 		ReadableShopOrder readableOrder = new ReadableShopOrder();
 		try {
 
-			//re-generate cart
+			// re-generate cart
 			com.salesmanager.core.business.shoppingcart.model.ShoppingCart cart = shoppingCartFacade.getShoppingCartModel(shoppingCartCode, store);
 
 			ReadableShopOrderPopulator populator = new ReadableShopOrderPopulator();
 			populator.populate(order, readableOrder, store, language);
-			
 
-			//re-create a quote
-			//ShippingQuote quote = orderFacade.getShippingQuote(cart, order, store, language);
-				
-			//if(quote!=null) {
-					//if(StringUtils.isBlank(quote.getShippingReturnCode())) {
-			if(order.getSelectedShippingOption()!=null) {
-						ShippingSummary summary = (ShippingSummary)request.getSession().getAttribute("SHIPPING_SUMMARY");
-						@SuppressWarnings("unchecked")
-						List<ShippingOption> options = (List<ShippingOption>)request.getSession().getAttribute("SHIPPING_OPTIONS");
-						
-						
-						order.setShippingSummary(summary);//for total calculation
-						
-						
-						ReadableShippingSummary readableSummary = new ReadableShippingSummary();
-						ReadableShippingSummaryPopulator readableSummaryPopulator = new ReadableShippingSummaryPopulator();
-						readableSummaryPopulator.setPricingService(pricingService);
-						readableSummaryPopulator.populate(summary, readableSummary, store, language);
-						
-						
-						if(!CollectionUtils.isEmpty(options)) {
-						
-							//get submitted shipping option
-							ShippingOption quoteOption = null;
-							ShippingOption selectedOption = order.getSelectedShippingOption();
+			// re-create a quote
+			// ShippingQuote quote = orderFacade.getShippingQuote(cart, order,
+			// store, language);
 
-							
-							
-							//check if selectedOption exist
-							for(ShippingOption shipOption : options) {
-								if(!StringUtils.isBlank(shipOption.getOptionId()) && shipOption.getOptionId().equals(selectedOption.getOptionId())) {
-									quoteOption = shipOption;
-								}
-							}
-							
-							if(quoteOption==null) {
-								quoteOption = options.get(0);
-							}
-							
-							
-							readableSummary.setSelectedShippingOption(quoteOption);
-							readableSummary.setShippingOptions(options);
-							
+			// if(quote!=null) {
+			// if(StringUtils.isBlank(quote.getShippingReturnCode())) {
+			if (order.getSelectedShippingOption() != null) {
+				ShippingSummary summary = (ShippingSummary) request.getSession().getAttribute("SHIPPING_SUMMARY");
+				@SuppressWarnings("unchecked")
+				List<ShippingOption> options = (List<ShippingOption>) request.getSession().getAttribute("SHIPPING_OPTIONS");
 
-							summary.setShippingOption(quoteOption.getOptionId());
-							summary.setShipping(quoteOption.getOptionPrice());
-						
+				order.setShippingSummary(summary);// for total calculation
+
+				ReadableShippingSummary readableSummary = new ReadableShippingSummary();
+				ReadableShippingSummaryPopulator readableSummaryPopulator = new ReadableShippingSummaryPopulator();
+				readableSummaryPopulator.setPricingService(pricingService);
+				readableSummaryPopulator.populate(summary, readableSummary, store, language);
+
+				if (!CollectionUtils.isEmpty(options)) {
+
+					// get submitted shipping option
+					ShippingOption quoteOption = null;
+					ShippingOption selectedOption = order.getSelectedShippingOption();
+
+					// check if selectedOption exist
+					for (ShippingOption shipOption : options) {
+						if (!StringUtils.isBlank(shipOption.getOptionId()) && shipOption.getOptionId().equals(selectedOption.getOptionId())) {
+							quoteOption = shipOption;
 						}
-
-						
-						readableOrder.setShippingSummary(readableSummary);
-
-					
-					//}
-					
-/*					if(quote.getShippingReturnCode()!=null && quote.getShippingReturnCode().equals(ShippingQuote.NO_SHIPPING_MODULE_CONFIGURED)) {
-						LOGGER.error("Shipping quote error " + quote.getShippingReturnCode());
-						readableOrder.setErrorMessage(messages.getMessage("message.noshipping", locale));
 					}
-					
-					if(!StringUtils.isBlank(quote.getQuoteError())) {
-						LOGGER.error("Shipping quote error " + quote.getQuoteError());
-						readableOrder.setErrorMessage(messages.getMessage("message.noshipping", locale));
+
+					if (quoteOption == null) {
+						quoteOption = options.get(0);
 					}
-					
-					if(quote.getShippingReturnCode()!=null && quote.getShippingReturnCode().equals(ShippingQuote.NO_SHIPPING_TO_SELECTED_COUNTRY)) {
-						LOGGER.error("Shipping quote error " + quote.getShippingReturnCode());
-						readableOrder.setErrorMessage(messages.getMessage("message.noshipping", locale));
-					}*/
+
+					readableSummary.setSelectedShippingOption(quoteOption);
+					readableSummary.setShippingOptions(options);
+
+					summary.setShippingOption(quoteOption.getOptionId());
+					summary.setShipping(quoteOption.getOptionPrice());
+
+				}
+
+				readableOrder.setShippingSummary(readableSummary);
+
+				// }
+
+				/*
+				 * if(quote.getShippingReturnCode()!=null &&
+				 * quote.getShippingReturnCode
+				 * ().equals(ShippingQuote.NO_SHIPPING_MODULE_CONFIGURED)) {
+				 * LOGGER.error("Shipping quote error " +
+				 * quote.getShippingReturnCode());
+				 * readableOrder.setErrorMessage(
+				 * messages.getMessage("message.noshipping", locale)); }
+				 * 
+				 * if(!StringUtils.isBlank(quote.getQuoteError())) {
+				 * LOGGER.error("Shipping quote error " +
+				 * quote.getQuoteError());
+				 * readableOrder.setErrorMessage(messages
+				 * .getMessage("message.noshipping", locale)); }
+				 * 
+				 * if(quote.getShippingReturnCode()!=null &&
+				 * quote.getShippingReturnCode
+				 * ().equals(ShippingQuote.NO_SHIPPING_TO_SELECTED_COUNTRY)) {
+				 * LOGGER.error("Shipping quote error " +
+				 * quote.getShippingReturnCode());
+				 * readableOrder.setErrorMessage(
+				 * messages.getMessage("message.noshipping", locale)); }
+				 */
 			}
-			
-			//set list of shopping cart items for core price calculation
+
+			// set list of shopping cart items for core price calculation
 			List<ShoppingCartItem> items = new ArrayList<ShoppingCartItem>(cart.getLineItems());
 			order.setShoppingCartItems(items);
-			
+
 			OrderTotalSummary orderTotalSummary = orderFacade.calculateOrderTotal(store, order, language);
-			
-			
+
 			ReadableOrderTotalPopulator totalPopulator = new ReadableOrderTotalPopulator();
 			totalPopulator.setMessages(messages);
 			totalPopulator.setPricingService(pricingService);
 
 			List<ReadableOrderTotal> subtotals = new ArrayList<ReadableOrderTotal>();
-			for(OrderTotal total : orderTotalSummary.getTotals()) {
-				if(!total.getOrderTotalCode().equals("order.total.total")) {
+			for (OrderTotal total : orderTotalSummary.getTotals()) {
+				if (!total.getOrderTotalCode().equals("order.total.total")) {
 					ReadableOrderTotal t = new ReadableOrderTotal();
 					totalPopulator.populate(total, t, store, language);
 					subtotals.add(t);
-				} else {//grand total
+				} else {// grand total
 					ReadableOrderTotal ot = new ReadableOrderTotal();
 					totalPopulator.populate(total, ot, store, language);
 					readableOrder.setGrandTotal(ot.getTotal());
 				}
 			}
-			
-			
+
 			readableOrder.setSubTotals(subtotals);
-		
-		} catch(Exception e) {
-			LOGGER.error("Error while getting shipping quotes",e);
+
+		} catch (Exception e) {
+			LOGGER.error("Error while getting shipping quotes", e);
 			readableOrder.setErrorMessage(messages.getMessage("message.error", locale));
 		}
-		
+
 		return readableOrder;
 	}
-	
-
 
 }

@@ -394,9 +394,9 @@ function initPayment(paymentSelection) {
 				console.log(status);
 				if(status==0 || status ==9999) {
 					
-					var data = response.dataMap.url;
+					var data = 'commit.html';
 					console.log(response.dataMap.url);
-					location.href=response.dataMap.url;
+					location.href='commit.html';
 
 				} else {
 					console.log('Wrong status ' + status);
@@ -557,11 +557,11 @@ $(document).ready(function() {
 			resetErrorMessage();
 			$('#pageContainer').showLoading();
 			var paymentSelection = $('input[name=paymentMethodType]:checked', checkoutFormId).val();
-			if(paymentSelection.contains('paypal')) {
+			if(paymentSelection=='paypal') {
 
 				initPayment(paymentSelection);
 				
-			} else if(paymentSelection.contains('moneyorder')) {
+			} else if(paymentSelection=='moneyorder') {
 				
 				initPayment(paymentSelection);
 				
