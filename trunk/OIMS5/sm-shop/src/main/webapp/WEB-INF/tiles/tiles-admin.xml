@@ -461,6 +461,18 @@
   		<put-attribute name="body" value="/pages/admin/billing/creditnotelisting.jsp" /> 
   	</definition>
   	
+  	<definition name="admin-product-sharing" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/products/product-sharing.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-manufacturer-sharing" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/products/manufacturer-sharing.jsp" /> 
+  	</definition>
+  	
+  	<definition name="admin-category-sharing" template="/layout/admin/layout.jsp">
+  		<put-attribute name="body" value="/pages/admin/products/category-sharing.jsp" /> 
+  	</definition>
+  	
   	<!-- <definition name="admin-sales-order-booking-listing" template="/layout/admin/layout.jsp">
   		<put-attribute name="body" value="/pages/admin/orders/salesorderbookings.jsp" /> 
   	</definition> -->

@@ -58,7 +58,6 @@ import com.salesmanager.web.shop.controller.shoppingCart.facade.ShoppingCartFaca
 import com.salesmanager.web.utils.LabelUtils;
 
 @Controller
-@RequestMapping(Constants.SHOP_URI+"/order")
 public class ShoppingOrderController extends AbstractController {
 	
 	private static final Logger LOGGER = LoggerFactory
@@ -94,9 +93,11 @@ public class ShoppingOrderController extends AbstractController {
 	@Autowired
 	private PricingService pricingService;
 	
-	@RequestMapping("/checkout.html")
+	
+	@RequestMapping("/shop/order/checkout.html")
 	public String displayCheckout(@CookieValue("cart") String cookie, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
+		System.out.println("======/shop/order/checkout.html========================================");
 		Language language = (Language)request.getAttribute("LANGUAGE");
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.MERCHANT_STORE);
 		Customer customer = (Customer)request.getSession().getAttribute(Constants.CUSTOMER);
@@ -244,9 +245,10 @@ public class ShoppingOrderController extends AbstractController {
 
 		model.addAttribute("order",order);
 		model.addAttribute("paymentMethods", paymentMethods);
-		
+		System.out.println("===============checkout done===============");
 		/** template **/
 		StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Checkout.checkout).append(".").append(store.getStoreTemplate());
+		System.out.println("=============template>>>"+template);
 		return template.toString();
 
 		
@@ -262,7 +264,7 @@ public class ShoppingOrderController extends AbstractController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/commit.html")
+	@RequestMapping("/shop/order/commit.html")
 	public String commitOrder(Model model, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
 		
@@ -285,7 +287,7 @@ public class ShoppingOrderController extends AbstractController {
 		
 	}
 	
-	@RequestMapping("/commitShopOrder.html")
+	@RequestMapping("/shop/order/commitShopOrder.html")
 	public String commitShopOrder(@Valid @ModelAttribute(value="order") ShopOrder order, BindingResult bindingResult, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
 		MerchantStore store = (MerchantStore)request.getAttribute(Constants.MERCHANT_STORE);
@@ -388,7 +390,7 @@ public class ShoppingOrderController extends AbstractController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value={"/shippingQuotes.html"}, method=RequestMethod.POST)
+	@RequestMapping(value={"/shop/order/shippingQuotes.html"}, method=RequestMethod.POST)
 	public @ResponseBody ReadableShopOrder calculateShipping(@ModelAttribute(value="order") ShopOrder order, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		
 		Language language = (Language)request.getAttribute("LANGUAGE");
@@ -495,7 +497,7 @@ public class ShoppingOrderController extends AbstractController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value={"/calculateOrderTotal.html"}, method=RequestMethod.POST)
+	@RequestMapping(value={"/shop/order/calculateOrderTotal.html"}, method=RequestMethod.POST)
 	public @ResponseBody ReadableShopOrder calculateOrderTotal(@ModelAttribute(value="order") ShopOrder order, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		
 		Language language = (Language)request.getAttribute("LANGUAGE");

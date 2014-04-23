@@ -176,19 +176,16 @@
 		]
 	}},
 	{"menu":{
-		"code":"master-entry","url":"","role":"PRODUCTS","order":5,"menus":
+		"code":"inventory-sharing","url":"","role":"PRODUCTS","order":5,"menus":
 		[
 			{"menu":{
-				"code":"pack-size-list","url":"/admin/catalogue/master/listpacksize.html","role":"PRODUCTS","order":0
+				"code":"product-sharing","url":"/admin/catalogue/sharing/byProduct.html","role":"PRODUCTS","order":0
 			}},
 			{"menu":{
-				"code":"pack-size-create","url":"/admin/catalogue/master/createpacksize.html","role":"PRODUCTS","order":1
+				"code":"manufacturer-sharing","url":"/admin/catalogue/sharing/byManufacturer.html","role":"PRODUCTS","order":1
 			}},
 			{"menu":{
-				"code":"shades-list","url":"/admin/catalogue/master/listshade.html","role":"PRODUCTS","order":2
-			}},
-			{"menu":{
-				"code":"shades-create","url":"/admin/catalogue/master/createshade.html","role":"PRODUCTS","order":3
+				"code":"category-sharing","url":"/admin/catalogue/sharing/byCategory.html","role":"PRODUCTS","order":2
 			}}
 		]
 	}}

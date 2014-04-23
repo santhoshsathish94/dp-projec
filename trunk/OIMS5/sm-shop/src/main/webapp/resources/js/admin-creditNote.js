@@ -369,13 +369,13 @@ function calculateAmount(calledDiv) {
 		qty = 0;
 	}
 	
-	amount = qty * unitPrice;
+	amount = parseFloat(qty * unitPrice);
 	
 	var taxAmt = parseFloat($('#tax_amount'+rowValue).val());
 	
-	var taxAmount = taxAmt * amount;
+	var taxAmount = parseFloat((taxAmt * amount)/100);
 	
-	var total = amount + taxAmount;
+	var total = parseFloat(amount + taxAmount);
 	
 	$('#prod_amount'+rowValue).val(total.toFixed(2));
 	
