@@ -513,8 +513,12 @@ public class ShippingServiceImpl implements ShippingService {
 			List<ShippingOption> shippingOptions = null;
 					
 			try {
+				
+				System.out.println("shippingOptions==========>>"+shippingOptions);
 				shippingOptions = shippingQuoteModule.getShippingQuotes(packages, orderTotal, delivery, store, configuration, shippingModule, shippingConfiguration, locale);
+				System.out.println("set shippingOptions==========>>"+shippingOptions);
 			} catch(Exception e) {
+				System.out.println("ERROR shippingOptions==========>>"+ e);
 				LOGGER.error("Error while calculating shipping", e);
 				merchantLogService.save(
 						new MerchantLog(store,

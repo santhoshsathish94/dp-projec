@@ -115,6 +115,7 @@ public class TaxServiceImpl
 		}
 		
 		Country country = customer.getBilling().getCountry();
+		
 		Zone zone = customer.getBilling().getZone();
 		String stateProvince = customer.getBilling().getState();
 		

@@ -16,6 +16,10 @@ public class SalesInvoiceProductEntity {
 	
 	public String productName;
 	
+	public String productDispalyName;
+	
+	public String productManu;
+	
 	public Long variantId;
 	
 	public String description;
@@ -46,6 +50,21 @@ public class SalesInvoiceProductEntity {
 		this.amount = amount;
 	}
 	
+	public SalesInvoiceProductEntity(Long productId, String productName,String productDispalyName, Long variantId, String description,
+			Integer quantity, String uom, BigDecimal unitPrice, String taxClass, BigDecimal amount) {
+		
+		this.productId = productId;
+		this.productName = productName;
+		this.productDispalyName=productDispalyName;
+		this.variantId = variantId;
+		this.description = description;
+		this.quantity = quantity;
+		this.uom = uom;
+		this.unitPrice = unitPrice;
+		this.taxClass = taxClass;
+		this.amount = amount;
+	}
+	
 	public static List<SalesInvoiceProductEntity> getSalesInvoiceProductEntity(List<Product> productList) {
 		
 		List<SalesInvoiceProductEntity> siProductList = new ArrayList<SalesInvoiceProductEntity>();
@@ -67,6 +86,7 @@ public class SalesInvoiceProductEntity {
 			} else {
 				siProduct.productId = prod.getId();
 				siProduct.productName = prod.getSku();
+				siProduct.productDispalyName = prod.getProductDescription().getName();
 				siProduct.description = prod.getProductDescription().getDescription();
 				siProduct.quantity = qty;
 				siProduct.unitPrice = unitPrice;
@@ -87,7 +107,9 @@ public class SalesInvoiceProductEntity {
 			siProduct = new SalesInvoiceProductEntity();
 			
 			String origProdName = prodAttr.getProduct().getSku();
+			String origProdDisplayName = prodAttr.getProduct().getProductDescription().getName();
 			String prodOpt = prodAttr.getProductOption().getCode();
+			String prodTaxClass = prodAttr.getProduct().getTaxClass().getTitle();
 			
 			if(prodAttr.getProductOptionValue().getDescriptions() != null && prodAttr.getProductOptionValue().getDescriptions().size() > 0) {
 				
@@ -95,12 +117,13 @@ public class SalesInvoiceProductEntity {
 					
 					siProduct.productId = prodAttr.getProduct().getId();
 					siProduct.productName = origProdName + " " + prodOpt + " " + prodOptValDesc.getName();
+					siProduct.productDispalyName = origProdDisplayName;
 					siProduct.variantId = prodAttr.getId();
 					siProduct.description = prodDesc;
 					siProduct.quantity = qty;
 					siProduct.unitPrice = unitPrice;
 					siProduct.amount = amount;
-					
+					siProduct.amount = amount;					
 					siProductList.add(siProduct);
 				}
 			}

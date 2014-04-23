@@ -75,9 +75,9 @@ public class PaymentTestCase extends AbstractSalesManagerCoreTestCase {
 	    payment.setPaymentType(PaymentType.CREDITCARD);
 		payment.setCardOwner("Test User");
 		payment.setCredidCardValidationNumber("0421");
-		payment.setCreditCardNumber("545412345678");
+		payment.setCreditCardNumber("545412345674");
 		payment.setExpirationMonth("04");
-		payment.setExpirationYear("16");
+		payment.setExpirationYear("2016");
 		payment.setCreditCard(CreditCardType.MASTERCARD);
 		payment.setTransactionType(TransactionType.AUTHORIZECAPTURE);
 	    
