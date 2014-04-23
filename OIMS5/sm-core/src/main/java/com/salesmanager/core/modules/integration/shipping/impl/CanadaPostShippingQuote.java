@@ -101,7 +101,7 @@ public class CanadaPostShippingQuote implements ShippingQuoteModule {
 	public List<ShippingOption> getShippingQuotes(List<PackageDetails> packages, BigDecimal orderTotal, Delivery delivery, MerchantStore store, IntegrationConfiguration configuration, IntegrationModule module, ShippingConfiguration shippingConfiguration, Locale locale) throws IntegrationException {
 		BigDecimal total = orderTotal;
 
-
+		System.out.println("====================In CanadaPostShippingQuote================");
 		Validate.notNull(packages, "Packages are null");
 		Validate.notNull(delivery.getPostalCode(), "Delivery postal code is null");
 		

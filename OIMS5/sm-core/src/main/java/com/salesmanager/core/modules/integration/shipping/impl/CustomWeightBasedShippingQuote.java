@@ -28,96 +28,87 @@ import com.salesmanager.core.modules.integration.shipping.model.ShippingQuoteMod
 import com.salesmanager.core.utils.ProductPriceUtils;
 
 public class CustomWeightBasedShippingQuote implements ShippingQuoteModule {
-	
+
 	public final static String MODULE_CODE = "weightBased";
 	private final static String CUSTOM_WEIGHT = "CUSTOM_WEIGHT";
-	
+
 	@Autowired
 	private MerchantConfigurationService merchantConfigurationService;
-	
+
 	@Autowired
 	private ProductPriceUtils productPriceUtils;
 
-
 	@Override
-	public void validateModuleConfiguration(
-			IntegrationConfiguration integrationConfiguration,
-			MerchantStore store) throws IntegrationException {
-		
-		
-		//not used, it has its own controller with complex validators
+	public void validateModuleConfiguration(IntegrationConfiguration integrationConfiguration, MerchantStore store) throws IntegrationException {
+
+		// not used, it has its own controller with complex validators
 
 	}
-	
 
 	@Override
-	public CustomIntegrationConfiguration getCustomModuleConfiguration(
-			MerchantStore store) throws IntegrationException {
+	public CustomIntegrationConfiguration getCustomModuleConfiguration(MerchantStore store) throws IntegrationException {
 
 		try {
 
 			MerchantConfiguration configuration = merchantConfigurationService.getMerchantConfiguration(MODULE_CODE, store);
-	
-			if(configuration!=null) {
+
+			if (configuration != null) {
 				String value = configuration.getValue();
 				ObjectMapper mapper = new ObjectMapper();
 				try {
 					CustomShippingQuotesConfiguration config = mapper.readValue(value, CustomShippingQuotesConfiguration.class);
 					return config;
-				} catch(Exception e) {
+				} catch (Exception e) {
 					throw new ServiceException("Cannot parse json string " + value);
 				}
-	
+
 			} else {
 				CustomShippingQuotesConfiguration custom = new CustomShippingQuotesConfiguration();
 				custom.setModuleCode(MODULE_CODE);
 				return custom;
 			}
-		
+
 		} catch (Exception e) {
 			throw new IntegrationException(e);
 		}
-		
-		
+
 	}
 
 	@Override
-	public List<ShippingOption> getShippingQuotes(
-			List<PackageDetails> packages, BigDecimal orderTotal,
-			Delivery delivery, MerchantStore store,
-			IntegrationConfiguration configuration, IntegrationModule module,
-			ShippingConfiguration shippingConfiguration, Locale locale)
-			throws IntegrationException {
+	public List<ShippingOption> getShippingQuotes(List<PackageDetails> packages, BigDecimal orderTotal, Delivery delivery, MerchantStore store, IntegrationConfiguration configuration,
+			IntegrationModule module, ShippingConfiguration shippingConfiguration, Locale locale) throws IntegrationException {
+		System.out.println("====================In CustomWeightBasedShippingQuote================");
+		// get configuration
+		CustomShippingQuotesConfiguration customConfiguration = (CustomShippingQuotesConfiguration) this.getCustomModuleConfiguration(store);
 
-		
-		
-		//get configuration
-		CustomShippingQuotesConfiguration customConfiguration = (CustomShippingQuotesConfiguration)this.getCustomModuleConfiguration(store);
-		
-		
 		List<CustomShippingQuotesRegion> regions = customConfiguration.getRegions();
-		
-		ShippingBasisType shippingType =  shippingConfiguration.getShippingBasisType();
-		ShippingOption shippingOption = null;
-		try {
-			
+		System.out.println("====================In regions length================" + regions.size());
+		System.out.println("====================In regions================" + regions.toString());
 
-			for(CustomShippingQuotesRegion region : customConfiguration.getRegions()) {
-	
-				for(String countryCode : region.getCountries()) {
-					if(countryCode.equals(delivery.getCountry().getIsoCode())) {
-						
-						
-						//determine shipping weight
+		ShippingBasisType shippingType = shippingConfiguration.getShippingBasisType();
+		ShippingOption shippingOption = null;
+		System.out.println("====================In shippingType================" + shippingType.name());
+		try {
+
+			for (CustomShippingQuotesRegion region : customConfiguration.getRegions()) {
+
+				for (String countryCode : region.getCountries()) {
+					System.out.println("countryCode>>>"+countryCode+"====="+delivery.getCountry().getIsoCode());
+					if (countryCode.equals(delivery.getCountry().getIsoCode())) {
+
+						// determine shipping weight
 						double weight = 0;
-						for(PackageDetails packageDetail : packages) {
+						for (PackageDetails packageDetail : packages) {
 							weight = weight + packageDetail.getShippingWeight();
 						}
-						
-						//see the price associated with the width
+						System.out.println("weight>>>"+weight);
+						// see the price associated with the width
 						List<CustomShippingQuoteWeightItem> quoteItems = region.getQuoteItems();
-						for(CustomShippingQuoteWeightItem quoteItem : quoteItems) {
-							if(weight<= quoteItem.getMaximumWeight()) {
+						System.out.println("quoteItems size>>>"+quoteItems.size());
+						System.out.println("quoteItems>>>"+quoteItems.toString());
+						for (CustomShippingQuoteWeightItem quoteItem : quoteItems) {
+							System.out.println("weight>>>"+weight+"=====quoteItem.getMaximumWeight()>>"+quoteItem.getMaximumWeight());
+							if (weight <= quoteItem.getMaximumWeight()) {
 								shippingOption = new ShippingOption();
 								shippingOption.setOptionCode(new StringBuilder().append(CUSTOM_WEIGHT).toString());
 								shippingOption.setOptionId(new StringBuilder().append(CUSTOM_WEIGHT).append("_").append(region.getCustomRegionName()).toString());
@@ -126,28 +117,25 @@ public class CustomWeightBasedShippingQuote implements ShippingQuoteModule {
 								break;
 							}
 						}
-						
+
 					}
-					
-					
+
 				}
-				
+
 			}
-			
-			if(shippingOption!=null) {
+
+			if (shippingOption != null) {
 				List<ShippingOption> options = new ArrayList<ShippingOption>();
 				options.add(shippingOption);
 				return options;
 			}
-			
+
 			return null;
-		
+
 		} catch (Exception e) {
 			throw new IntegrationException(e);
 		}
 
 	}
-
-
 
 }

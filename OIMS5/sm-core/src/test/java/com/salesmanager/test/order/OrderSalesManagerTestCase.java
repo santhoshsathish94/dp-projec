@@ -64,18 +64,6 @@ public class OrderSalesManagerTestCase extends AbstractSalesManagerCoreTestCase 
 		// create a merchant
 		MerchantStore store = merchantService.getMerchantStore(MerchantStore.DEFAULT_STORE);
 		ProductType generalType = productTypeService.getProductType(ProductType.GENERAL_TYPE);
-
-		
-
-		
-
-		
-		
-
-
-		
-
-		
 		// Create a customer (user name[nick] : shopizer password : password)
 
 		Customer customer = new Customer();
