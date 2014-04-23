@@ -1,5 +1,6 @@
 package com.salesmanager.core.modules.integration.shipping.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONAware;
@@ -9,14 +10,18 @@ public class CustomShippingQuotesRegion implements JSONAware {
 	private String customRegionName;//a name given by the merchant for this custom region
 	private List<String> countries;//a list of country code for this region
 	
-	private List<CustomShippingQuoteWeightItem> quoteItems;//price max weight
+	private List<CustomShippingQuoteWeightItem> quoteItems= new ArrayList<CustomShippingQuoteWeightItem>();//price max weight
 
 	public void setQuoteItems(List<CustomShippingQuoteWeightItem> quoteItems) {
 		this.quoteItems = quoteItems;
+		
 	}
 
 	public List<CustomShippingQuoteWeightItem> getQuoteItems() {
-		return quoteItems;
+		
+		List<CustomShippingQuoteWeightItem> itmes = new ArrayList<CustomShippingQuoteWeightItem>();
+		itmes.add(new CustomShippingQuoteWeightItem());
+		return itmes;
 	}
 
 	public void setCountries(List<String> countries) {
