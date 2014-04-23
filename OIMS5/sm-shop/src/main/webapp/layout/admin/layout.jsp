@@ -478,6 +478,19 @@ response.setDateHeader ("Expires", -1);
 			$("#sale-order-booking-create-link").click(function() {
 				window.location='<c:url value="/admin/orders/createsaleorderbooking.html" />';
 			});
+
+
+			///  inventory sharing
+			
+			$("#product-sharing-link").click(function() {
+				window.location='<c:url value="/admin/catalogue/sharing/byProduct.html" />';
+			});
+			$("#manufacturer-sharing-link").click(function() {
+				window.location='<c:url value="/admin/catalogue/sharing/byManufacturer.html" />';
+			});
+			$("#category-sharing-link").click(function() {
+				window.location='<c:url value="/admin/catalogue/sharing/byCategory.html" />';
+			});			
 			
 		}); 
 		

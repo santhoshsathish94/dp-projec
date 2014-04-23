@@ -27,7 +27,7 @@
 	overflow-y: auto;
 	/* prevent horizontal scrollbar */
 	overflow-x: hidden;
-	max-width: 190px;
+	max-width: 350px;
 }
 
 .ui-autocomplete {
@@ -35,7 +35,7 @@
 	overflow-y: auto;
 	/* prevent horizontal scrollbar */
 	overflow-x: hidden;
-	max-width: 205px;
+	max-width: 305px;
 }
 /* IE 6 doesn't support max-height
 * we use height instead, but this forces the menu to always be this tall

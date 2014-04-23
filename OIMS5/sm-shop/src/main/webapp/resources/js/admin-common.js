@@ -150,7 +150,7 @@ function createProductAmountDiv(productCount) {
 
 
 function onLoadSalesInvoice() {
-	setupCustomerAutoComplete('customerName');
+	setupCustomerPhoneticAutoComplete('customerName');
 	
 	if($('#id').val() == '') {
 		setupProductAutoComplete('productName1');
@@ -180,6 +180,34 @@ function setupCustomerAutoComplete(labelId) {
 					response($.map(data, function(item) {
 						return {
 							label: item.name,
+							val: item.id
+						};
+					}));
+					
+				}
+			});
+		},
+		select: function (e, i) {
+            $("#customer").val(i.item.val);
+            $(this).val(i.item.label);
+        },
+		minLength: 2
+	});
+}
+
+function setupCustomerPhoneticAutoComplete(labelId) {
+	
+	$( "#"+labelId ).autocomplete({
+		source: function( request, response ) {
+			$.ajax({
+				type: 'POST',
+				url: '/ishop/admin/catalogue/sharing/loadCustomer.html',
+				data: {fieldValue: $( "#"+labelId ).val()},
+				dataType: 'json',
+				success: function(data) {
+					response($.map(data, function(item) {
+						return {
+							label: item.nick+":"+item.name+":"+item.company,
 							val: item.id
 						};
 					}));
