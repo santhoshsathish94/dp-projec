@@ -9,7 +9,7 @@ import com.salesmanager.core.business.generic.dao.SalesManagerEntityDao;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
 
 public interface CustomerDAO extends SalesManagerEntityDao<Long, Customer> {
-	
+
 	public List<Customer> getByName(String name);
 
 	List<Customer> listByStore(MerchantStore store);
@@ -19,10 +19,12 @@ public interface CustomerDAO extends SalesManagerEntityDao<Long, Customer> {
 	CustomerList listByStore(MerchantStore store, CustomerCriteria criteria);
 
 	Customer getByNick(String nick, int storeId);
-	
+
 	Customer getByCustomerCompany(String customerCompany);
-	
+
 	List<String> getCustomerListByCustomerCompany(String accountName);
-	
+
 	List<Customer> getCustomerListByCustomerCompany(MerchantStore store, String accountName);
+
+	List<Customer> getByNameOrIdOrCompany(MerchantStore store, String searchString);
 }

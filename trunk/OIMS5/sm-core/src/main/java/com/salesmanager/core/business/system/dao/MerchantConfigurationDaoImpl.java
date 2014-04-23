@@ -20,7 +20,8 @@ public class MerchantConfigurationDaoImpl extends SalesManagerEntityDaoImpl<Long
 	@Override
 	public MerchantConfiguration getMerchantConfiguration(String key, MerchantStore store) {
 		
-		
+		System.out.println("=========key========>>>"+key);
+		System.out.println("=========store========>>>"+store.getCode());
 		
 		QMerchantConfiguration qMerchantConfiguration = QMerchantConfiguration.merchantConfiguration;
 

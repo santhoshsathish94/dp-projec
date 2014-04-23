@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -47,6 +48,7 @@ import com.salesmanager.core.business.reference.language.service.LanguageService
 import com.salesmanager.core.business.reference.zone.service.ZoneService;
 import com.salesmanager.core.business.shoppingcart.service.ShoppingCartService;
 import com.salesmanager.core.business.system.service.EmailService;
+import com.salesmanager.core.business.user.service.GroupService;
 
 @ContextConfiguration(locations = {
 		"classpath:spring/test-spring-context.xml"
@@ -152,6 +154,11 @@ public abstract class AbstractSalesManagerCoreTestCase {
 	
 	@Autowired
 	protected EmailService emailService;
+	
+
+
+	@Autowired
+	protected GroupService groupService;
 
 
 	@Before
@@ -171,7 +178,7 @@ public abstract class AbstractSalesManagerCoreTestCase {
 	private void populate() throws ServiceException {
 		
 		
-		initializationDatabase.populate("TEST");
+		//initializationDatabase.populate("TEST");
 		
 
 	}

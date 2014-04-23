@@ -21,13 +21,12 @@ import com.salesmanager.core.business.merchant.model.MerchantStore;
 public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<Long, Customer> implements CustomerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerServiceImpl.class);
-	
+
 	private CustomerDAO customerDAO;
-	
+
 	@Autowired
 	private CustomerAttributeService customerAttributeService;
 
-	
 	@Autowired
 	public CustomerServiceImpl(CustomerDAO customerDAO) {
 		super(customerDAO);
@@ -38,41 +37,41 @@ public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<Long, Cus
 	public List<Customer> getByName(String firstName) {
 		return customerDAO.getByName(firstName);
 	}
-	
+
 	@Override
 	public Customer getById(Long id) {
-			return customerDAO.getById(id);		
+		return customerDAO.getById(id);
 	}
-	
+
 	@Override
 	public Customer getByNick(String nick) {
-		return customerDAO.getByNick(nick);	
+		return customerDAO.getByNick(nick);
 	}
-	
+
 	@Override
 	public Customer getByNick(String nick, int storeId) {
-		return customerDAO.getByNick(nick, storeId);	
+		return customerDAO.getByNick(nick, storeId);
 	}
-	
+
 	@Override
 	public List<Customer> listByStore(MerchantStore store) {
 		return customerDAO.listByStore(store);
 	}
-	
+
 	@Override
 	public CustomerList listByStore(MerchantStore store, CustomerCriteria criteria) {
-		return customerDAO.listByStore(store,criteria);
+		return customerDAO.listByStore(store, criteria);
 	}
 
-	@Override	
+	@Override
 	public void saveOrUpdate(Customer customer) throws ServiceException {
 
 		LOGGER.debug("Creating Customer");
-		
-		if(customer.getId()!=null && customer.getId()>0) {
+
+		if (customer.getId() != null && customer.getId() > 0) {
 			super.update(customer);
-		} else {			
-		
+		} else {
+
 			super.create(customer);
 
 		}
@@ -80,31 +79,36 @@ public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<Long, Cus
 
 	public void delete(Customer customer) throws ServiceException {
 		customer = getById(customer.getId());
-		
-		//delete attributes
-		List<CustomerAttribute> attributes =customerAttributeService.getByCustomer(customer.getMerchantStore(), customer);
-		if(attributes!=null) {
-			for(CustomerAttribute attribute : attributes) {
+
+		// delete attributes
+		List<CustomerAttribute> attributes = customerAttributeService.getByCustomer(customer.getMerchantStore(), customer);
+		if (attributes != null) {
+			for (CustomerAttribute attribute : attributes) {
 				customerAttributeService.delete(attribute);
 			}
 		}
 		customerDAO.delete(customer);
 
 	}
-	
+
 	@Override
 	public Customer getByCustomerCompany(String customerCompany) {
-		return customerDAO.getByCustomerCompany(customerCompany);	
+		return customerDAO.getByCustomerCompany(customerCompany);
 	}
 
 	@Override
 	public List<String> getCustomerListByCustomerCompany(String accountName) {
 		return customerDAO.getCustomerListByCustomerCompany(accountName);
 	}
-	
+
 	@Override
 	public List<Customer> getCustomerListByCustomerCompany(MerchantStore store, String accountName) {
 		return customerDAO.getCustomerListByCustomerCompany(store, accountName);
+	}
+
+	@Override
+	public List<Customer> getByNameOrIdOrCompany(MerchantStore store, String searchString) {
+		return customerDAO.getByNameOrIdOrCompany(store, searchString);
 	}
 
 }

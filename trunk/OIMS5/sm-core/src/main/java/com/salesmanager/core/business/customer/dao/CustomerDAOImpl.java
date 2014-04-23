@@ -391,4 +391,34 @@ public class CustomerDAOImpl extends SalesManagerEntityDaoImpl<Long, Customer> i
 		
 		return companyList;
 	}
+	
+	@Override
+	public List<Customer> getByNameOrIdOrCompany(MerchantStore store, String searchString) {
+		
+		QCustomer qCustomer = QCustomer.customer;
+
+		QCustomerAttribute qCustomerAttribute = QCustomerAttribute.customerAttribute;
+		QCustomerOption qCustomerOption = QCustomerOption.customerOption;
+		QCustomerOptionValue qCustomerOptionValue = QCustomerOptionValue.customerOptionValue;
+		
+		
+		JPQLQuery query = new JPAQuery (getEntityManager());
+		
+		query.from(qCustomer)
+			.join(qCustomer.merchantStore).fetch()
+			.leftJoin(qCustomer.defaultLanguage).fetch()
+			.leftJoin(qCustomer.attributes,qCustomerAttribute).fetch()
+			.leftJoin(qCustomerAttribute.customerOption, qCustomerOption).fetch()
+			.leftJoin(qCustomerAttribute.customerOptionValue, qCustomerOptionValue).fetch()
+			.leftJoin(qCustomerOption.descriptions).fetch()
+			.leftJoin(qCustomerOptionValue.descriptions).fetch()
+			.where(
+					qCustomer.billing.firstName.like("%"+searchString+"%")
+					.or(qCustomer.billing.lastName.like("%"+searchString+"%"))
+					.or(qCustomer.billing.company.like("%"+searchString+"%"))
+					.or(qCustomer.nick.like("%"+searchString+"%"))
+			);
+		
+		return query.list(qCustomer);
+	}
 }
