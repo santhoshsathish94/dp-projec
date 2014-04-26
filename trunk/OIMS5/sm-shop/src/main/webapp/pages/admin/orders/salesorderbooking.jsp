@@ -22,7 +22,11 @@
 <script src="<c:url value="/resources/js/admin-orders.js" />"></script>
 <script>
 var productCount = 1;
-	
+var ctx = "${pageContext.request.contextPath}";
+var taxClassMap = '';
+<c:if test="${taxRateMap ne null}">
+	taxClassMap = ${taxRateMap};
+</c:if>
 </script>
 <style>
 .ui-autocomplete #customerName {
@@ -30,7 +34,7 @@ var productCount = 1;
 	overflow-y: auto;
 	/* prevent horizontal scrollbar */
 	overflow-x: hidden;
-	max-width: 190px;
+	max-width: 350px;
 }
 
 .ui-autocomplete {
@@ -38,7 +42,7 @@ var productCount = 1;
 	overflow-y: auto;
 	/* prevent horizontal scrollbar */
 	overflow-x: hidden;
-	max-width: 205px;
+	max-width: 350px;
 }
 /* IE 6 doesn't support max-height
 * we use height instead, but this forces the menu to always be this tall
@@ -48,7 +52,7 @@ var productCount = 1;
 	width: 205px;
 }
 .ui-autocomplete-loading {
-		background: white url('/ishop/resources/css/bootstrap/themes/base/images/ui-anim_basic_16x16.gif') right center no-repeat;
+		background: white url('<c:out value="${pageContext.request.contextPath}"/>/resources/css/bootstrap/themes/base/images/ui-anim_basic_16x16.gif') right center no-repeat;
 	}
 </style>
 
@@ -58,11 +62,11 @@ var productCount = 1;
 
 	<h3><s:message code="label.sales.order.booking.title" text="Sales Order Booking: " /></h3><br/>
 	
-	<c:set var="salesOrderBooking" value="" />
+	<c:url var="saveSalesOrderBookingUrl" value="/admin/orders/savesalesorderbooking.html" />
 	
 	<div style="float: left; width: 100%; margin-top: 10px;">
 	
-		<form:form method="POST" commandName="salesOrderBooking" action="${salesOrderBooking}">
+		<form:form method="POST" commandName="salesOrderBooking" action="${saveSalesOrderBookingUrl}">
 			
 			<form:errors path="*" cssClass="alert alert-error" element="div" />
 				
@@ -76,7 +80,17 @@ var productCount = 1;
 						<div class="control-group" style="float: left; margin-bottom: 0px;">
 							<label><s:message code="label.billing.prefix" text="Customer"/></label>
 							<div style="float: left;" class="controls">
-								<form:input cssClass="input-large highlight" path="customer.company" cssStyle="width: 185px;"/>
+								
+								<c:choose>
+									<c:when test="${salesOrderBooking.customerId ne null}">
+										<input class="input-large highlight" id="customerName" style="width: 185px;" value="${customerName}"/>
+									</c:when>
+									<c:otherwise>
+										<input class="input-large highlight" id="customerName" style="width: 185px;" value=""/>
+									</c:otherwise>
+								</c:choose>
+								<form:input type="hidden" path="customerId" id="customerId" value=""/>
+								<%-- <form:input cssClass="input-large highlight" path="customer.company" cssStyle="width: 185px;"/> --%>
 							</div>
 						</div>
 					</div>
@@ -84,7 +98,10 @@ var productCount = 1;
 						<div class="control-group" style="float: left; margin-bottom: 0px;">
 							<label><s:message code="label.billing.prefix" text="Date"/></label>
 							<div style="float: left;" class="controls">
-								<form:input cssClass="input-large highlight" path="bookingDate" cssStyle="width: 95px;"/>
+								<form:input cssClass="input-large highlight" path="bookingDate" cssStyle="width: 95px;" data-date-format="<%=com.salesmanager.core.constants.Constants.DEFAULT_DATE_FORMAT%>" data-datepicker="datepicker"/>
+								<script type="text/javascript">
+									$('#bookingDate').datepicker();
+								</script>
 							</div>
 						</div>
 					</div>
@@ -93,7 +110,7 @@ var productCount = 1;
 						<div class="control-group" style="float: left; margin-bottom: 0px;">
 							<label><s:message code="label.billing.prefix" text="Comments:"/></label>
 							<div style="float: left;" class="controls">
-								<form:textarea cssClass="input-large" path="commant" cssStyle="width: 315px;"/>
+								<form:textarea cssClass="input-large" path="comment" cssStyle="width: 315px;"/>
 							</div>
 						</div>
 					</div>
@@ -107,8 +124,13 @@ var productCount = 1;
 				
 			</div>
 			
-			<%-- <form:hidden path="id"/>
-			<form:hidden path="productJson"/> --%>
+			<form:hidden path="productJson"/>
+			<select id="hiddenTaxClass" style="display: none; width: 100px;">
+				<option value=""></option>
+				<c:forEach items="${taxClasses }" var="taxClass">
+					<option value="${taxClass.id}">${taxClass.code}</option>
+				</c:forEach>
+			</select>
 			
 			<div style="float: left; width: 100%; margin-top: 10px; font-weight: bold;">
 				<span style="float: left; width: 100%; height: 25px;">
@@ -140,3 +162,6 @@ var productCount = 1;
 		
 	</div>
 </div>
+<script>
+	onLoadSalesOrderBooking();
+</script>

@@ -5,8 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.salesmanager.core.business.billing.dao.CreditNoteDao;
 import com.salesmanager.core.business.billing.model.CreditNote;
+import com.salesmanager.core.business.billing.model.CreditNoteProductEntity;
 import com.salesmanager.core.business.generic.service.SalesManagerEntityServiceImpl;
 import com.salesmanager.core.business.billing.model.CreditNoteProduct;
 import com.salesmanager.core.business.generic.exception.ServiceException;
@@ -55,5 +60,27 @@ public class CreditNoteServiceImpl extends SalesManagerEntityServiceImpl<Long, C
 	@Override
 	public void SaveOrUpdate(CreditNoteProduct creditNoteProduct) throws ServiceException {
 		creditNoteDao.SaveOrUpdate(creditNoteProduct);
+	}
+	
+	@Override
+	public void getCreditNoteProductFromJSON(String creditNoteProductJson, CreditNote creditNote) throws ServiceException {
+		
+		JsonArray jsonArr = new JsonParser().parse(creditNoteProductJson).getAsJsonArray();
+		if(jsonArr.size() > 0) {
+			for(int i = 0; i < jsonArr.size(); i++) {
+				JsonObject arrayrObject = jsonArr.get(i).getAsJsonObject();
+				if(arrayrObject != null) {
+					
+					CreditNoteProductEntity creditNoteProductEntity = new Gson().fromJson(arrayrObject, CreditNoteProductEntity.class);
+					
+					CreditNoteProduct creditNoteProduct = CreditNoteProductEntity.populateCreditNoteProduct(creditNoteProductEntity);
+					creditNoteProduct.setCreditNote(creditNote);
+					
+					SaveOrUpdate(creditNoteProduct);
+					
+					//creditNoteProdList.add(CreditNoteProductEntity.populateCreditNoteProduct(creditNoteProductEntity));
+				}
+			}
+		}
 	}
 }

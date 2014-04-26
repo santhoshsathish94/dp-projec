@@ -45,12 +45,13 @@
 	width: 205px;
 }
 .ui-autocomplete-loading {
-		background: white url('/ishop/resources/css/bootstrap/themes/base/images/ui-anim_basic_16x16.gif') right center no-repeat;
+		background: white url('<c:out value="${pageContext.request.contextPath}"/>/resources/css/bootstrap/themes/base/images/ui-anim_basic_16x16.gif') right center no-repeat;
 	}
 </style>
 
 <script type="text/javascript">
 var productCount = 1;
+var ctx = "${pageContext.request.contextPath}";
 </script>
 
 
@@ -228,7 +229,6 @@ var productCount = 1;
 </div>
 
 <script type="text/javascript">
-
 	if(${salesInvoice.id ne null}) {
 		
 		$('#invoiceTypeSelection').hide();

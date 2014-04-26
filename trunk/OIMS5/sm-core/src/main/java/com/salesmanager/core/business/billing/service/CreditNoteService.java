@@ -22,4 +22,6 @@ public interface CreditNoteService  extends SalesManagerEntityService<Long, Cred
 	List<CreditNoteProduct> creditNoteProductByCreditNoteId(Long Id) throws ServiceException;
 	
 	void SaveOrUpdate(CreditNoteProduct creditNoteProduct) throws ServiceException;
+	
+	void getCreditNoteProductFromJSON(String creditNoteProductJson, CreditNote creditNote) throws ServiceException;
 }

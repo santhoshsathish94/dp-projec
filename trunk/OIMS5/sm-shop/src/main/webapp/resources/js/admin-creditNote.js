@@ -252,7 +252,7 @@ function setupProductAutoComplete(labelId) {
 		source: function( request, response ) {
 			$.ajax({
 				type: 'POST',
-				url: '/ishop/admin/billing/loadProductInfo.html',
+				url: ctx + '/admin/ajax/loadProductInfo.html',
 				data: {fieldValue: $( "#"+labelId ).val(), searchType: 'CREDITNOTE'},
 				dataType: 'json',
 				success: function(data) {
@@ -298,7 +298,7 @@ function setupCustomerAutoComplete(labelId) {
 		source: function( request, response ) {
 			$.ajax({
 				type: 'POST',
-				url: '/ishop/admin/billing/loadCustomer.html',
+				url: ctx + '/admin/ajax/loadCustomer.html',
 				data: {fieldValue: $( "#"+labelId ).val()},
 				dataType: 'json',
 				success: function(data) {

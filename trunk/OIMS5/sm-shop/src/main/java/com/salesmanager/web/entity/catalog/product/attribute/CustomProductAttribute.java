@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.salesmanager.web.utils.LogicUtils;
+
 
 import com.salesmanager.core.business.catalog.product.model.attribute.ProductAttribute;
+import com.salesmanager.core.business.service.utils.LogicUtils;
 
 public class CustomProductAttribute {
 

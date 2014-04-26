@@ -45,7 +45,7 @@
 	width: 205px;
 }
 .ui-autocomplete-loading {
-		background: white url('/ishop/resources/css/bootstrap/themes/base/images/ui-anim_basic_16x16.gif') right center no-repeat;
+		background: white url('${pageContext.request.contextPath}/resources/css/bootstrap/themes/base/images/ui-anim_basic_16x16.gif') right center no-repeat;
 	}
 </style>
 
@@ -55,7 +55,7 @@ var taxClassMap = '';
 <c:if test="${taxRateMap ne null}">
 	taxClassMap = ${taxRateMap};
 </c:if>
-
+var ctx = "${pageContext.request.contextPath}";
 </script>
 
 
@@ -93,8 +93,6 @@ var taxClassMap = '';
 							<div style="float: left;" class="controls">
 								<input class="input-large highlight" id="creditCustomerName" style="width: 200px;" value="${creditNote.creditCustomer.billing.company}"/>
 								<form:input type="hidden" path="creditCustomer.id" id="creditCustomer" value="${creditCustomer.id}"/>
-								<%-- <input class="input-large highlight" id="creditCustomerName" style="width: 200px;" value="${creditCustomer.company}"/> --%>
-								<%-- <form:input path="creditCustomer.company"/> --%>
 							</div>
 						</div>
 					</div>
@@ -179,8 +177,6 @@ var taxClassMap = '';
 							<div style="float: left;" class="controls">
 								<input class="input-large highlight" id="debitCustomerName" style="width: 200px;" value="${creditNote.debitCustomer.billing.company}"/>
 								<form:input type="hidden" path="debitCustomer.id" id="debitCustomer" value="${debitCustomer.id}"/>
-								<%-- <input class="input-large highlight" id="debitCustomerName" style="width: 200px;" value="${debitCustomer.company}"/> --%>
-								<%-- <form:input path="debitCustomer.company" value=""/> --%>
 							</div>
 						</div>
 					</div>

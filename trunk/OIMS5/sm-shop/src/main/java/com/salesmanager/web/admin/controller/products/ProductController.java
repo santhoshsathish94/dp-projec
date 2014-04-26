@@ -59,6 +59,7 @@ import com.salesmanager.core.business.catalog.product.service.type.ProductTypeSe
 import com.salesmanager.core.business.generic.exception.ServiceException;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.reference.language.model.Language;
+import com.salesmanager.core.business.service.utils.LogicUtils;
 import com.salesmanager.core.business.tax.model.taxclass.TaxClass;
 import com.salesmanager.core.business.tax.service.TaxClassService;
 import com.salesmanager.core.utils.CoreConfiguration;
@@ -70,7 +71,6 @@ import com.salesmanager.web.constants.Constants;
 import com.salesmanager.web.entity.catalog.product.attribute.CustomProductAttribute;
 import com.salesmanager.web.utils.DateUtil;
 import com.salesmanager.web.utils.LabelUtils;
-import com.salesmanager.web.utils.LogicUtils;
 
 @Controller
 public class ProductController {

@@ -167,13 +167,13 @@ function onLoadSalesInvoice() {
 	}
 }
 
-function setupCustomerAutoComplete(labelId) {
+/*function setupCustomerAutoComplete(labelId) {
 	
 	$( "#"+labelId ).autocomplete({
 		source: function( request, response ) {
 			$.ajax({
 				type: 'POST',
-				url: '/ishop/admin/billing/loadCustomer.html',
+				url: ctx+'/admin/ajax/loadCustomer.html',
 				data: {fieldValue: $( "#"+labelId ).val()},
 				dataType: 'json',
 				success: function(data) {
@@ -193,7 +193,7 @@ function setupCustomerAutoComplete(labelId) {
         },
 		minLength: 2
 	});
-}
+}*/
 
 function setupCustomerPhoneticAutoComplete(labelId) {
 	
@@ -201,7 +201,7 @@ function setupCustomerPhoneticAutoComplete(labelId) {
 		source: function( request, response ) {
 			$.ajax({
 				type: 'POST',
-				url: '/ishop/admin/catalogue/sharing/loadCustomer.html',
+				url: ctx+'/admin/ajax/loadCustomer.html',
 				data: {fieldValue: $( "#"+labelId ).val()},
 				dataType: 'json',
 				success: function(data) {
@@ -232,7 +232,7 @@ function setupProductAutoComplete(labelId) {
 		source: function( request, response ) {
 			$.ajax({
 				type: 'POST',
-				url: '/ishop/admin/billing/loadProductInfo.html',
+				url: ctx+'/admin/ajax/loadProductInfo.html',
 				data: {fieldValue: $( "#"+labelId ).val(), searchType: 'SALESINVOICE'},
 				dataType: 'json',
 				success: function(data) {

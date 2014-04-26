@@ -3,7 +3,6 @@ package com.salesmanager.core.business.order.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.salesmanager.core.business.customer.model.Customer;
 import com.salesmanager.core.business.tax.model.taxclass.TaxClass;
 
 public class SalesOrderBooking implements Serializable {
@@ -14,28 +13,47 @@ public class SalesOrderBooking implements Serializable {
 	private static final long serialVersionUID = 5287202556021148489L;
 
 	
-	public Customer customer;
+	public Long customerId;
 	
 	public String bookingDate;
 	
-	public String commant;
+	public String comment;
+	
+	public String productJson;
 	
 	
+
+
 	/**
-	 * @return the customer
+	 * @return the productJson
 	 */
-	public Customer getCustomer() {
-		return customer;
+	public String getProductJson() {
+		return productJson;
 	}
 
 
 	/**
-	 * @param customer the customer to set
+	 * @param productJson the productJson to set
 	 */
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
+	public void setProductJson(String productJson) {
+		this.productJson = productJson;
 	}
 
+
+	/**
+	 * @return the customerId
+	 */
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+
+	/**
+	 * @param customerId the customerId to set
+	 */
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
 
 	/**
 	 * @return the date
@@ -56,16 +74,16 @@ public class SalesOrderBooking implements Serializable {
 	/**
 	 * @return the commant
 	 */
-	public String getCommant() {
-		return commant;
+	public String getComment() {
+		return comment;
 	}
 
 
 	/**
 	 * @param commant the commant to set
 	 */
-	public void setCommant(String commant) {
-		this.commant = commant;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	
@@ -204,5 +222,7 @@ public class SalesOrderBooking implements Serializable {
 		
 		
 	}
+
+
 
 }
