@@ -2,7 +2,6 @@ package com.salesmanager.web.admin.controller.billing;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.salesmanager.core.business.adapter.CustomCustomer;
 import com.salesmanager.core.business.billing.model.CreditNote;
 import com.salesmanager.core.business.billing.model.CreditNoteProduct;
 import com.salesmanager.core.business.billing.model.CreditNoteProductEntity;
@@ -38,26 +32,19 @@ import com.salesmanager.core.business.billing.model.InvoiceSetting;
 import com.salesmanager.core.business.billing.model.InvoiceSettingType;
 import com.salesmanager.core.business.billing.model.SalesInvoice;
 import com.salesmanager.core.business.billing.model.SalesInvoiceProduct;
-import com.salesmanager.core.business.billing.model.SalesInvoiceProductEntity;
 import com.salesmanager.core.business.billing.service.CreditNoteService;
 import com.salesmanager.core.business.billing.service.InvoiceSettingService;
 import com.salesmanager.core.business.billing.service.SalesInvoiceService;
-import com.salesmanager.core.business.catalog.product.model.Product;
-import com.salesmanager.core.business.catalog.product.model.ProductCriteria;
-import com.salesmanager.core.business.catalog.product.model.ProductList;
-import com.salesmanager.core.business.catalog.product.service.ProductService;
-import com.salesmanager.core.business.customer.model.Customer;
-import com.salesmanager.core.business.customer.service.CustomerService;
-import com.salesmanager.core.business.generic.exception.ServiceException;
+import com.salesmanager.core.business.common.model.ProductJSONEntity;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
-import com.salesmanager.core.business.reference.language.model.Language;
+import com.salesmanager.core.business.service.utils.LogicUtils;
+import com.salesmanager.core.business.service.utils.ProductJSONEntityService;
 import com.salesmanager.core.business.tax.model.taxclass.TaxClass;
 import com.salesmanager.core.business.tax.service.TaxClassService;
 import com.salesmanager.core.utils.ajax.AjaxResponse;
 import com.salesmanager.web.admin.entity.web.Menu;
 import com.salesmanager.web.constants.Constants;
 import com.salesmanager.web.utils.DateUtil;
-import com.salesmanager.web.utils.LogicUtils;
 
 @Controller
 public class BillingController {
@@ -69,12 +56,6 @@ public class BillingController {
 	
 	@Autowired
 	public SalesInvoiceService salesInvoiceService;
-	
-	@Autowired
-	private CustomerService customerService;
-	
-	@Autowired
-	private ProductService productService;
 	
 	@Autowired
 	private TaxClassService taxClassService;
@@ -260,7 +241,7 @@ public class BillingController {
 			}
 			
 			List<SalesInvoiceProduct> salesInvoiceProduct = salesInvoiceService.salesInvoiceProductListBySalesInvoiceId(salesInvoice.getId());
-			List<SalesInvoiceProductEntity> sipe = SalesInvoiceProductEntity.getProductInfoJson(salesInvoiceProduct);
+			List<ProductJSONEntity> sipe = ProductJSONEntityService.getProductInfoJson(salesInvoiceProduct);
 			salesInvoice.setProductJson(LogicUtils.getJSONString(sipe));
 		}
 		
@@ -355,7 +336,7 @@ public class BillingController {
 			salesInvoiceService.SaveOrUpdate(newSalesInvoice);
 			
 			if(saveProductInfo) {
-				saveSalesInvoiceProductInfo(salesInvoice.getProductJson(), newSalesInvoice);
+				salesInvoiceService.saveSalesInvoiceProductInfo(salesInvoice.getProductJson(), newSalesInvoice);
 				invoiceSettingService.saveOrUpdate(invoiceSetting);
 			}
 			
@@ -382,99 +363,7 @@ public class BillingController {
 		return displayInvoice(dbSalesInvoice, model, request, response, locale);
 	}
 	
-	@RequestMapping(value={"/admin/billing/loadCustomer.html"}, method=RequestMethod.POST, produces="application/json")
-	public @ResponseBody String loadCustomerData(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
-		
-		String fieldValue = request.getParameter("fieldValue");
-		
-		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
-		
-		List<Customer> customerList = customerService.getCustomerListByCustomerCompany(store, fieldValue);
-		
-		List<CustomCustomer> customCustomerList = new ArrayList<CustomCustomer>();
-		
-		for(Customer customer: customerList) {
-			CustomCustomer cc = new CustomCustomer();
-			
-			cc.id = customer.getId();
-			cc.name = customer.getBilling().getCompany();
-			
-			customCustomerList.add(cc);
-		}
-		
-		return LogicUtils.getJSONString(customCustomerList);
-	}
 	
-	@RequestMapping(value={"/admin/billing/loadProductInfo.html"}, method=RequestMethod.POST, produces="application/json")
-	public @ResponseBody String loadProductInfo(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
-		
-		String fieldValue = request.getParameter("fieldValue");
-		String searchType = request.getParameter("searchType");
-		
-		Language language = (Language)request.getAttribute("LANGUAGE");
-		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
-		
-		ProductCriteria criteria = new ProductCriteria();
-		
-		ProductList productList = productService.listByStore(store, language, criteria);
-		
-		List<Product> pList = productList.getProducts();
-		
-		if(searchType.equals("SALESINVOICE")) {
-			List<SalesInvoiceProductEntity> customProdList = getcustomProdList(pList, fieldValue);
-			return LogicUtils.getJSONString(customProdList);
-		} else {
-			List<CreditNoteProductEntity> customProdList = getcustomProdListForCreditNote(pList, fieldValue);
-			return LogicUtils.getJSONString(customProdList);
-		}
-	}
-	
-	private List<SalesInvoiceProductEntity> getcustomProdList(List<Product> productList, String fieldValue) {
-		
-		List<SalesInvoiceProductEntity> customProdList = SalesInvoiceProductEntity.getSalesInvoiceProductEntity(productList);
-		
-		List<SalesInvoiceProductEntity> newCustomProdList = new ArrayList<SalesInvoiceProductEntity>(); 
-		
-		for(SalesInvoiceProductEntity siProd: customProdList) {
-			if(siProd.productName.contains(fieldValue)) {
-				newCustomProdList.add(siProd);
-			}
-		}
-		
-		return newCustomProdList;
-	}
-	
-	private void saveSalesInvoiceProductInfo(String productInfoJson, SalesInvoice invoice) {
-		List<SalesInvoiceProductEntity> salesInvoiceProductEntityList = new ArrayList<SalesInvoiceProductEntity>();
-		
-		SalesInvoiceProductEntity salesInvoiceProductEntity = null;
-		
-		JsonArray jsonArr = new JsonParser().parse(productInfoJson).getAsJsonArray();
-		
-		if(jsonArr.size() > 0) {
-			for(int i = 0; i < jsonArr.size(); i++) {
-				JsonObject combineArrayrObject = jsonArr.get(i).getAsJsonObject();
-				if(combineArrayrObject != null) {
-					
-					salesInvoiceProductEntity = new Gson().fromJson(combineArrayrObject, SalesInvoiceProductEntity.class);
-					
-					salesInvoiceProductEntityList.add(salesInvoiceProductEntity);
-				}
-			}
-		}
-		
-		if(salesInvoiceProductEntityList.size() > 0) {
-			for(SalesInvoiceProductEntity siProductEntity: salesInvoiceProductEntityList) {
-				
-				try {
-					salesInvoiceService.SaveOrUpdate(siProductEntity.getSalesInvoiceProduct(siProductEntity, invoice));
-					
-				} catch (ServiceException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 	
 	@Secured("AUTH")
 	@RequestMapping(value="/admin/billing/createcreditnote.html", method=RequestMethod.GET)
@@ -531,13 +420,6 @@ public class BillingController {
 		return "admin-credit-note";
 	}
 	
-	private List<CreditNoteProductEntity> getcustomProdListForCreditNote(List<Product> productList, String fieldValue) {
-		
-		List<CreditNoteProductEntity> customProdList = CreditNoteProductEntity.getCreditNoteProductEntity(productList, fieldValue);
-		
-		return customProdList;
-	}
-	
 	@Secured("AUTH")
 	@RequestMapping(value="/admin/billing/savecreditnote.html", method=RequestMethod.POST)
 	public String saveCreditNote(@Valid @ModelAttribute("creditNote") CreditNote creditNote, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
@@ -574,7 +456,7 @@ public class BillingController {
 		creditNoteService.SaveOrUpdate(creditNote);
 		
 		if(creditNote.getCreditNoteType().equals("PRODUCT")) {
-			getCreditNoteProductFromJSON(creditNote.getProductJson(), creditNote);
+			creditNoteService.getCreditNoteProductFromJSON(creditNote.getProductJson(), creditNote);
 		}
 		
 		model.addAttribute("success","success");
@@ -584,26 +466,6 @@ public class BillingController {
 		return displayCreditNote(persistedCreditNote, model, request, response, locale);
 	}
 	
-	private void getCreditNoteProductFromJSON(String creditNoteProductJson, CreditNote creditNote) throws ServiceException {
-		
-		JsonArray jsonArr = new JsonParser().parse(creditNoteProductJson).getAsJsonArray();
-		if(jsonArr.size() > 0) {
-			for(int i = 0; i < jsonArr.size(); i++) {
-				JsonObject arrayrObject = jsonArr.get(i).getAsJsonObject();
-				if(arrayrObject != null) {
-					
-					CreditNoteProductEntity creditNoteProductEntity = new Gson().fromJson(arrayrObject, CreditNoteProductEntity.class);
-					
-					CreditNoteProduct creditNoteProduct = CreditNoteProductEntity.populateCreditNoteProduct(creditNoteProductEntity);
-					creditNoteProduct.setCreditNote(creditNote);
-					
-					creditNoteService.SaveOrUpdate(creditNoteProduct);
-					
-					//creditNoteProdList.add(CreditNoteProductEntity.populateCreditNoteProduct(creditNoteProductEntity));
-				}
-			}
-		}
-	}
 	
 	@Secured("AUTH")
 	@RequestMapping(value="/admin/billing/editcredtnote.html", method=RequestMethod.GET)

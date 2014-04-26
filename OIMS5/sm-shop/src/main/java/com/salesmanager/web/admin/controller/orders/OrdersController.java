@@ -1,5 +1,8 @@
 package com.salesmanager.web.admin.controller.orders;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -7,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,19 +19,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.salesmanager.core.business.catalog.product.model.Product;
+import com.salesmanager.core.business.catalog.product.model.attribute.ProductAttribute;
+import com.salesmanager.core.business.catalog.product.service.ProductService;
+import com.salesmanager.core.business.catalog.product.service.attribute.ProductAttributeService;
+import com.salesmanager.core.business.common.model.ProductJSONEntity;
+import com.salesmanager.core.business.customer.model.Customer;
+import com.salesmanager.core.business.customer.service.CustomerService;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.order.model.Order;
 import com.salesmanager.core.business.order.model.OrderCriteria;
 import com.salesmanager.core.business.order.model.OrderList;
 import com.salesmanager.core.business.order.model.SalesOrderBooking;
+import com.salesmanager.core.business.order.model.orderproduct.OrderProduct;
+import com.salesmanager.core.business.order.model.orderproduct.OrderProductPrice;
+import com.salesmanager.core.business.order.model.orderstatus.OrderStatus;
+import com.salesmanager.core.business.order.model.orderstatus.OrderStatusHistory;
 import com.salesmanager.core.business.order.service.OrderService;
+import com.salesmanager.core.business.payments.model.PaymentType;
+import com.salesmanager.core.business.reference.currency.service.CurrencyService;
 import com.salesmanager.core.business.reference.language.model.Language;
+import com.salesmanager.core.business.service.utils.LogicUtils;
+import com.salesmanager.core.business.service.utils.ProductJSONEntityService;
 import com.salesmanager.core.business.system.model.IntegrationModule;
 import com.salesmanager.core.business.system.service.ModuleConfigurationService;
+import com.salesmanager.core.business.tax.model.taxclass.TaxClass;
+import com.salesmanager.core.business.tax.service.TaxClassService;
 import com.salesmanager.core.utils.ProductPriceUtils;
 import com.salesmanager.core.utils.ajax.AjaxPageableResponse;
 import com.salesmanager.core.utils.ajax.AjaxResponse;
@@ -58,7 +82,22 @@ public class OrdersController {
 	
 	@Autowired
 	protected ModuleConfigurationService moduleConfigurationService;
-	 
+	
+	@Autowired
+	private TaxClassService taxClassService;
+	
+	@Autowired
+	private CustomerService customerService;
+	
+	@Autowired
+	protected CurrencyService currencyService;
+	
+	@Autowired
+	protected ProductService productService;
+
+	@Autowired
+	protected ProductAttributeService productAttributeService;
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderControler.class);
 
 	
@@ -181,6 +220,8 @@ public class OrdersController {
 	public String salesOrderBooking(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		
 		SalesOrderBooking salesOrderBooking = new SalesOrderBooking();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		salesOrderBooking.setBookingDate(format.format(new Date()));
 		
 		return displaySalesOrderBooking(salesOrderBooking, model, request, response, locale);
 	}
@@ -189,9 +230,174 @@ public class OrdersController {
 		
 		setMenu(model,request, "sale-order-booking");
 		
+		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
+		List<TaxClass> taxClasses = taxClassService.listByStore(store);
+		
+		Map<Long, BigDecimal> taxRateMap = new HashMap<Long, BigDecimal>();
+		for(TaxClass tc: taxClasses) {
+			if(tc.getTaxRates() != null && tc.getTaxRates().size() > 0) {
+				taxRateMap.put(tc.getId(), tc.getTaxRates().iterator().next().getTaxRate());
+			} else {
+				taxRateMap.put(tc.getId(), new BigDecimal(0));
+			}
+		}
+		
+		
+		model.addAttribute("taxClasses", taxClasses);
+		model.addAttribute("taxRateMap", LogicUtils.getJSONStringFromMap(taxRateMap));
+		
 		model.addAttribute("salesOrderBooking", salesOrderBooking);
 		
 		return "admin-create-sales-order-booking";
 	}
+	
+	@Secured("ORDER")
+	@RequestMapping(value="/admin/orders/savesalesorderbooking.html", method=RequestMethod.POST)
+	public String saveCreditNote(@Valid @ModelAttribute("salesOrderBooking") SalesOrderBooking salesOrderBooking, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		
+		MerchantStore store = (MerchantStore)request.getAttribute(Constants.ADMIN_STORE);
+		
+		Customer adminOrderBookingCustomer = customerService.getById(salesOrderBooking.getCustomerId());
+		
+		//Currency currency = currencyService.getByCode("CAD");
+		
+		Date datePurchased = new Date();
+		if(!StringUtils.isBlank(salesOrderBooking.getBookingDate()) ){
+			try {
+				datePurchased = DateUtil.getDate(salesOrderBooking.getBookingDate());
+			} catch (Exception e) {
+				ObjectError error = new ObjectError("datePurchased",messages.getMessage("message.invalid.date", locale));
+				result.addError(error);
+			}
+			
+		}
+		
+		Order order = new Order();
+		
+		order.setDatePurchased(datePurchased);
+		order.setCurrency(store.getCurrency());
+		order.setLastModified(new Date());
+		order.setBilling(adminOrderBookingCustomer.getBilling());
+		
+		order.setCustomerId(salesOrderBooking.getCustomerId());
+		order.setDelivery(adminOrderBookingCustomer.getDelivery());
+		order.setCustomerEmailAddress(adminOrderBookingCustomer.getEmailAddress());
+		order.setIpAddress("");
+		order.setMerchant(store);
+		order.setOrderDateFinished(new Date());
+		
+		OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
+		orderStatusHistory.setComments(salesOrderBooking.getComment());
+		orderStatusHistory.setCustomerNotified(1);
+		orderStatusHistory.setStatus(OrderStatus.ORDERED);
+		orderStatusHistory.setDateAdded(new Date());
+		orderStatusHistory.setOrder(order);
+		
+		order.getOrderHistory().add(orderStatusHistory);
+		
+		order.setPaymentType(PaymentType.PAYPAL);
+		order.setPaymentModuleCode("paypal");
+		order.setTotal(calculateTotalOrderAmount(salesOrderBooking.productJson));
+		
+		order = calculateOrderProductTotal(order, salesOrderBooking.productJson);
+		
+		orderService.saveOrUpdate(order);
+		
+		return displayOrders(model, request, response);
+	}
+	
+	private BigDecimal calculateTotalOrderAmount(String productJson) {
+		
+		BigDecimal totalAmount = new BigDecimal(0);
+		
+		List<ProductJSONEntity> pjeList = ProductJSONEntityService.getProductJSONEntityListFromJsonString(productJson); 
+		
+		for (ProductJSONEntity pje: pjeList) {
+			
+			int quantity = pje.quantity;
+			BigDecimal taxAmount = null;
+			BigDecimal unitPrice = new BigDecimal(0);
+			
+			Product prod = null;
+			
+			if(pje.variantId == null) {
+				prod = productService.getById(pje.productId);
+			} else {
+				ProductAttribute poa = productAttributeService.getById(pje.variantId);
+				prod = productService.getById(poa.getProduct().getId());
+			}
+			
+			unitPrice = prod.getAvailabilities().iterator().next().getPrices().iterator().next().getProductPriceAmount();
+			
+			if(pje.taxClassId != null && prod.getTaxClass().getTaxRates() != null) {
+				taxAmount = prod.getTaxClass().getTaxRates().iterator().next().getTaxRate();
+			}
+			
+			if(taxAmount == null) {
+				totalAmount = totalAmount.add(unitPrice.multiply(new BigDecimal(quantity)));
+			} else {
+				BigDecimal taxableAmount = unitPrice.multiply(new BigDecimal(quantity)).multiply(taxAmount).divide(new BigDecimal(100));
+				totalAmount = totalAmount.add(unitPrice.multiply(new BigDecimal(quantity)).add(taxableAmount));
+			}
+		}
+		
+		return totalAmount;
+	}
 
+	
+	private Order calculateOrderProductTotal(Order order, String productJson) {
+		
+		
+		List<ProductJSONEntity> pjeList = ProductJSONEntityService.getProductJSONEntityListFromJsonString(productJson); 
+		
+		
+		Product prod = null;
+		
+		for (ProductJSONEntity pje: pjeList) {
+			if(pje.variantId == null) {
+				prod = productService.getById(pje.productId);
+			} else {
+				ProductAttribute poa = productAttributeService.getById(pje.variantId);
+				prod = productService.getById(poa.getProduct().getId());
+			}
+			
+			 // OrderProductPrice
+			OrderProductPrice oproductprice = new OrderProductPrice();
+			oproductprice.setDefaultPrice(true);
+			oproductprice.setProductPrice(prod.getAvailabilities().iterator().next().getPrices().iterator().next().getProductPriceAmount());
+			oproductprice.setProductPriceCode("baseprice");
+			oproductprice.setProductPriceName("Base Price");
+			// oproductprice.setProductPriceSpecialAmount(new BigDecimal(13.99) );
+
+			// OrderProduct
+			OrderProduct oproduct = new OrderProduct();
+			//oproduct.getDownloads().add(orderProductDownload);
+			BigDecimal oneTimeCharge = null;
+			BigDecimal taxAmount = null;
+			BigDecimal unitPrice = prod.getAvailabilities().iterator().next().getPrices().iterator().next().getProductPriceAmount();
+			
+			if(pje.taxClassId != null && prod.getTaxClass().getTaxRates() != null) {
+				taxAmount = prod.getTaxClass().getTaxRates().iterator().next().getTaxRate();
+				BigDecimal taxableAmount = unitPrice.multiply(new BigDecimal(pje.quantity)).multiply(taxAmount).divide(new BigDecimal(100));
+				oneTimeCharge = unitPrice.multiply(new BigDecimal(pje.quantity)).add(taxableAmount);
+			} else {
+				oneTimeCharge = unitPrice.multiply(new BigDecimal(pje.quantity));
+			}
+			
+			oproduct.setOneTimeCharge(oneTimeCharge);
+			oproduct.setOrder(order);
+			oproduct.setProductName(prod.getDescriptions().iterator().next().getName());
+			oproduct.setProductQuantity(pje.quantity);
+			oproduct.setSku(prod.getSku());
+			oproduct.getPrices().add(oproductprice);
+
+			oproductprice.setOrderProduct(oproduct);
+			//orderProductDownload.setOrderProduct(oproduct);
+			order.getOrderProducts().add(oproduct);
+		}
+		
+		return order;
+	}
+	
+	
 }

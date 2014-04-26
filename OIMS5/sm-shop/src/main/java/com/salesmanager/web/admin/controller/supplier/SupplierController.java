@@ -38,6 +38,7 @@ import com.salesmanager.core.business.reference.language.model.Language;
 import com.salesmanager.core.business.reference.language.service.LanguageService;
 import com.salesmanager.core.business.reference.zone.model.Zone;
 import com.salesmanager.core.business.reference.zone.service.ZoneService;
+import com.salesmanager.core.business.service.utils.LogicUtils;
 import com.salesmanager.core.business.supplier.model.PartyItemDefaultMargin;
 import com.salesmanager.core.business.supplier.model.Supplier;
 import com.salesmanager.core.business.supplier.service.SupplierService;
@@ -47,7 +48,6 @@ import com.salesmanager.core.utils.ajax.AjaxResponse;
 import com.salesmanager.web.admin.entity.web.Menu;
 import com.salesmanager.web.constants.Constants;
 import com.salesmanager.web.utils.LabelUtils;
-import com.salesmanager.web.utils.LogicUtils;
 import com.salesmanager.web.utils.UserUtils;
 
 @Controller

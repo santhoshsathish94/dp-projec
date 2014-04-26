@@ -92,9 +92,10 @@
 			<div style="width: 90px; float: left; margin-left: 25px;">
 				<div class="control-group" style="float: left;">
 					<div style="float: left;" class="controls">
-						<select class="input-large" id="prod_tax1" style="width: 90px;">
+						<select class="input-large" id="prod_tax1" style="width: 90px;"  onchange="getMapValue($(this).val(), 'tax_amount1');">
 							
 						</select>
+						<input type="hidden" id="tax_amount1" value=""/>
 					</div>
 				</div>
 			</div>

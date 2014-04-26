@@ -30,11 +30,11 @@ import com.google.gson.JsonParser;
 import com.salesmanager.core.business.adapter.CustomCustomer;
 import com.salesmanager.core.business.billing.model.CreditNoteProductEntity;
 import com.salesmanager.core.business.billing.model.SalesInvoice;
-import com.salesmanager.core.business.billing.model.SalesInvoiceProductEntity;
 import com.salesmanager.core.business.catalog.product.model.Product;
 import com.salesmanager.core.business.catalog.product.model.ProductCriteria;
 import com.salesmanager.core.business.catalog.product.model.ProductList;
 import com.salesmanager.core.business.catalog.product.service.ProductService;
+import com.salesmanager.core.business.common.model.ProductJSONEntity;
 import com.salesmanager.core.business.customer.model.Customer;
 import com.salesmanager.core.business.customer.service.CustomerService;
 import com.salesmanager.core.business.generic.exception.ServiceException;
@@ -48,12 +48,13 @@ import com.salesmanager.core.business.reference.inventory.service.PurchaseReturn
 import com.salesmanager.core.business.reference.inventory.service.PurchaseService;
 import com.salesmanager.core.business.reference.inventory.service.StockService;
 import com.salesmanager.core.business.reference.language.model.Language;
+import com.salesmanager.core.business.service.utils.LogicUtils;
+import com.salesmanager.core.business.service.utils.ProductJSONEntityService;
 import com.salesmanager.core.business.user.service.UserService;
 import com.salesmanager.web.admin.entity.web.Menu;
 import com.salesmanager.web.constants.Constants;
 import com.salesmanager.web.utils.DateUtil;
 import com.salesmanager.web.utils.LabelUtils;
-import com.salesmanager.web.utils.LogicUtils;
 
 @Controller
 public class InventorySharingController {
@@ -174,18 +175,18 @@ public class InventorySharingController {
 
 		List<Product> pList = productList.getProducts();
 
-		List<SalesInvoiceProductEntity> customProdList = getcustomProdList(pList, fieldValue);
+		List<ProductJSONEntity> customProdList = getcustomProdList(pList, fieldValue);
 		return LogicUtils.getJSONString(customProdList);
 
 	}
 
-	private List<SalesInvoiceProductEntity> getcustomProdList(List<Product> productList, String fieldValue) {
+	private List<ProductJSONEntity> getcustomProdList(List<Product> productList, String fieldValue) {
 		fieldValue = fieldValue.toUpperCase();
-		List<SalesInvoiceProductEntity> customProdList = SalesInvoiceProductEntity.getSalesInvoiceProductEntity(productList);
+		List<ProductJSONEntity> customProdList = ProductJSONEntityService.getProductJSONEntity(productList);
 
-		List<SalesInvoiceProductEntity> newCustomProdList = new ArrayList<SalesInvoiceProductEntity>();
+		List<ProductJSONEntity> newCustomProdList = new ArrayList<ProductJSONEntity>();
 
-		for (SalesInvoiceProductEntity siProd : customProdList) {
+		for (ProductJSONEntity siProd : customProdList) {
 			if (siProd.productName.toUpperCase().contains(fieldValue) || siProd.productDispalyName.toUpperCase().contains(fieldValue)) {
 				newCustomProdList.add(siProd);
 			}

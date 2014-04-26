@@ -1,88 +1,52 @@
-package com.salesmanager.core.business.billing.model;
+package com.salesmanager.core.business.service.utils;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gson.reflect.TypeToken;
+import com.salesmanager.core.business.billing.model.SalesInvoice;
+import com.salesmanager.core.business.billing.model.SalesInvoiceProduct;
 import com.salesmanager.core.business.catalog.product.model.Product;
 import com.salesmanager.core.business.catalog.product.model.attribute.ProductAttribute;
 import com.salesmanager.core.business.catalog.product.model.attribute.ProductOptionValueDescription;
+import com.salesmanager.core.business.common.model.ProductJSONEntity;
+import com.salesmanager.core.business.tax.model.taxclass.TaxClass;
 
+public class ProductJSONEntityService {
 
-public class SalesInvoiceProductEntity {
-
-	public Long productId;
-	
-	public String productName;
-	
-	public String productDispalyName;
-	
-	public String productManu;
-	
-	public Long variantId;
-	
-	public String description;
-	
-	public Integer quantity;
-	
-	public String uom;
-	
-	public BigDecimal unitPrice;
-	
-	public String taxClass;
-	
-	public BigDecimal amount;
-	
-	public SalesInvoiceProductEntity(){}
-	
-	public SalesInvoiceProductEntity(Long productId, String productName, Long variantId, String description,
-			Integer quantity, String uom, BigDecimal unitPrice, String taxClass, BigDecimal amount) {
+	/**
+	 * @Purpose: This method return the productJSONEntity list from product List
+	 * 
+	 */
+	public static List<ProductJSONEntity> getProductJSONEntity(List<Product> productList) {
 		
-		this.productId = productId;
-		this.productName = productName;
-		this.variantId = variantId;
-		this.description = description;
-		this.quantity = quantity;
-		this.uom = uom;
-		this.unitPrice = unitPrice;
-		this.taxClass = taxClass;
-		this.amount = amount;
-	}
-	
-	public SalesInvoiceProductEntity(Long productId, String productName,String productDispalyName, Long variantId, String description,
-			Integer quantity, String uom, BigDecimal unitPrice, String taxClass, BigDecimal amount) {
+		List<ProductJSONEntity> siProductList = new ArrayList<ProductJSONEntity>();
 		
-		this.productId = productId;
-		this.productName = productName;
-		this.productDispalyName=productDispalyName;
-		this.variantId = variantId;
-		this.description = description;
-		this.quantity = quantity;
-		this.uom = uom;
-		this.unitPrice = unitPrice;
-		this.taxClass = taxClass;
-		this.amount = amount;
-	}
-	
-	public static List<SalesInvoiceProductEntity> getSalesInvoiceProductEntity(List<Product> productList) {
-		
-		List<SalesInvoiceProductEntity> siProductList = new ArrayList<SalesInvoiceProductEntity>();
-		
-		SalesInvoiceProductEntity siProduct =  null;
+		ProductJSONEntity siProduct =  null;
 		
 		for(Product prod: productList) {
 			
-			siProduct = new SalesInvoiceProductEntity();
+			siProduct = new ProductJSONEntity();
 			
 			Integer qty = prod.getAvailabilities().iterator().next().getProductQuantity();
 			BigDecimal unitPrice = prod.getAvailabilities().iterator().next().getPrices().iterator().next().getProductPriceAmount();
 			
-			BigDecimal amount = calculateAmount(prod.getAvailabilities().iterator().next().getPrices().iterator().next().getProductPriceAmount(), prod.getAvailabilities().iterator().next().getProductQuantity());
+			TaxClass txc = prod.getTaxClass();
+			Long taxClassId = null;
+			BigDecimal prodTaxRate = new BigDecimal(0.00);
+			if(txc != null && txc.getTaxRates() != null && txc.getTaxRates().size() > 0) {
+				prodTaxRate = txc.getTaxRates().iterator().next().getTaxRate();
+				taxClassId = txc.getId();
+			}
 			
+			BigDecimal amount = calculateAmount(prod.getAvailabilities().iterator().next().getPrices().iterator().next().getProductPriceAmount(), prod.getAvailabilities().iterator().next().getProductQuantity());
+			amount = amount.add(amount.multiply(prodTaxRate));
 			
 			if(prod.isProductHaveVariants()) {
-				siProductList = getVariantData(siProductList, prod.getAttributes(), siProduct, prod.getProductDescription().getDescription(), qty, unitPrice, amount);
+				siProductList = getVariantData(siProductList, prod.getAttributes(), siProduct, prod.getProductDescription().getDescription(), qty, unitPrice, amount, taxClassId);
 			} else {
 				siProduct.productId = prod.getId();
 				siProduct.productName = prod.getSku();
@@ -90,6 +54,7 @@ public class SalesInvoiceProductEntity {
 				siProduct.description = prod.getProductDescription().getDescription();
 				siProduct.quantity = qty;
 				siProduct.unitPrice = unitPrice;
+				siProduct.taxClassId = taxClassId;
 				siProduct.amount = amount;
 				
 				siProductList.add(siProduct);
@@ -99,17 +64,16 @@ public class SalesInvoiceProductEntity {
 		return siProductList;
 	}
 	
-	private static List<SalesInvoiceProductEntity> getVariantData(List<SalesInvoiceProductEntity> siProductList, Set<ProductAttribute> prodAttrList,
-			SalesInvoiceProductEntity siProduct, String prodDesc, Integer qty, BigDecimal unitPrice, BigDecimal amount) {
+	private static List<ProductJSONEntity> getVariantData(List<ProductJSONEntity> siProductList, Set<ProductAttribute> prodAttrList,
+			ProductJSONEntity siProduct, String prodDesc, Integer qty, BigDecimal unitPrice, BigDecimal amount, Long taxClassId) {
 		
 		for(ProductAttribute prodAttr: prodAttrList) {
 			
-			siProduct = new SalesInvoiceProductEntity();
+			siProduct = new ProductJSONEntity();
 			
 			String origProdName = prodAttr.getProduct().getSku();
 			String origProdDisplayName = prodAttr.getProduct().getProductDescription().getName();
 			String prodOpt = prodAttr.getProductOption().getCode();
-			String prodTaxClass = prodAttr.getProduct().getTaxClass().getTitle();
 			
 			if(prodAttr.getProductOptionValue().getDescriptions() != null && prodAttr.getProductOptionValue().getDescriptions().size() > 0) {
 				
@@ -122,7 +86,7 @@ public class SalesInvoiceProductEntity {
 					siProduct.description = prodDesc;
 					siProduct.quantity = qty;
 					siProduct.unitPrice = unitPrice;
-					siProduct.amount = amount;
+					siProduct.taxClassId = taxClassId;
 					siProduct.amount = amount;					
 					siProductList.add(siProduct);
 				}
@@ -137,7 +101,7 @@ public class SalesInvoiceProductEntity {
 		return totalAmt;
 	}
 	
-	public SalesInvoiceProduct getSalesInvoiceProduct(SalesInvoiceProductEntity siProductEntity, SalesInvoice invoice) {
+	public static SalesInvoiceProduct getSalesInvoiceProduct(ProductJSONEntity siProductEntity, SalesInvoice invoice) {
 		
 		SalesInvoiceProduct siProduct = new SalesInvoiceProduct();
 		
@@ -163,14 +127,14 @@ public class SalesInvoiceProductEntity {
 		return siProduct;
 	}
 	
-	public static List<SalesInvoiceProductEntity> getProductInfoJson(List<SalesInvoiceProduct> salesInvoiceProductList) {
+	public static List<ProductJSONEntity> getProductInfoJson(List<SalesInvoiceProduct> salesInvoiceProductList) {
 		
-		List<SalesInvoiceProductEntity> sipeList = new ArrayList<SalesInvoiceProductEntity>();
+		List<ProductJSONEntity> sipeList = new ArrayList<ProductJSONEntity>();
 		
-		SalesInvoiceProductEntity sipe = null;
+		ProductJSONEntity sipe = null;
 		
 		for(SalesInvoiceProduct sip: salesInvoiceProductList) {
-			sipe = new SalesInvoiceProductEntity();
+			sipe = new ProductJSONEntity();
 			
 			sipe.productId = sip.getProduct().getId();
 			sipe.productName = sip.getProductName();
@@ -189,5 +153,12 @@ public class SalesInvoiceProductEntity {
 		}
 		
 		return sipeList;
+	}
+	
+	public static List<ProductJSONEntity> getProductJSONEntityListFromJsonString(String productJson) {
+		
+		Type collectionListType = new TypeToken<List<ProductJSONEntity>>(){}.getType();
+		
+		return LogicUtils.gson.fromJson(productJson, collectionListType);
 	}
 }
