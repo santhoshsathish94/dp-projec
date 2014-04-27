@@ -147,7 +147,7 @@ public class OrderSalesManagerTestCase extends AbstractSalesManagerCoreTestCase 
 
 		order.setPaymentType(PaymentType.PAYPAL);
 		order.setPaymentModuleCode("paypal");
-		order.setStatus(OrderStatus.DELIVERED);
+		order.setStatus(OrderStatus.ORDERED);
 		order.setTotal(new BigDecimal(23.99));
 
 		// OrderProductDownload - Digital download
