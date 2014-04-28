@@ -25,5 +25,10 @@ public class Constants {
 	public final static String OT_TAX_MODULE_CODE = "tax";
 	
 	public final static String TEXT_STRING = "text";
+	
+	public final static String PRODUCT = "PRODUCT";
+	public final static String MANUFACTURER = "MANUFACTURER";
+	public final static String CATEGORY = "CATEGORY";
+	
 
 }
