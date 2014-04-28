@@ -1,16 +1,22 @@
 package com.salesmanager.web.admin.controller.products;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,11 +45,13 @@ import com.salesmanager.core.business.common.model.ProductJSONEntity;
 import com.salesmanager.core.business.customer.model.Customer;
 import com.salesmanager.core.business.customer.service.CustomerService;
 import com.salesmanager.core.business.generic.exception.ServiceException;
+import com.salesmanager.core.business.inventory.model.CustomerInventory;
 import com.salesmanager.core.business.inventory.model.Purchase;
 import com.salesmanager.core.business.inventory.model.PurchaseReturnDebitNote;
 import com.salesmanager.core.business.inventory.model.Stock;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.reference.inventory.service.BranchTransferService;
+import com.salesmanager.core.business.reference.inventory.service.CustomerInventoryService;
 import com.salesmanager.core.business.reference.inventory.service.DebitNoteOtherService;
 import com.salesmanager.core.business.reference.inventory.service.PurchaseReturnDebitNoteService;
 import com.salesmanager.core.business.reference.inventory.service.PurchaseService;
@@ -87,34 +96,81 @@ public class InventorySharingController {
 
 	@Autowired
 	private ProductService productService;
+	@Autowired
+	private CustomerInventoryService customerInventoryService;
 
 	@Secured("AUTH")
 	@RequestMapping(value = "/admin/catalogue/sharing/byProduct.html", method = RequestMethod.GET)
-	public String createStockPage(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public String customerProduct(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		// display menu
-		Purchase purchase = new Purchase();
-		model.addAttribute("purchase", purchase);
+		CustomerInventory customerInventory = new CustomerInventory();
+		model.addAttribute("customerInventory", customerInventory);
 		setMenu(model, request, "product-sharing");
 		return "admin-product-sharing";
 	}
 
 	@Secured("AUTH")
 	@RequestMapping(value = "/admin/catalogue/sharing/byManufacturer.html", method = RequestMethod.GET)
-	public String PerchaseEntery(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public String customerManufacturer(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		// display menu
-		Purchase purchase = new Purchase();
-		model.addAttribute("purchase", purchase);
+		CustomerInventory customerInventory = new CustomerInventory();
+		model.addAttribute("customerInventory", customerInventory);
 		setMenu(model, request, "manufacturer-sharing");
 		return "admin-manufacturer-sharing";
 	}
 
 	@Secured("AUTH")
 	@RequestMapping(value = "/admin/catalogue/sharing/byCategory.html", method = RequestMethod.GET)
-	public String purchasereturndnEntery(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public String customerCategory(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		// display menu
-		Purchase purchase = new Purchase();
-		model.addAttribute("purchase", purchase);
+		CustomerInventory customerInventory = new CustomerInventory();
+		model.addAttribute("customerInventory", customerInventory);
 		setMenu(model, request, "category-sharing");
+		return "admin-category-sharing";
+	}
+
+	@Secured("AUTH")
+	@RequestMapping(value = "/admin/catalogue/sharing/saveCustomerProductMapping.html", method = RequestMethod.POST)
+	public String saveCustomerProductMapping(@Valid @ModelAttribute("customerInventory") CustomerInventory customerInventory, BindingResult result, Model model, HttpServletRequest request,
+			HttpServletResponse response, Locale locale) throws Exception {
+		// display menu
+		MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
+		JSONParser parser = new JSONParser();
+		JSONArray jsonArray = (JSONArray) parser.parse(customerInventory.getJsonArray());
+		Iterator i = jsonArray.iterator();
+
+		while (i.hasNext()) {
+			CustomerInventory customerInventory1 = new CustomerInventory();
+			JSONObject slide = (JSONObject) i.next();
+			customerInventory1.setCustomerid(Long.parseLong(slide.get("customer").toString()));
+			customerInventory1.setInventoryid(Long.parseLong(slide.get("product").toString()));
+			customerInventory1.setInventory_type(slide.get("type").toString());
+			customerInventory1.setMerchantStore(store);
+			customerInventoryService.addCustomerInventory(customerInventory1);
+		}
+
+		model.addAttribute("customerInventory", new CustomerInventory());
+		setMenu(model, request, "product-sharing");
+		return "admin-product-sharing";
+	}
+
+	@Secured("AUTH")
+	@RequestMapping(value = "/admin/catalogue/sharing/saveCustomerManufacturerMapping.html", method = RequestMethod.POST)
+	public String saveCustomerManufacturerMapping(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		// display menu
+		CustomerInventory customerInventory = new CustomerInventory();
+		model.addAttribute("customerInventory", customerInventory);
+		setMenu(model, request, "product-sharing");
+		return "admin-manufacturer-sharing";
+	}
+
+	@Secured("AUTH")
+	@RequestMapping(value = "/admin/catalogue/sharing/saveCustomerCategoryMapping.html", method = RequestMethod.POST)
+	public String saveCustomerCategoryMapping(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		// display menu
+		CustomerInventory customerInventory = new CustomerInventory();
+		model.addAttribute("customerInventory", customerInventory);
+		setMenu(model, request, "product-sharing");
 		return "admin-category-sharing";
 	}
 
