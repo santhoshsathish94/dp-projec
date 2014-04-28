@@ -18,8 +18,8 @@
 	</h3>
 	<br />
 </div>
-<c:url var="savePurchaseEntery" value="/admin/inventoryManagement/createPurchaseEntry.html" />
-<form:form method="POST" commandName="purchase" action="${savePurchaseEntery}">
+<c:url var="saveCustomerInventory" value="/admin/catalogue/sharing/saveCustomerProductMapping.html" />
+<form:form method="POST" commandName="customerInventory" action="${saveCustomerInventory}">
 
 	
 	<div class="control-group" style="float: left; width: 100%;">
@@ -89,11 +89,12 @@
 				object = new Object();
 				object.customer = $('#customer'+counter).val();
 				object.product = $('#product'+counter).val();
+				object.type = 'PRODUCT';
 				
 				objectAray.push(object);
 			}
 		}
-		//alert(JSON.stringify(objectAray));
+		alert(JSON.stringify(objectAray));
 		$('#jsonArray').val(JSON.stringify(objectAray));
 	}
 		
