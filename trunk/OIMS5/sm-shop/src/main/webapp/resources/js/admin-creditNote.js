@@ -276,10 +276,14 @@ function setupProductAutoComplete(labelId) {
             var unitPrice = parseFloat(i.item.val.unitPrice);
             $("#prod_unit_price"+rowValue).val(unitPrice.toFixed(2));
             
+            $('#prod_tax1').append($('#hiddenTaxClass option').clone());
             $("#prod_tax"+rowValue).val(i.item.val.taxClassId);
             
             var taxAmt = parseFloat(i.item.val.taxAmount);
-            $("#tax_amount"+rowValue).val(taxAmt.toFixed(2));
+            if(isNaN(taxAmt)) {
+            	taxAmt = 0.00;
+            }
+        	$("#tax_amount"+rowValue).val(taxAmt.toFixed(2));
             
             var amount = parseFloat(i.item.val.amount);
             $("#prod_amount"+rowValue).val(amount.toFixed(2));
@@ -389,9 +393,10 @@ function calculateTotal() {
 	    	subTotal += parseFloat($('#prod_amount'+i).val());
 	    }
 	}
-	
-	$('#totalValue').html('');
-	$('#totalValue').html(subTotal.toFixed(2));
+	if($('#totalValue').length > 0) {
+		$('#totalValue').html('');
+		$('#totalValue').html(subTotal.toFixed(2));
+	}
 }
 
 function createProductJsonBeforeSave() {
@@ -405,8 +410,9 @@ function createProductJsonBeforeSave() {
 			if($("#product_row_data"+rowValue).length > 0) {
 				
 				object = new Object();
-				
-				object.creditNoteProductId = parseInt($("#creditNoteProductId"+rowValue).val());
+				if($("#creditNoteProductId"+rowValue).length > 0) {
+					object.creditNoteProductId = parseInt($("#creditNoteProductId"+rowValue).val());
+				}
 				object.productId = parseInt($("#productId"+rowValue).val());
 				object.productName = $("#productName"+rowValue).val();
 				object.variantId = parseInt($("#variant"+rowValue).val());
@@ -419,7 +425,9 @@ function createProductJsonBeforeSave() {
 					object.taxClassId = $("#prod_tax"+rowValue).val();
 				}
 				
-				object.taxAmount = $("#tax_amount"+rowValue).val();
+				object.taxAmount = parseFloat($("#tax_amount"+rowValue).val());
+				object.amount = parseFloat($('#prod_amount'+rowValue).val());
+				
 				if($("#invoice"+rowValue).val() != '') {
 					object.invoiceNumber = $("#invoice"+rowValue).val();
 				} else {
@@ -463,7 +471,8 @@ function onLoadProductInfo() {
             $("#prod_tax"+productCount).val(dataObj[rowValue].taxClassId);
             
             var taxAmt = parseFloat(dataObj[rowValue].taxAmount);
-            $("#tax_amount"+productCount).val(taxAmt.toFixed(2));
+            if(!isNaN(taxAmt))
+            	$("#tax_amount"+productCount).val(taxAmt.toFixed(2));
             
             var amount = parseFloat(dataObj[rowValue].amount);
             $("#prod_amount"+productCount).val(amount.toFixed(2));
@@ -474,5 +483,13 @@ function onLoadProductInfo() {
             
             setupProductAutoComplete('productName'+productCount);
 		}
+	}
+}
+
+function onLoadPurchaseEntryReturn() {
+	if($('#id').val() == '') {
+		setupProductAutoComplete('productName1');
+	} else {
+		onLoadProductInfo();
 	}
 }

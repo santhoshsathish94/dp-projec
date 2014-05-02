@@ -82,17 +82,17 @@ public class AjaxController {
 		
 		List<Product> pList = productList.getProducts();
 		
-		if(StringUtils.equals("CREDITNOTE", searchType)) {
+		/*if(StringUtils.equals("CREDITNOTE", searchType)) {
 			
 			List<CreditNoteProductEntity> customProdList = salesInvoiceService.getcustomProdListForCreditNote(pList, fieldValue);
 			return LogicUtils.getJSONString(customProdList);
 		
-		} else {
+		} else {*/
 		
 			List<ProductJSONEntity> customProdList = getcustomProdList(pList, fieldValue);
 			return LogicUtils.getJSONString(customProdList);
 		
-		}
+		//}
 	}
 	
 	private List<ProductJSONEntity> getcustomProdList(List<Product> productList, String fieldValue) {

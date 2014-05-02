@@ -5,11 +5,55 @@
 <%@ page session="false"%>
 
 <html>
-<head>
+<%-- <head>
 	<script src="<c:url value="/resources/js/jquery-1.10.2.min.js"/>"></script>
 	<link href="<c:url value="/resources/css/bootstrap/css/datepicker.css" />" rel="stylesheet"></link>
 	<script src="<c:url value="/resources/js/bootstrap/bootstrap-datepicker.js" />"></script>
-</head>
+</head> --%>
+
+<link rel="stylesheet" href="<c:url value="/resources/css/bootstrap/themes/base/jquery.ui.theme.css" />">
+<link rel="stylesheet" href="<c:url value="/resources/css/bootstrap/themes/base/jquery.ui.accordion.css" />">
+<link rel="stylesheet" href="<c:url value="/resources/css/bootstrap/themes/base/jquery.ui.menu.css" />">
+
+<script type='text/javascript' src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.bgiframe.min.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.ui.core.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.ui.widget.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.ui.position.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.ui.menu.js" />"></script>
+<script src="<c:url value="/resources/js/bootstrap/jquery/ui/jquery.ui.autocomplete.js" />"></script>
+
+<link href="<c:url value="/resources/css/bootstrap/css/datepicker.css" />" rel="stylesheet"></link>
+<script src="<c:url value="/resources/js/bootstrap/bootstrap-datepicker.js" />"></script>
+
+<script src="<c:url value="/resources/js/admin-inventory.js" />"></script>
+
+<script>
+var productCount = 1;
+var ctx = "${pageContext.request.contextPath}";
+var taxClassMap = '';
+<c:if test="${taxRateMap ne null}">
+	taxClassMap = ${taxRateMap};
+</c:if>
+</script>
+<style>
+.ui-autocomplete {
+	max-height: 100px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	max-width: 305px;
+}
+/* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+*/
+* html .ui-autocomplete {
+	height: 100px;
+	width: 205px;
+}
+.ui-autocomplete-loading {
+		background: white url('<c:out value="${pageContext.request.contextPath}"/>/resources/css/bootstrap/themes/base/images/ui-anim_basic_16x16.gif') right center no-repeat;
+	}
+</style>
 
 <div class="tabbable">
 	<jsp:include page="/common/adminTabs.jsp" />
@@ -86,8 +130,24 @@
 		</div>
 
 	</div>
+	
+	<div style="width: 100%; float: left;">
+		<span style="float: right; cursor: pointer; font-weight: bold; text-decoration: underline; color: #0431B4;" onclick="addNewProduct();">Add New List</span>
+	</div>
+	
+	<jsp:include page="/pages/admin/inventory/productInfo.jsp" />
+	
+	<form:hidden path="id"/>
+	<form:hidden path="productJson"/>
+	<select id="hiddenTaxClass" style="display: none; width: 100px;">
+		<option value=""></option>
+		<c:forEach items="${taxClasses }" var="taxClass">
+			<option value="${taxClass.id}">${taxClass.code}</option>
+		</c:forEach>
+	</select>
+	
 	<div class="control-group" style="float: left; width: 100%;">
-		<div class="pull-left" style="width: 100%;">
+		<%-- div class="pull-left" style="width: 100%;">
 			<div style="float: left; width: 100%;" class="stockLabel">
 				<span style="float: left;">Product</span>
 				<span id="addNewRow" style="float: left; margin-left: 10px; cursor: pointer; text-decoration: underline; color: blue;">Add New Row</span>
@@ -116,10 +176,10 @@
 			</div>
 			<input type="hidden" id="jsonArray" name="jsonArray" value=""/>
 			
-		</div>
+		</div> --%>
 		
 		<div class="pull-left" style="width: 100%; margin-top: 10px;">
-			<button type="submit" class="btn btn-success" onclick="return createStockEntryJson();">
+			<button type="submit" class="btn btn-success" onclick="return createProductJsonBeforeSave();">
 				<s:message code="button.label.submit2" text="Add Stock" />
 			</button>
 		</div>
@@ -129,7 +189,8 @@
 
 			
 <script>
-	var rowCount = 1;
+	onLoadPurchaseEntry();
+	/* var rowCount = 1;
 	$("#addNewRow").click(function (){
 		addNewRow();
 	});
@@ -179,6 +240,6 @@
 		}
 		//alert(JSON.stringify(objectAray));
 		$('#jsonArray').val(JSON.stringify(objectAray));
-	}
+	} */
 		
 </script>

@@ -25,7 +25,11 @@ public class ProductJSONEntity {
 	
 	public Long taxClassId;
 	
+	public BigDecimal taxAmount;
+	
 	public BigDecimal amount;
+	
+	public Long invoiceNumber;
 	
 	public ProductJSONEntity() {
 		

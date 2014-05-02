@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.salesmanager.core.business.common.model.ProductJSONEntity;
 import com.salesmanager.core.business.inventory.model.BranchTransfer;
 import com.salesmanager.core.business.inventory.model.DebitNoteOther;
 import com.salesmanager.core.business.inventory.model.Purchase;
@@ -40,6 +41,10 @@ import com.salesmanager.core.business.reference.inventory.service.DebitNoteOther
 import com.salesmanager.core.business.reference.inventory.service.PurchaseReturnDebitNoteService;
 import com.salesmanager.core.business.reference.inventory.service.PurchaseService;
 import com.salesmanager.core.business.reference.inventory.service.StockService;
+import com.salesmanager.core.business.service.utils.LogicUtils;
+import com.salesmanager.core.business.service.utils.ProductJSONEntityService;
+import com.salesmanager.core.business.tax.model.taxclass.TaxClass;
+import com.salesmanager.core.business.tax.service.TaxClassService;
 import com.salesmanager.core.business.user.model.User;
 import com.salesmanager.core.business.user.service.UserService;
 import com.salesmanager.core.utils.ajax.AjaxResponse;
@@ -71,6 +76,9 @@ public class InventoryController {
 
 	@Autowired
 	BranchTransferService branchTransferService;
+	
+	@Autowired
+	private TaxClassService taxClassService;
 
 	@Autowired
 	LabelUtils messages;
@@ -82,6 +90,22 @@ public class InventoryController {
 		Stock stock = new Stock();
 		model.addAttribute("stock", stock);
 		setMenu(model, request, "openingStock");
+		
+		MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
+		List<TaxClass> taxClasses = taxClassService.listByStore(store);
+
+		Map<Long, BigDecimal> taxRateMap = new HashMap<Long, BigDecimal>();
+		for (TaxClass tc : taxClasses) {
+			if (tc.getTaxRates() != null && tc.getTaxRates().size() > 0) {
+				taxRateMap.put(tc.getId(), tc.getTaxRates().iterator().next().getTaxRate());
+			} else {
+				taxRateMap.put(tc.getId(), new BigDecimal(0));
+			}
+		}
+
+		model.addAttribute("taxClasses", taxClasses);
+		model.addAttribute("taxRateMap", LogicUtils.getJSONStringFromMap(taxRateMap));
+		
 		return "admin-inventory";
 	}
 
@@ -92,6 +116,22 @@ public class InventoryController {
 		Purchase purchase = new Purchase();
 		model.addAttribute("purchase", purchase);
 		setMenu(model, request, "purchase");
+		
+		MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
+		List<TaxClass> taxClasses = taxClassService.listByStore(store);
+
+		Map<Long, BigDecimal> taxRateMap = new HashMap<Long, BigDecimal>();
+		for (TaxClass tc : taxClasses) {
+			if (tc.getTaxRates() != null && tc.getTaxRates().size() > 0) {
+				taxRateMap.put(tc.getId(), tc.getTaxRates().iterator().next().getTaxRate());
+			} else {
+				taxRateMap.put(tc.getId(), new BigDecimal(0));
+			}
+		}
+
+		model.addAttribute("taxClasses", taxClasses);
+		model.addAttribute("taxRateMap", LogicUtils.getJSONStringFromMap(taxRateMap));
+		
 		return "admin-perchase";
 	}
 
@@ -102,6 +142,22 @@ public class InventoryController {
 		PurchaseReturnDebitNote purchaseReturnDebitNote = new PurchaseReturnDebitNote();
 		model.addAttribute("purchaseReturnDebitNote", purchaseReturnDebitNote);
 		setMenu(model, request, "purchase");
+		
+		MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
+		List<TaxClass> taxClasses = taxClassService.listByStore(store);
+
+		Map<Long, BigDecimal> taxRateMap = new HashMap<Long, BigDecimal>();
+		for (TaxClass tc : taxClasses) {
+			if (tc.getTaxRates() != null && tc.getTaxRates().size() > 0) {
+				taxRateMap.put(tc.getId(), tc.getTaxRates().iterator().next().getTaxRate());
+			} else {
+				taxRateMap.put(tc.getId(), new BigDecimal(0));
+			}
+		}
+
+		model.addAttribute("taxClasses", taxClasses);
+		model.addAttribute("taxRateMap", LogicUtils.getJSONStringFromMap(taxRateMap));
+		
 		return "admin-perchase-returned";
 	}
 
@@ -132,8 +188,8 @@ public class InventoryController {
 		String sCurrentUser = request.getRemoteUser();
 		MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
 		Date date = null;
-		JSONParser parser = new JSONParser();
-		JSONArray jsonArray = (JSONArray) parser.parse(stock.getOpeningStocks());
+		/*JSONParser parser = new JSONParser();
+		JSONArray jsonArray = (JSONArray) parser.parse(stock.getOpeningStocks());*/
 		if (!StringUtils.isBlank(stock.getStockSDate())) {
 			try {
 				date = DateUtil.getDate(stock.getStockSDate());
@@ -154,7 +210,25 @@ public class InventoryController {
 		}
 		stock.setCreatedBy(sCurrentUser);
 		stock.setMerchantStore(store);
-		Iterator i = jsonArray.iterator();
+		
+		List<ProductJSONEntity> pjeList = ProductJSONEntityService.getProductJSONEntityListFromJsonString(stock.getProductJson());
+		
+		for(ProductJSONEntity pje : pjeList) {
+			Stock stock1 = new Stock();
+			stock1.setStockSKU(pje.productName);
+			stock1.setStockQuantity(pje.quantity);
+			stock1.setStockUOM(pje.uom);
+			stock1.setStockUnitPrice(pje.unitPrice);
+			stock1.setStockAmount(pje.amount);
+			stock1.setStockDate(stock.getStockDate());
+			stock1.setStockComment(stock.getStockComment());
+			stock1.setCreatedBy(sCurrentUser);
+			stock1.setMerchantStore(store);
+
+			stockService.addStosk(stock1);
+		}
+		
+		/*Iterator i = jsonArray.iterator();
 
 		while (i.hasNext()) {
 			Stock stock1 = new Stock();
@@ -162,7 +236,6 @@ public class InventoryController {
 			stock1.setStockSKU((String) slide.get("stockSKU"));
 			stock1.setStockQuantity(Integer.parseInt((String) slide.get("stockQuantity")));
 			stock1.setStockUOM((String) slide.get("stockUOM"));
-			stock1.setStockQuantity(Integer.parseInt((String) slide.get("stockQuantity")));
 			stock1.setStockUnitPrice(new BigDecimal(slide.get("stockUnitPrice").toString()));
 			stock1.setStockAmount(new BigDecimal(slide.get("stockAmount").toString()));
 			stock1.setStockDate(stock.getStockDate());
@@ -171,7 +244,7 @@ public class InventoryController {
 			stock1.setMerchantStore(store);
 
 			stockService.addStosk(stock1);
-		}
+		}*/
 
 		stock.reset();
 		model.addAttribute("stock", stock);
@@ -188,8 +261,10 @@ public class InventoryController {
 		MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
 		Date date = null;
 
-		JSONParser parser = new JSONParser();
-		JSONArray jsonArray = (JSONArray) parser.parse(purchase.getJsonArray());
+		List<ProductJSONEntity> pjeList = ProductJSONEntityService.getProductJSONEntityListFromJsonString(purchase.getProductJson());
+		
+		/*JSONParser parser = new JSONParser();
+		JSONArray jsonArray = (JSONArray) parser.parse(purchase.getJsonArray());*/
 
 		if (!StringUtils.isBlank(purchase.getPurchase_Sdate())) {
 			try {
@@ -213,7 +288,31 @@ public class InventoryController {
 
 		purchase.setCreated_by(sCurrentUser);
 		purchase.setMerchantStore(store);
-		Iterator i = jsonArray.iterator();
+		
+		for(ProductJSONEntity pje: pjeList) {
+			Purchase purchase1 = new Purchase();
+
+			purchase1.setCreated_by(sCurrentUser);
+			purchase1.setMerchantStore(store);
+			purchase1.setPurchase_sku(pje.productName);
+			purchase1.setPurchase_description(pje.description);
+			purchase1.setPurchase_quantity(pje.quantity);
+			purchase1.setPurchase_uom(pje.uom);
+			purchase1.setPurchase_unit_price(pje.unitPrice);
+			purchase1.setPurchase_tax(pje.taxClassId.toString());
+			purchase1.setPurchase_amount(pje.amount);
+
+			purchase1.setPurchase_supplier(purchase.getPurchase_supplier());
+			purchase1.setPurchase_due_date(purchase.getPurchase_due_date());
+			purchase1.setPurchase_date(purchase.getPurchase_date());
+			purchase1.setPurchase_ref_number(purchase.getPurchase_ref_number());
+			purchase1.setPurchase_comment(purchase.getPurchase_comment());
+			purchase1.setEntry_date(purchase.getEntry_date());
+
+			purchaseService.addPurchase(purchase1);
+		}
+		
+		/*Iterator i = jsonArray.iterator();
 		while (i.hasNext()) {
 			Purchase purchase1 = new Purchase();
 			JSONObject slide = (JSONObject) i.next();
@@ -236,7 +335,7 @@ public class InventoryController {
 			purchase1.setEntry_date(purchase.getEntry_date());
 
 			purchaseService.addPurchase(purchase1);
-		}
+		}*/
 
 		purchase.reset();
 		model.addAttribute("purchase", purchase);
@@ -254,12 +353,14 @@ public class InventoryController {
 		MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);
 		Date date = null;
 
-		JSONParser parser = new JSONParser();
+		/*JSONParser parser = new JSONParser();
 		System.out.println("============Json Starts====================>>" + purchaseReturnDebitNote.getJsonArray());
 		JSONArray jsonArray = (JSONArray) parser.parse(purchaseReturnDebitNote.getJsonArray());
 		System.out.println("============Json JSONParser completes====================");
-		System.out.println(jsonArray.toJSONString());
+		System.out.println(jsonArray.toJSONString());*/
 
+		List<ProductJSONEntity> pjeList = ProductJSONEntityService.getProductJSONEntityListFromJsonString(purchaseReturnDebitNote.getProductJson());
+		
 		if (!StringUtils.isBlank(purchaseReturnDebitNote.getDebit_Sdate())) {
 			try {
 				date = DateUtil.getDate(purchaseReturnDebitNote.getDebit_Sdate());
@@ -275,7 +376,32 @@ public class InventoryController {
 
 		purchaseReturnDebitNote.setCreated_by(sCurrentUser);
 		purchaseReturnDebitNote.setMerchantStore(store);
-		Iterator<JSONObject> i = jsonArray.iterator();
+		
+		for(ProductJSONEntity pje : pjeList) {
+			
+			PurchaseReturnDebitNote purchaseReturnDebitNote1 = new PurchaseReturnDebitNote();
+
+			purchaseReturnDebitNote1.setCreated_by(sCurrentUser);
+			purchaseReturnDebitNote1.setMerchantStore(store);
+
+			purchaseReturnDebitNote1.setDebit_sku(pje.productName);
+			purchaseReturnDebitNote1.setDebit_description(pje.description);
+			purchaseReturnDebitNote1.setDebit_quantity(pje.quantity);
+			purchaseReturnDebitNote1.setDebit_unit_price(pje.unitPrice);
+			purchaseReturnDebitNote1.setDebit_tax(pje.taxClassId.toString());
+			purchaseReturnDebitNote1.setDebit_tax_amount(pje.taxAmount);
+			purchaseReturnDebitNote1.setDebit_amount(pje.amount);
+			purchaseReturnDebitNote1.setDebit_invoice_number(pje.invoiceNumber.toString());
+
+			System.out.println("=========purchaseReturnDebitNote1.getDebit_sku===>>>" + purchaseReturnDebitNote1.getDebit_sku());
+			purchaseReturnDebitNote1.setDebit_supplier(purchaseReturnDebitNote.getDebit_supplier());
+			purchaseReturnDebitNote1.setDebit_date(purchaseReturnDebitNote.getDebit_date());
+			purchaseReturnDebitNote1.setDebit_ref_number(purchaseReturnDebitNote.getDebit_ref_number());
+			purchaseReturnDebitNote1.setEntry_date(purchaseReturnDebitNote.getEntry_date());
+			purchaseReturnDebitNoteService.addPurchaseReturnDebitNote(purchaseReturnDebitNote1);
+		}
+		
+		/*Iterator<JSONObject> i = jsonArray.iterator();
 		System.out.println("============Basic Settings completes=========Going to Iterate JsonArray===========");
 		while (i.hasNext()) {
 			PurchaseReturnDebitNote purchaseReturnDebitNote1 = new PurchaseReturnDebitNote();
@@ -300,7 +426,7 @@ public class InventoryController {
 			purchaseReturnDebitNote1.setEntry_date(purchaseReturnDebitNote.getEntry_date());
 			purchaseReturnDebitNoteService.addPurchaseReturnDebitNote(purchaseReturnDebitNote1);
 
-		}
+		}*/
 
 		purchaseReturnDebitNote = new PurchaseReturnDebitNote();
 		model.addAttribute("purchaseReturnDebitNote", purchaseReturnDebitNote);

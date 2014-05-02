@@ -243,7 +243,7 @@ public class OrdersController {
 
 	@Secured("ORDER")
 	@RequestMapping(value = "/admin/orders/savesalesorderbooking.html", method = RequestMethod.POST)
-	public String saveCreditNote(@Valid @ModelAttribute("salesOrderBooking") SalesOrderBooking salesOrderBooking, BindingResult result, Model model, HttpServletRequest request,
+	public String saveSalesOederBooking(@Valid @ModelAttribute("salesOrderBooking") SalesOrderBooking salesOrderBooking, BindingResult result, Model model, HttpServletRequest request,
 			HttpServletResponse response, Locale locale) throws Exception {
 
 		MerchantStore store = (MerchantStore) request.getAttribute(Constants.ADMIN_STORE);

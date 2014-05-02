@@ -90,6 +90,9 @@ public class PurchaseReturnDebitNote extends SalesManagerEntity<Long, PurchaseRe
 	@Column(name = "CREATED_BY")
 	private String created_by;
 
+	@Transient
+	private String productJson;
+	
 	public String getDebit_credit_to() {
 		return debit_credit_to;
 	}
@@ -264,6 +267,20 @@ public class PurchaseReturnDebitNote extends SalesManagerEntity<Long, PurchaseRe
 
 	public void setEntry_Sdate(String entry_Sdate) {
 		this.entry_Sdate = entry_Sdate;
+	}
+
+	/**
+	 * @return the productJson
+	 */
+	public String getProductJson() {
+		return productJson;
+	}
+
+	/**
+	 * @param productJson the productJson to set
+	 */
+	public void setProductJson(String productJson) {
+		this.productJson = productJson;
 	}
 
 }

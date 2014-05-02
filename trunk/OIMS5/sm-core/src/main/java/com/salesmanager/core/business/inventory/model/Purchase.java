@@ -93,6 +93,9 @@ public class Purchase extends SalesManagerEntity<Long, Purchase> {
 
 	@Transient
 	private String jsonArray;
+	
+	@Transient
+	private String productJson;
 
 	@Column(name = "ENTRY_DATE")
 	private Date entry_date;
@@ -273,6 +276,20 @@ public class Purchase extends SalesManagerEntity<Long, Purchase> {
 
 	public void setEntry_Sdate(String entry_Sdate) {
 		this.entry_Sdate = entry_Sdate;
+	}
+
+	/**
+	 * @return the productJson
+	 */
+	public String getProductJson() {
+		return productJson;
+	}
+
+	/**
+	 * @param productJson the productJson to set
+	 */
+	public void setProductJson(String productJson) {
+		this.productJson = productJson;
 	}
 
 }
