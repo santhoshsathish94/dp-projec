@@ -389,7 +389,7 @@
 "menu":{
 "code":"inventoryManagement", 
 "icon":"icon-inventoryManagement",
-"url":"/admin/inventoryManagement/createstock.html", 
+"url":"/admin/inventoryManagement/stocks.html", 
 "role":"AUTH",
 "order":12,
 "menus":[
@@ -478,7 +478,7 @@
 "menu":{
 "code":"account_Management",
 "icon":"icon-wrench", 
-"url":"/admin/account/createReceipt.html", 
+"url":"/admin/account/receipts.html", 
 "role":"AUTH",
 "order":13,
 "menus":[

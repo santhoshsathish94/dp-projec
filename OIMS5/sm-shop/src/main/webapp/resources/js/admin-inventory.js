@@ -1,8 +1,17 @@
-function onLoadSalesOrderBooking() {
-	setupCustomerPhoneticAutoComplete('customerName');
-	setupProductAutoComplete('productName1');
-	
-	onLoadProductInfo();
+function onLoadCreateStock() {
+	if($('#id').val() == '') {
+		setupProductAutoComplete('productName1');
+	} else {
+		onLoadProductInfo();
+	}
+}
+
+function onLoadPurchaseEntry() {
+	if($('#id').val() == '') {
+		setupProductAutoComplete('productName1');
+	} else {
+		onLoadProductInfo();
+	}
 }
 
 function addNewProduct() {
@@ -200,7 +209,6 @@ function setupProductAutoComplete(labelId) {
             $("#prod_unit_price"+rowValue).val(unitPrice.toFixed(2));
             
             $("#prod_tax"+rowValue).append($('#hiddenTaxClass option').clone());
-            
             $("#prod_tax"+rowValue).val(i.item.val.taxClassId);
             
             var amount = parseFloat(i.item.val.amount);
@@ -224,11 +232,15 @@ function calculateTotal() {
 	    }
 	}
 	
-	$('#subTotalValue').html('');
-	$('#subTotalValue').html(subTotal.toFixed(2));
+	if($('#subTotalValue').length > 0) {
+		$('#subTotalValue').html('');
+		$('#subTotalValue').html(subTotal.toFixed(2));
+	}
 	
-	$('#totalValue').html('');
-	$('#totalValue').html(subTotal.toFixed(2));
+	if($('#totalValue').length > 0) {
+		$('#totalValue').html('');
+		$('#totalValue').html(subTotal.toFixed(2));
+	}
 }
 
 function calculateAmount(calledDiv) {
@@ -252,15 +264,17 @@ function calculateAmount(calledDiv) {
 	
 	amount = parseFloat(qty * unitPrice);
 	
-	var taxAmt = parseFloat($('#tax_amount'+rowValue).val());
 	var taxAmount = 0.00;
-	if(!isNaN(taxAmt)) {
-		taxAmount = parseFloat((taxAmt * amount)/100);
+	if($('#tax_amount'+rowValue).length > 0) {
+		var taxAmt = parseFloat($('#tax_amount'+rowValue).val());
+		if(!isNaN(taxAmt)) {
+			taxAmount = parseFloat((taxAmt * amount)/100);
+		}
 	}
-	
 	var total = parseFloat(amount + taxAmount);
 	
-	$('#prod_amount'+rowValue).val(total.toFixed(2));
+	if($('#prod_amount'+rowValue).length > 0) 
+		$('#prod_amount'+rowValue).val(total.toFixed(2));
 	
 	calculateTotal();
 }
@@ -351,13 +365,5 @@ function onLoadProductInfo() {
             
             setupProductAutoComplete('productName'+productCount);
 		}
-	}
-}
-
-function onLoadCreateStock() {
-	if($('#id').val() == '') {
-		setupProductAutoComplete('productName1');
-	} else {
-		onLoadProductInfo();
 	}
 }

@@ -85,6 +85,9 @@ public class Stock extends SalesManagerEntity<Long, Stock> {
 	@Transient
 	private String openingStocks;
 	
+	@Transient
+	private String productJson;
+	
 	public String getOpeningStocks() {
 		return openingStocks;
 	}
@@ -231,6 +234,20 @@ public class Stock extends SalesManagerEntity<Long, Stock> {
 		this.updatedBy = null;
 		this.updatedDate = null;
 		this.updatedSDate = null;
+	}
+
+	/**
+	 * @return the productJson
+	 */
+	public String getProductJson() {
+		return productJson;
+	}
+
+	/**
+	 * @param productJson the productJson to set
+	 */
+	public void setProductJson(String productJson) {
+		this.productJson = productJson;
 	}
 
 }
