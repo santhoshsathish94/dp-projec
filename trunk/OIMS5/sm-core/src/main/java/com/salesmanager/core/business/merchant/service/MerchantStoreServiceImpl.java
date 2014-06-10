@@ -1,5 +1,6 @@
 package com.salesmanager.core.business.merchant.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,6 +155,17 @@ public class MerchantStoreServiceImpl extends SalesManagerEntityServiceImpl<Inte
 		
 		super.delete(merchant);
 		
+	}
+
+
+	@Override
+	public List<MerchantStore> listStoreByIds(ArrayList<Integer> storeIds)
+			throws ServiceException {
+		try {
+			return this.merchantStoreDao.listStoreByIds(storeIds);
+		} catch (Exception e) {
+			throw new ServiceException(e);
+		}
 	}
 
 }

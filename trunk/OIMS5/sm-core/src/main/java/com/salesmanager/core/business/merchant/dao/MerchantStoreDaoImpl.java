@@ -1,6 +1,10 @@
 package com.salesmanager.core.business.merchant.dao;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import javax.persistence.Query;
 
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -13,6 +17,8 @@ import com.salesmanager.core.business.generic.dao.SalesManagerEntityDaoImpl;
 import com.salesmanager.core.business.generic.exception.ServiceException;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
 import com.salesmanager.core.business.merchant.model.QMerchantStore;
+import com.salesmanager.core.business.user.model.Group;
+import com.salesmanager.core.business.user.model.User;
 
 
 @Repository("merchantStoreDao")
@@ -141,6 +147,22 @@ public class MerchantStoreDaoImpl extends SalesManagerEntityDaoImpl<Integer, Mer
 			.where(qMerchantStore.id.eq(merchantStoreId));
 		
 		return query.uniqueResult(qMerchantStore);
+	}
+
+	@Override
+	public List<MerchantStore> listStoreByIds(ArrayList<Integer> storeIds) {
+		
+QMerchantStore qMerchantStore = QMerchantStore.merchantStore;
+
+		
+		JPQLQuery query = new JPAQuery (getEntityManager());
+		query.from(qMerchantStore)
+			.where(qMerchantStore.id.in(storeIds));
+		
+		List<MerchantStore> stores =  query.listDistinct(qMerchantStore);
+    	
+    	return stores;
+		
 	}
 
 }

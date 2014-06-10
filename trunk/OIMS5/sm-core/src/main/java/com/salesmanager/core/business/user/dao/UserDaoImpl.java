@@ -8,6 +8,7 @@ import com.mysema.query.jpa.JPQLQuery;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.salesmanager.core.business.generic.dao.SalesManagerEntityDaoImpl;
 import com.salesmanager.core.business.merchant.model.MerchantStore;
+import com.salesmanager.core.business.merchant.model.QMerchantStore;
 import com.salesmanager.core.business.user.model.QGroup;
 import com.salesmanager.core.business.user.model.QUser;
 import com.salesmanager.core.business.user.model.User;
@@ -22,13 +23,15 @@ public class UserDaoImpl extends SalesManagerEntityDaoImpl<Long, User> implement
 		
 		QUser qUser = QUser.user;
 		QGroup qGroup = QGroup.group;
+		QMerchantStore qMerchantStore = QMerchantStore.merchantStore;
 		
 		JPQLQuery query = new JPAQuery (getEntityManager());
 		
 		query.from(qUser)
-			.innerJoin(qUser.groups, qGroup).fetch()
+			.innerJoin(qUser.groups, qGroup).fetch()			
 			.innerJoin(qUser.merchantStore).fetch()
 			.leftJoin(qUser.defaultLanguage).fetch()
+			//.innerJoin(qUser.merchantStores, qMerchantStore).fetch()
 			.where(qUser.adminName.eq(userName));
 		
 		
