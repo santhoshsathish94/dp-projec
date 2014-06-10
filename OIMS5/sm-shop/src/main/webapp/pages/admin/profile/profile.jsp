@@ -155,7 +155,16 @@
 	                        </div>
 	              </div>
 	               </sec:authorize>
-                  
+	               
+                  <sec:authorize access="hasRole('ADMIN') and fullyAuthenticated">
+                  <div class="control-group">
+	                        <label><s:message code="" text="Stores"/></label>
+	                        <div class="controls">
+	                        	<form:checkboxes cssClass="highlight" items="${stores}" itemValue="id" itemLabel="storename" path="sMerchantStores" delimiter="<br/>" /> 
+	                            <span class="help-inline"><form:errors path="sMerchantStores" cssClass="error" /></span>
+	                        </div>
+	              </div>
+	               </sec:authorize>
                   
                   <sec:authorize access="hasRole('ADMIN') and fullyAuthenticated">
                   <div class="control-group">
