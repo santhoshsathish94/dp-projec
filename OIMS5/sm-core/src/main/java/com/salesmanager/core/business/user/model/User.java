@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.validator.constraints.Email;
@@ -78,6 +79,18 @@ public class User extends SalesManagerEntity<Long, User> implements Auditable {
 		
 	})
 	private List<Group> groups = new ArrayList<Group>();
+	
+	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name = "USER_MERCHANT_STORE", joinColumns = { 
+			@JoinColumn(name = "USER_ID", nullable = false, updatable = false) }
+			, 
+			inverseJoinColumns = { @JoinColumn(name = "MERCHANT_ID", 
+					nullable = false, updatable = false) }
+	)	
+	private List<MerchantStore> merchantStores = new ArrayList<MerchantStore>();
+	@Transient
+	private List<String> sMerchantStores = new ArrayList<String>();
+	
 	
 	@NotEmpty
 	@Email
@@ -261,6 +274,22 @@ public class User extends SalesManagerEntity<Long, User> implements Auditable {
 
 	public List<Group> getGroups() {
 		return groups;
+	}
+
+	public List<MerchantStore> getMerchantStores() {
+		return merchantStores;
+	}
+
+	public void setMerchantStores(List<MerchantStore> merchantStores) {
+		this.merchantStores = merchantStores;
+	}
+
+	public List<String> getsMerchantStores() {
+		return sMerchantStores;
+	}
+
+	public void setsMerchantStores(List<String> sMerchantStores) {
+		this.sMerchantStores = sMerchantStores;
 	}
 
 	public MerchantStore getMerchantStore() {
