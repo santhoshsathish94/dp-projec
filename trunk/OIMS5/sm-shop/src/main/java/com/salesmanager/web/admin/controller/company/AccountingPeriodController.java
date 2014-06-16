@@ -147,7 +147,7 @@ public class AccountingPeriodController {
 		//display menu
 		setMenu(model,request);
 		
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		String returnType = "admin-company-accounting-period";
 		
