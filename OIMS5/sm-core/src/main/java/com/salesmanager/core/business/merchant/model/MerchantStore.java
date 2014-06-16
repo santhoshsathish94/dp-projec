@@ -73,11 +73,11 @@ public class MerchantStore extends SalesManagerEntity<Integer, MerchantStore> {
 	@Column(name = "STORE_POSTAL_CODE", length=15)
 	private String storepostalcode;
 
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Country.class)
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Country.class)
 	@JoinColumn(name="COUNTRY_ID", nullable=false, updatable=true)
 	private Country country;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="ZONE_ID", nullable=true, updatable=true)
 	private Zone zone;
 
