@@ -176,7 +176,8 @@ public class UserController {
 
 	@Secured("AUTH")
 	@RequestMapping(value = "/admin/users/savePassword.html", method = RequestMethod.POST)
-	public String changePassword(@ModelAttribute("password") Password password, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public String changePassword(@ModelAttribute("password") Password password, BindingResult result, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale)
+			throws Exception {
 		setMenu(model, request);
 		String userName = request.getRemoteUser();
 		User dbUser = userService.getByUserName(userName);
@@ -187,7 +188,8 @@ public class UserController {
 
 		// validate password not empty
 		if (StringUtils.isBlank(password.getPassword())) {
-			ObjectError error = new ObjectError("password", new StringBuilder().append(messages.getMessage("label.generic.password", locale)).append(" ").append(messages.getMessage("message.cannot.empty", locale)).toString());
+			ObjectError error = new ObjectError("password", new StringBuilder().append(messages.getMessage("label.generic.password", locale)).append(" ")
+					.append(messages.getMessage("message.cannot.empty", locale)).toString());
 			result.addError(error);
 			return ControllerConstants.Tiles.User.password;
 		}
@@ -202,12 +204,14 @@ public class UserController {
 		}
 
 		if (StringUtils.isBlank(password.getNewPassword())) {
-			ObjectError error = new ObjectError("newPassword", new StringBuilder().append(messages.getMessage("label.generic.newpassword", locale)).append(" ").append(messages.getMessage("message.cannot.empty", locale)).toString());
+			ObjectError error = new ObjectError("newPassword", new StringBuilder().append(messages.getMessage("label.generic.newpassword", locale)).append(" ")
+					.append(messages.getMessage("message.cannot.empty", locale)).toString());
 			result.addError(error);
 		}
 
 		if (StringUtils.isBlank(password.getRepeatPassword())) {
-			ObjectError error = new ObjectError("newPasswordAgain", new StringBuilder().append(messages.getMessage("label.generic.newpassword.repeat", locale)).append(" ").append(messages.getMessage("message.cannot.empty", locale)).toString());
+			ObjectError error = new ObjectError("newPasswordAgain", new StringBuilder().append(messages.getMessage("label.generic.newpassword.repeat", locale)).append(" ")
+					.append(messages.getMessage("message.cannot.empty", locale)).toString());
 			result.addError(error);
 		}
 
@@ -290,16 +294,27 @@ public class UserController {
 		// get groups
 		List<Group> groups = new ArrayList<Group>();
 		List<Group> userGroups = groupService.listGroup(GroupType.ADMIN);
+		List<MerchantStore> stores = new ArrayList<MerchantStore>();
+
+		// stores.add(store);
+		stores = user.getMerchantStores();
+
 		for (Group group : userGroups) {
 			if (!group.getGroupName().equals(Constants.GROUP_SUPERADMIN)) {
 				groups.add(group);
 			}
 		}
 
-		List<MerchantStore> stores = new ArrayList<MerchantStore>();
-
-		// stores.add(store);
-		stores = merchantStoreService.list();
+		for (Group group : user.getGroups()) {
+			if (group.getGroupName().equals(Constants.GROUP_SUPERADMIN)) {
+				stores = merchantStoreService.list();
+				break;
+			}
+		}
+		
+		if(user.getAdminName()==null){
+			stores = merchantStoreService.list();
+		}
 
 		// String remoteUser = request.getRemoteUser();
 
@@ -371,13 +386,13 @@ public class UserController {
 	private String displayUser(User user, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
 		ArrayList<String> storesId = new ArrayList<String>();
-		if (user.getMerchantStores().size() > 0) {
+		if (user != null && user.getMerchantStores().size() > 0) {
 			for (MerchantStore mstore : user.getMerchantStores()) {
 				storesId.add(mstore.getId().toString());
 			}
 		}
-
-		user.setsMerchantStores(storesId);
+		if (user != null)
+			user.setsMerchantStores(storesId);
 		// display menu
 		setMenu(model, request);
 
@@ -509,8 +524,8 @@ public class UserController {
 			result.addError(error);
 		}
 
-		if (user.getQuestion1().equals(user.getQuestion2()) || user.getQuestion1().equals(user.getQuestion3()) || user.getQuestion2().equals(user.getQuestion1()) || user.getQuestion1().equals(user.getQuestion3()) || user.getQuestion3().equals(user.getQuestion1())
-				|| user.getQuestion1().equals(user.getQuestion2()))
+		if (user.getQuestion1().equals(user.getQuestion2()) || user.getQuestion1().equals(user.getQuestion3()) || user.getQuestion2().equals(user.getQuestion1())
+				|| user.getQuestion1().equals(user.getQuestion3()) || user.getQuestion3().equals(user.getQuestion1()) || user.getQuestion1().equals(user.getQuestion2()))
 
 		{
 			ObjectError error = new ObjectError("question1", messages.getMessage("security.questions.differentmessages", locale));
