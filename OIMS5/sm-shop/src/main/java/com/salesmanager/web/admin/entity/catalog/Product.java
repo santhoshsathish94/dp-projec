@@ -11,10 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 
+
 import com.salesmanager.core.business.catalog.product.model.availability.ProductAvailability;
 import com.salesmanager.core.business.catalog.product.model.description.ProductDescription;
 import com.salesmanager.core.business.catalog.product.model.image.ProductImage;
 import com.salesmanager.core.business.catalog.product.model.price.ProductPrice;
+import com.salesmanager.core.business.merchant.model.MerchantStore;
 
 public class Product implements Serializable {
 	
@@ -55,6 +57,8 @@ public class Product implements Serializable {
 	
 	private String productVariants;
 	
+	private List<String> merchantstores = new ArrayList<String>();
+	
 	public String getDateAvailable() {
 		return dateAvailable;
 	}
@@ -63,6 +67,10 @@ public class Product implements Serializable {
 	}
 	public com.salesmanager.core.business.catalog.product.model.Product getProduct() {
 		return product;
+	}
+	
+	public com.salesmanager.core.business.catalog.product.model.Product getProduct1() throws CloneNotSupportedException {
+		return (com.salesmanager.core.business.catalog.product.model.Product) product.clone();
 	}
 	public void setProduct(com.salesmanager.core.business.catalog.product.model.Product product) {
 		this.product = product;
@@ -134,6 +142,12 @@ public class Product implements Serializable {
 	 */
 	public void setProductVariants(String productVariants) {
 		this.productVariants = productVariants;
+	}
+	public List<String> getMerchantstores() {
+		return merchantstores;
+	}
+	public void setMerchantstores(List<String> merchantstores) {
+		this.merchantstores = merchantstores;
 	}
 	
 
