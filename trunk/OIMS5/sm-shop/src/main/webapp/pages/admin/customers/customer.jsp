@@ -453,7 +453,40 @@ function resetCustomerPassword(customerId){
 	                        </div>
 	                  </div>
 
-	 					
+					
+					<div class="control-group">
+	                        <label><s:message code="label.customer.pan.number" text="Pan Number"/></label>
+	                        <div class="controls">
+	                        		<form:input  cssClass="input-large highlight"  maxlength="64"  path="panNumber"/>
+	                                <span class="help-inline"><form:errors path="panNumber" cssClass="error" /></span>
+	                        </div>
+	                </div>
+	                
+	                <div class="control-group">
+	                        <label><s:message code="label.customer.tin.number" text="Tin Number"/></label>
+	                        <div class="controls">
+	                        		<form:input  cssClass="input-large highlight"  maxlength="64"  path="tinNumber"/>
+	                                <span class="help-inline"><form:errors path="tinNumber" cssClass="error" /></span>
+	                        </div>
+	                </div>
+	                
+	                <div class="control-group">
+	                        <label><s:message code="label.customer.cst.number" text="CST Number"/></label>
+	                        <div class="controls">
+	                        		<form:input  cssClass="input-large highlight"  maxlength="64"  path="cstNumber"/>
+	                                <span class="help-inline"><form:errors path="cstNumber" cssClass="error" /></span>
+	                        </div>
+	                </div>
+	                
+	                <div class="control-group">
+	                        <label><s:message code="label.customer.service.tax.number" text="Service Tax Number"/></label>
+	                        <div class="controls">
+	                        		<form:input  cssClass="input-large highlight"  maxlength="64"  path="serviceTaxNumber"/>
+	                                <span class="help-inline"><form:errors path="serviceTaxNumber" cssClass="error" /></span>
+	                        </div>
+	                </div>
+					
+						 					
 				<h3><s:message code="label.customer.shippinginformation" text="Shipping information"/></h3>
 				<address>
 			            <div class="controls">
