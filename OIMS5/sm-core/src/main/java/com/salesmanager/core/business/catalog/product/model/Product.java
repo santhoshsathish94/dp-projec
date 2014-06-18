@@ -1,8 +1,10 @@
 package com.salesmanager.core.business.catalog.product.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -49,8 +51,13 @@ import com.salesmanager.core.constants.SchemaConstant;
 @Entity
 @EntityListeners(value = AuditListener.class)
 @Table(name = "PRODUCT")
-public class Product extends SalesManagerEntity<Long, Product> implements Auditable {
+public class Product extends SalesManagerEntity<Long, Product> implements Auditable, Cloneable {
 	private static final long serialVersionUID = -6228066416290007047L;
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+	return super.clone();
+	}
 
 	@Id
 	@Column(name = "PRODUCT_ID", unique=true, nullable=false)
@@ -163,6 +170,9 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 	
 	@Transient
 	private String productVariants;
+	
+	@Transient
+	private List<MerchantStore> merchantstores = new ArrayList<MerchantStore>();
 	
 	public Product() {
 	}
@@ -449,5 +459,16 @@ public class Product extends SalesManagerEntity<Long, Product> implements Audita
 		this.productVariants = productVariants;
 	}
 
+	public List<MerchantStore> getMerchantstores() {
+		return merchantstores;
+	}
+
+	public void setMerchantstores(List<MerchantStore> merchantstores) {
+		this.merchantstores = merchantstores;
+	}
+
+
+
+	
 
 }
