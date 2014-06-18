@@ -1,3 +1,4 @@
+
 package com.salesmanager.core.business.customer.model;
 
 import java.util.ArrayList;
@@ -133,6 +134,17 @@ public class Customer extends SalesManagerEntity<Long, Customer> {
 	@Transient
 	private String showDeliveryStateList;
 	
+	@Column(name="PAN_NUMBER")
+	private String panNumber;
+	
+	@Column(name="TIN_NUMBER")
+	private String tinNumber;
+	
+	@Column(name="CST_NUMBER")
+	private String cstNumber;
+	
+	@Column(name="SERVICE_TAX_NUMBER")
+	private String serviceTaxNumber;
 	
 	public Customer() {
 	}
@@ -285,6 +297,62 @@ public class Customer extends SalesManagerEntity<Long, Customer> {
 
 	public CustomerGender getGender() {
 		return gender;
+	}
+
+	/**
+	 * @return the panNumber
+	 */
+	public String getPanNumber() {
+		return panNumber;
+	}
+
+	/**
+	 * @param panNumber the panNumber to set
+	 */
+	public void setPanNumber(String panNumber) {
+		this.panNumber = panNumber;
+	}
+
+	/**
+	 * @return the tinNumber
+	 */
+	public String getTinNumber() {
+		return tinNumber;
+	}
+
+	/**
+	 * @param tinNumber the tinNumber to set
+	 */
+	public void setTinNumber(String tinNumber) {
+		this.tinNumber = tinNumber;
+	}
+
+	/**
+	 * @return the cstNumber
+	 */
+	public String getCstNumber() {
+		return cstNumber;
+	}
+
+	/**
+	 * @param cstNumber the cstNumber to set
+	 */
+	public void setCstNumber(String cstNumber) {
+		this.cstNumber = cstNumber;
+	}
+
+	/**
+	 * @return the serviceTaxNumber
+	 */
+	public String getServiceTaxNumber() {
+		return serviceTaxNumber;
+	}
+
+	/**
+	 * @param serviceTaxNumber the serviceTaxNumber to set
+	 */
+	public void setServiceTaxNumber(String serviceTaxNumber) {
+		this.serviceTaxNumber = serviceTaxNumber;
 	}
 	
 }

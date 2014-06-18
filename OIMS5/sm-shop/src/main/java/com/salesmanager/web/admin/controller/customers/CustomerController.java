@@ -358,6 +358,11 @@ public class CustomerController {
 		customer.getBilling().setCountry(billingCountry );
 		newCustomer.setBilling( customer.getBilling()  );
 		
+		newCustomer.setPanNumber(customer.getPanNumber());
+		newCustomer.setTinNumber(customer.getTinNumber());
+		newCustomer.setCstNumber(customer.getCstNumber());
+		newCustomer.setServiceTaxNumber(customer.getServiceTaxNumber());
+		
 		customerService.saveOrUpdate(newCustomer);
 		
 		model.addAttribute("customer", newCustomer);
