@@ -458,6 +458,16 @@ var counter = 1;
 							<span class="help-inline"></span>
 						</div>
 					</div>
+					<div class="control-group">
+	                  <div class="control-group">
+		                        <label><s:message code="" text="Stores"/></label>
+		                        <div class="controls">
+		                        	<form:checkboxes cssClass="highlight" items="${stores}" itemValue="id" itemLabel="storename" path="merchantstores" delimiter="<br/>" /> 
+		                            <span class="help-inline"><form:errors path="merchantstores" cssClass="error" /></span>
+		                        </div>
+		                        <form:hidden path="merchantstores" vlaue=""/>
+		              </div>
+					</div>
 					<div class="form-actions">
 						<div class="pull-right">
 							<button type="submit" class="btn btn-success" onclick="return setupShadeVariant();"><s:message code="button.label.submit2" text="Submit"/></button>
