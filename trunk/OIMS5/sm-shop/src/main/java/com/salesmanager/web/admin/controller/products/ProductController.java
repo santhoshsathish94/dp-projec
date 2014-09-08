@@ -474,6 +474,17 @@ public class ProductController {
 
 		Product newProduct1 = (Product) newProduct.clone();
 
+		Set<ProductDescription> descriptions1 = new HashSet<ProductDescription>();
+		if (product.getDescriptions() != null && product.getDescriptions().size() > 0) {
+
+			for (ProductDescription description1 : product.getDescriptions()) {
+				description1.setProduct(newProduct1);
+				descriptions1.add(description1);
+
+			}
+		}
+		newProduct1.setDescriptions(descriptions1);
+
 		if (product.getImage() != null && !product.getImage().isEmpty()) {
 
 			String imageName = product.getImage().getOriginalFilename();
@@ -500,27 +511,29 @@ public class ProductController {
 			newProduct.getImages().add(productImage);
 			newProduct1.getImages().add(productImage);
 
-			//productService.saveOrUpdate(newProduct);
+			productService.saveOrUpdate(newProduct);
 
 			// product displayed
 			product.setProductImage(productImage);
 		} else {
-			//productService.saveOrUpdate(newProduct);
+			productService.saveOrUpdate(newProduct);
 		}
 
 		try {
-			//saveProductAttribute(product.getProductVariants(), newProduct);
+			saveProductAttribute(product.getProductVariants(), newProduct);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		product.getMerchantstores().add(store.getId().toString());
+		// product.getMerchantstores().add(store.getId().toString());
 		if (product.getMerchantstores().size() > 0) {
 			try {
 				for (String sMstore : product.getMerchantstores()) {
 					if (!"".equals(sMstore.trim())) {
-						saveProduct1(product, merchantStoreService.getById(Integer.parseInt(sMstore)));
-						
+						copyProductById(newProduct.getId(), request, merchantStoreService.getById(Integer.parseInt(sMstore)), product);
+						// saveProduct1(product,
+						// merchantStoreService.getById(Integer.parseInt(sMstore)));
+
 					}
 				}
 			} catch (Exception e) {
@@ -1136,7 +1149,6 @@ public class ProductController {
 		}
 
 		newProduct.setDescriptions(descriptions);
-		product.setDateAvailable(DateUtil.formatDate(date));
 
 		newProduct.setProductHaveVariants(product.isProductHaveVariants());
 
@@ -1177,5 +1189,191 @@ public class ProductController {
 			e.printStackTrace();
 		}
 
+	}
+
+	private Long copyProductById(Long prodId, HttpServletRequest request, MerchantStore store, com.salesmanager.web.admin.entity.catalog.Product product2) throws Exception {
+
+		Language language = (Language) request.getAttribute("LANGUAGE");
+
+		// display menu
+		// setMenu(model, request);
+
+		// MerchantStore store = (MerchantStore)
+		// request.getAttribute(Constants.ADMIN_STORE);
+
+		Product dbProduct = productService.getById(prodId);
+		Product newProduct = new Product();
+
+		// Make a copy of the product
+		com.salesmanager.web.admin.entity.catalog.Product product = new com.salesmanager.web.admin.entity.catalog.Product();
+
+		Set<ProductAvailability> availabilities = new HashSet<ProductAvailability>();
+		// availability - price
+		for (ProductAvailability pAvailability : dbProduct.getAvailabilities()) {
+
+			ProductAvailability availability = new ProductAvailability();
+			availability.setProductDateAvailable(pAvailability.getProductDateAvailable());
+			availability.setProductIsAlwaysFreeShipping(pAvailability.getProductIsAlwaysFreeShipping());
+			availability.setProductQuantity(pAvailability.getProductQuantity());
+			availability.setProductQuantityOrderMax(pAvailability.getProductQuantityOrderMax());
+			availability.setProductQuantityOrderMin(pAvailability.getProductQuantityOrderMin());
+			availability.setProductStatus(pAvailability.getProductStatus());
+			availability.setRegion(pAvailability.getRegion());
+			availability.setRegionVariant(pAvailability.getRegionVariant());
+
+			Set<ProductPrice> prices = pAvailability.getPrices();
+			for (ProductPrice pPrice : prices) {
+
+				ProductPrice price = new ProductPrice();
+				price.setDefaultPrice(pPrice.isDefaultPrice());
+				price.setProductPriceAmount(pPrice.getProductPriceAmount());
+				price.setProductAvailability(availability);
+				price.setProductPriceSpecialAmount(pPrice.getProductPriceSpecialAmount());
+				price.setProductPriceSpecialEndDate(pPrice.getProductPriceSpecialEndDate());
+				price.setProductPriceSpecialStartDate(pPrice.getProductPriceSpecialStartDate());
+				price.setProductPriceType(pPrice.getProductPriceType());
+
+				Set<ProductPriceDescription> priceDescriptions = new HashSet<ProductPriceDescription>();
+				// price descriptions
+				for (ProductPriceDescription pPriceDescription : pPrice.getDescriptions()) {
+
+					ProductPriceDescription productPriceDescription = new ProductPriceDescription();
+					productPriceDescription.setAuditSection(pPriceDescription.getAuditSection());
+					productPriceDescription.setDescription(pPriceDescription.getDescription());
+					productPriceDescription.setName(pPriceDescription.getName());
+					productPriceDescription.setLanguage(pPriceDescription.getLanguage());
+					productPriceDescription.setProductPrice(price);
+					priceDescriptions.add(productPriceDescription);
+
+				}
+				price.setDescriptions(priceDescriptions);
+				if (price.isDefaultPrice()) {
+					product.setPrice(price);
+					product.setProductPrice(priceUtil.getAdminFormatedAmount(store, price.getProductPriceAmount()));
+				}
+
+				availability.getPrices().add(price);
+			}
+
+			if (availability.getRegion().equals(com.salesmanager.core.constants.Constants.ALL_REGIONS)) {
+				product.setAvailability(availability);
+			}
+
+			availabilities.add(availability);
+		}
+
+		newProduct.setAvailabilities(availabilities);
+
+		// attributes
+		Set<ProductAttribute> attributes = new HashSet<ProductAttribute>();
+		for (ProductAttribute pAttribute : dbProduct.getAttributes()) {
+
+			ProductAttribute attribute = new ProductAttribute();
+			attribute.setAttributeDefault(pAttribute.getAttributeDefault());
+			attribute.setAttributeDiscounted(pAttribute.getAttributeDiscounted());
+			attribute.setAttributeDisplayOnly(pAttribute.getAttributeDisplayOnly());
+			attribute.setAttributeRequired(pAttribute.getAttributeRequired());
+			attribute.setProductAttributePrice(pAttribute.getProductAttributePrice());
+			attribute.setProductAttributeIsFree(pAttribute.getProductAttributeIsFree());
+			attribute.setProductAttributeWeight(pAttribute.getProductAttributeWeight());
+			attribute.setProductOption(pAttribute.getProductOption());
+			attribute.setProductOptionSortOrder(pAttribute.getProductOptionSortOrder());
+			attribute.setProductOptionValue(pAttribute.getProductOptionValue());
+			attributes.add(attribute);
+
+		}
+		newProduct.setAttributes(attributes);
+
+		// relationships
+		Set<ProductRelationship> relationships = new HashSet<ProductRelationship>();
+		for (ProductRelationship pRelationship : dbProduct.getRelationships()) {
+
+			ProductRelationship relationship = new ProductRelationship();
+			relationship.setActive(pRelationship.isActive());
+			relationship.setCode(pRelationship.getCode());
+			relationship.setRelatedProduct(pRelationship.getRelatedProduct());
+			relationship.setStore(store);
+			relationships.add(relationship);
+
+		}
+
+		newProduct.setRelationships(relationships);
+
+		// product description
+		Set<ProductDescription> descsset = new HashSet<ProductDescription>();
+		List<ProductDescription> desclist = new ArrayList<ProductDescription>();
+		Set<ProductDescription> descriptions = dbProduct.getDescriptions();
+		for (ProductDescription pDescription : descriptions) {
+
+			ProductDescription description = new ProductDescription();
+			description.setAuditSection(pDescription.getAuditSection());
+			description.setName(pDescription.getName());
+			description.setDescription(pDescription.getDescription());
+			description.setLanguage(pDescription.getLanguage());
+			description.setMetatagDescription(pDescription.getMetatagDescription());
+			description.setMetatagKeywords(pDescription.getMetatagKeywords());
+			description.setMetatagTitle(pDescription.getMetatagTitle());
+			descsset.add(description);
+			desclist.add(description);
+		}
+		newProduct.setDescriptions(descsset);
+		product.setDescriptions(desclist);
+
+		// product
+		newProduct.setAuditSection(dbProduct.getAuditSection());
+		newProduct.setAvailable(dbProduct.isAvailable());
+
+		// copy
+		newProduct.setCategories(dbProduct.getCategories());
+		newProduct.setDateAvailable(dbProduct.getDateAvailable());
+		newProduct.setManufacturer(dbProduct.getManufacturer());
+		newProduct.setMerchantStore(store);
+		newProduct.setProductHeight(dbProduct.getProductHeight());
+		newProduct.setProductIsFree(dbProduct.getProductIsFree());
+		newProduct.setProductLength(dbProduct.getProductLength());
+		newProduct.setProductOrdered(dbProduct.getProductOrdered());
+		newProduct.setProductWeight(dbProduct.getProductWeight());
+		newProduct.setProductWidth(dbProduct.getProductWidth());
+		newProduct.setSortOrder(dbProduct.getSortOrder());
+		newProduct.setTaxClass(dbProduct.getTaxClass());
+		newProduct.setType(dbProduct.getType());
+		newProduct.setSku(dbProduct.getSku());
+		newProduct.setProductVirtual(dbProduct.isProductVirtual());
+		newProduct.setProductShipeable(dbProduct.isProductShipeable());
+
+		productService.saveOrUpdate(newProduct);
+		try {
+			saveProductAttribute(product.getProductVariants(), newProduct);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Set<Category> categories = dbProduct.getCategories();
+		for (Category category : categories) {
+			newProduct.getCategories().add(category);
+			productService.update(newProduct);
+		}
+		return newProduct.getId();
+
+		// product.setProduct(newProduct);
+		// model.addAttribute("product", product);
+		// model.addAttribute("success", "success");
+
+		// return "redirect:/admin/products/editProduct.html?id=" +
+		// newProduct.getId();
+
+	}
+
+	private boolean createCategory(Long prodId, HttpServletRequest request, MerchantStore store, com.salesmanager.web.admin.entity.catalog.Product product2) {
+		Language language = (Language) request.getAttribute("LANGUAGE");
+		Category book = new Category();
+		book.setMerchantStore(store);
+		book.setCode("book");
+
+		CategoryDescription bookEnglishDescription = new CategoryDescription();
+		bookEnglishDescription.setName("Book");
+		bookEnglishDescription.setCategory(book);
+		bookEnglishDescription.setLanguage(language);
+		return true;
 	}
 }
