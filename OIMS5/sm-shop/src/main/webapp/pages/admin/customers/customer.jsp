@@ -307,7 +307,18 @@ function resetCustomerPassword(customerId){
 		});
 }
 
-
+$(document).ready(function() {
+    //set initial state.
+   // $('#textbox1').val($(this).is(':checked'));
+  alert($('#billing_company').val());
+    $('#checkbox1').change(function() {
+        alert($('#billing_company').val());
+        if($(this).is(":checked")) {
+        	 $('#shipping.country.isoCode').val($('#billing.country.isoCode').val());
+        }
+        $('#textbox1').val($(this).is(':checked'));        
+    });
+});
 </script>
 
 
@@ -389,7 +400,7 @@ function resetCustomerPassword(customerId){
 					
 						<div class="controls">
 		              		<label><s:message code="label.customer.billing.company" text="Company"/></label>
-		              		<form:input  cssClass="input-large"  maxlength="100" path="billing.company"/>	
+		              		<form:input  cssClass="input-large"  maxlength="100" path="billing.company" id="billing_company"/>	
 			            </div>
 
 			            <div class="controls">
@@ -486,7 +497,13 @@ function resetCustomerPassword(customerId){
 	                        </div>
 	                </div>
 					
-						 					
+				<div class="control-group">
+	                        <label><s:message code="" text="Shipping & Billing address is same."/></label>
+	                        <div class="controls">
+	                       		<form:checkbox cssClass="highlight" id="checkbox1" path="" value="true" />
+	                            <span class="help-inline"><form:errors path="" cssClass="error" /></span>
+	                        </div>
+	              </div>		 					
 				<h3><s:message code="label.customer.shippinginformation" text="Shipping information"/></h3>
 				<address>
 			            <div class="controls">

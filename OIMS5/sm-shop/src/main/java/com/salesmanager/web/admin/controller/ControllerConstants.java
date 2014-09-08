@@ -42,6 +42,10 @@ public interface ControllerConstants
             final String optionsValuesList="admin-customer-options-values-list";
             final String optionsValueDetails="admin-customer-options-values-details";
             final String optionsSet="admin-customer-options-set";
+            
+            final String CUSTOMER_PRODUCT_MARGIN="customer-product-margin";
+            final String CUSTOMER_MANUFACTURE_MARGIN="customer-manufacture-margin";
+            final String CUSTOMER_CATEGORY_MARGIN="customer-category-margin";
 
         }
         
